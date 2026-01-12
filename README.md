@@ -1,4 +1,4 @@
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Ruff](https://img.shields.io/badge/lint-ruff-2f6feb)
 ![Ruff Format](https://img.shields.io/badge/format-ruff-2f6feb)
 ![Ty](https://img.shields.io/badge/type%20check-ty-6e56cf)
