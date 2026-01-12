@@ -6,3 +6,6 @@ lint:
     uvx ruff check -- src
     uvx ruff format --check -- src
     uvx ty check
+
+docs:
+    uv run zensical serve
