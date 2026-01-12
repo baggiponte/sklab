@@ -66,7 +66,7 @@ def test_cross_validate_logs_metrics_and_refit() -> None:
     assert result.estimator is not None
 
 
-def test_tune_accepts_searcher() -> None:
+def test_search_accepts_searcher() -> None:
     X, y = _make_data()
     pipeline = _make_pipeline()
 
@@ -86,7 +86,7 @@ def test_tune_accepts_searcher() -> None:
     experiment = Experiment(pipeline=pipeline, scorers={"acc": "accuracy"})
     searcher = DummySearch(pipeline)
 
-    result = experiment.tune(searcher, X, y)
+    result = experiment.search(searcher, X, y)
 
     assert result.best_params == {"model__C": 1.0}
     assert result.best_score == 0.5

@@ -11,6 +11,7 @@ from sklearn.metrics import get_scorer
 
 from eksperiment.logging.adapters import NoOpLogger
 from eksperiment.logging.interfaces import LoggerProtocol
+from eksperiment.search import SearchConfigProtocol, SearcherProtocol
 
 MetricFunc = Callable[[Any, Any, Any], float]
 Scorer = MetricFunc | str
@@ -43,7 +44,7 @@ class CVResult:
 
 
 @dataclass(slots=True)
-class TuneResult:
+class SearchResult:
     """Result of a hyperparameter search run."""
 
     best_params: Mapping[str, Any]
@@ -151,9 +152,9 @@ class Experiment:
             estimator=final_estimator,
         )
 
-    def tune(
+    def search(
         self,
-        search_config: Any,
+        search: SearcherProtocol | SearchConfigProtocol,
         X: Any,
         y: Any | None = None,
         *,
@@ -161,10 +162,10 @@ class Experiment:
         n_trials: int | None = None,
         timeout: float | None = None,
         run_name: str | None = None,
-    ) -> TuneResult:
-        """Run a hyperparameter search using an explicit searcher/config object."""
+    ) -> SearchResult:
+        """Run a hyperparameter search using a searcher or config object."""
         searcher = _build_searcher(
-            search_config,
+            search,
             pipeline=self.pipeline,
             scorers=self.scorers,
             cv=cv,
@@ -186,7 +187,7 @@ class Experiment:
             if best_estimator is not None:
                 run.log_model(best_estimator, name="model")
             run.finish()
-        return TuneResult(
+        return SearchResult(
             best_params=best_params,
             best_score=best_score,
             estimator=getattr(searcher, "best_estimator_", None),
@@ -245,7 +246,7 @@ def _aggregate_cv_metrics(fold_metrics: Mapping[str, list[float]]) -> dict[str, 
 
 
 def _build_searcher(
-    search_config: Any,
+    search: SearcherProtocol | SearchConfigProtocol,
     *,
     pipeline: Any,
     scorers: Scorers | None,
@@ -253,14 +254,14 @@ def _build_searcher(
     n_trials: int | None,
     timeout: float | None,
 ) -> Any:
-    if hasattr(search_config, "create_searcher"):
-        return search_config.create_searcher(
+    if hasattr(search, "create_searcher"):
+        return search.create_searcher(
             pipeline=pipeline,
             scorers=scorers,
             cv=cv,
             n_trials=n_trials,
             timeout=timeout,
         )
-    if hasattr(search_config, "fit"):
-        return search_config
-    raise TypeError("search_config must provide create_searcher(...) or fit(...).")
+    if hasattr(search, "fit"):
+        return search
+    raise TypeError("search must provide create_searcher(...) or fit(...).")
