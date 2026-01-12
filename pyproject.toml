@@ -20,8 +20,10 @@ wandb = [
 
 [dependency-groups]
 dev = [
+    "polars>=1.37.0",
     "prek>=0.2.27",
     "pytest>=9.0.2",
+    "pytest-markdown-docs>=0.9.0",
     "ruff>=0.14.11",
     "scikit-learn>=1.7.2",
 ]
@@ -34,7 +36,8 @@ docs = [
 default-groups = ["dev", "docs"]
 
 [tool.pytest.ini_options]
-addopts = ["--import-mode=importlib"]
+addopts = ["--import-mode=importlib", "--markdown-docs"]
+testpaths = ["tests", "docs"]
 
 [tool.ruff]
 line-length = 88
