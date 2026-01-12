@@ -19,3 +19,5 @@ paths = ["src"]
 
 [project.plugins.mkdocstrings.handlers.python.options]
 docstring_style = "google"
+show_docstring_description = true
+show_docstring_parameters = true
