@@ -1,3 +1,9 @@
+---
+title: Experiment v1 API
+description: Minimal sklearn-first Experiment API spec and lifecycle
+date: 2026-01-12
+---
+
 # Experiment v1 API
 
 ## Goal

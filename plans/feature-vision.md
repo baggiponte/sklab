@@ -1,6 +1,7 @@
 ---
 title: Feature Vision
 description: Essential feature set for eksperiment based on real data scientist needs
+date: 2026-01-12
 ---
 
 # Feature Vision: What Eksperiment Should Be

@@ -1,6 +1,7 @@
 ---
 date: 2026-01-12
 title: Logger Protocol With Context-Managed Runs
+description: Minimal logger and run handle protocol aligned with sklearn workflows
 tags:
   - logging
   - mlflow
