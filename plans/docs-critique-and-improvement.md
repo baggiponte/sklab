@@ -1,3 +1,9 @@
+---
+title: Documentation critique and improvement plan
+description: Assessment of docs gaps and a roadmap to improve tutorials and theory
+date: 2026-01-12
+---
+
 # Documentation Critique and Improvement Plan
 
 ## Executive Summary
