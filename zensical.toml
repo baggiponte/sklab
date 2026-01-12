@@ -2,11 +2,28 @@
 site_name = "Eksperiment"
 nav = [
   {"Home" = "index.md"},
+  {"Glossary" = "glossary.md"},
   {"Tutorials" = [
     "tutorials/experiment.md",
+    "tutorials/why-pipelines.md",
+    "tutorials/basics-classification-iris.md",
+    "tutorials/basics-regression-census.md",
+    "tutorials/titanic-classification.md",
+    "tutorials/time-series-forecasting.md",
+    "tutorials/sklearn-search.md",
+    "tutorials/optuna-search.md",
+    "tutorials/optuna-advanced.md",
+    "tutorials/logger-adapters.md",
+    "tutorials/cyclical-feature-engineering.md",
+  ]},
+  {"Developer" = [
+    "developer/logging-plugins.md",
+    "developer/search-plugins.md",
   ]},
   {"API Reference" = [
     "api/eksperiment/experiment.md",
+    "api/eksperiment/search.md",
+    "api/eksperiment/optuna.md",
     "api/eksperiment/logging/interfaces.md",
     "api/eksperiment/logging/adapters.md",
   ]},
