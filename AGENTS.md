@@ -61,7 +61,7 @@ No flags to enable. No forgetting. It just happens.
 ## How to Collaborate
 
 1. **Spec first.** Draft a plan in `plans/` before coding. Keep it small, concrete, goal-driven.
-2. **Plans must include:** Frontmatter header (`title`, `description`), then Goal, References, Design, How to test. Add "Future considerations" for scoped-out items. Note: Only plans have frontmatter; docs do not.
+2. **Plans must include:** Frontmatter header (`title`, `description`, `date`), then Goal, References, Design, How to test. Add "Future considerations" for scoped-out items. Note: Only plans have frontmatter; docs do not.
 3. **Sketch before coding.** Interfaces, usage snippets, tradeoffs first. Code only after the API is clear.
 4. **Small steps.** Prefer small, reviewable PRs over big jumps.
 5. **Ask if blocked.** One brief clarifying question, not a brainstorm session.

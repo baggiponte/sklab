@@ -62,6 +62,7 @@ No `mlflow.log_param()` scattered through code. Ever.
    ---
    title: Feature Name
    description: One-line summary
+   date: YYYY-MM-DD
    ---
    # Feature Name
    ## Goal / ## References / ## Design / ## How to Test / ## Future Considerations
