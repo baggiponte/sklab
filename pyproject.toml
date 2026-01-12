@@ -33,6 +33,9 @@ docs = [
 [tool.uv]
 default-groups = ["dev", "docs"]
 
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+
 [tool.ruff]
 line-length = 88
 
