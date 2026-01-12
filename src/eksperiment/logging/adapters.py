@@ -8,7 +8,10 @@ from typing import Any
 
 @dataclass
 class NoOpRun:
-    """Run adapter that drops logging calls."""
+    """Run adapter that drops logging calls.
+
+    Useful as the default run when no external logging backend is configured.
+    """
 
     def __enter__(self) -> "NoOpRun":
         return self
