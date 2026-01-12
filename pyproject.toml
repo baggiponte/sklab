@@ -16,5 +16,16 @@ wandb = [
 
 [dependency-groups]
 dev = [
+    "prek>=0.2.27",
+    "ruff>=0.14.11",
     "scikit-learn>=1.7.2",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ["I", "UP", "TID"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
