@@ -2,6 +2,9 @@
 site_name = "Eksperiment"
 nav = [
   {"Home" = "index.md"},
+  {"Tutorials" = [
+    "tutorials/experiment.md",
+  ]},
   {"API Reference" = [
     "api/eksperiment/experiment.md",
     "api/eksperiment/logging/interfaces.md",
