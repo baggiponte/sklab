@@ -8,6 +8,7 @@ Eksperiment is a lightweight experiment runner for Python ML (starting with scik
 - Prefer small, reviewable changes over big jumps.
 - Keep plans/specs in `plans/` as markdown; promote to a design doc only after the API stabilizes.
 - Plan specs in `plans/` must include sections: Goal, References, Design, How to test.
+- If you defer items, add a `Future considerations` section (canonical place for scope‑outs).
 - Ask a short clarification question only when decisions are blocking.
 - Keep scope tight: focus on sklearn-first, optional optuna + wandb integrations.
 
@@ -23,6 +24,9 @@ Eksperiment is a lightweight experiment runner for Python ML (starting with scik
 - Logger protocol should return a context‑managed run handle.
 - Minimal run API: `log_params`, `log_metrics`, `set_tags`, `log_artifact`, `log_model`, `finish`.
 - Keep adapter examples minimal; avoid deep backend behavior in the core API.
+
+## Future considerations (canonical)
+- Use this section in plans to capture deferred or potentially complex items (e.g., run IDs, backend-specific behaviors).
 
 ## Tooling expectations
 - Use `uv` for all Python env and package operations; do not use the `uv pip` interface.
