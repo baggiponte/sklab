@@ -1,0 +1,20 @@
+[project]
+name = "eksperiment"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+optuna = [
+    "optuna>=4.6.0",
+]
+wandb = [
+    "wandb>=0.23.1",
+]
+
+[dependency-groups]
+dev = [
+    "scikit-learn>=1.7.2",
+]
