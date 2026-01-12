@@ -19,6 +19,8 @@ Scorers = Mapping[str, Scorer]
 
 @dataclass(slots=True)
 class FitResult:
+    """Result of a single fit run."""
+
     estimator: Any
     metrics: Mapping[str, float]
     params: Mapping[str, Any]
@@ -26,11 +28,15 @@ class FitResult:
 
 @dataclass(slots=True)
 class EvalResult:
+    """Result of evaluating a fitted estimator on a dataset."""
+
     metrics: Mapping[str, float]
 
 
 @dataclass(slots=True)
 class CVResult:
+    """Result of a cross-validation run."""
+
     metrics: Mapping[str, float]
     fold_metrics: Mapping[str, list[float]]
     estimator: Any | None
@@ -38,6 +44,8 @@ class CVResult:
 
 @dataclass(slots=True)
 class TuneResult:
+    """Result of a hyperparameter search run."""
+
     best_params: Mapping[str, Any]
     best_score: float | None
     estimator: Any | None
@@ -65,6 +73,7 @@ class Experiment:
         params: Mapping[str, Any] | None = None,
         run_name: str | None = None,
     ) -> FitResult:
+        """Fit the pipeline on the provided data and log the run."""
         estimator = clone(self.pipeline)
         merged_params = _merge_params(estimator, params)
         if params:
@@ -87,6 +96,7 @@ class Experiment:
         *,
         run_name: str | None = None,
     ) -> EvalResult:
+        """Evaluate a fitted estimator using experiment scorers and log metrics."""
         scorers = _require_scorers(self.scorers)
         metrics = _score_estimator(estimator, X, y, scorers)
         with self.logger.start_run(
@@ -107,6 +117,7 @@ class Experiment:
         refit: bool = True,
         run_name: str | None = None,
     ) -> CVResult:
+        """Run sklearn cross-validation, aggregate metrics, and optionally refit."""
         scorers = _require_scorers(self.scorers)
         scoring = _sklearn_scoring(scorers)
         scores = sklearn_cross_validate(
@@ -151,6 +162,7 @@ class Experiment:
         timeout: float | None = None,
         run_name: str | None = None,
     ) -> TuneResult:
+        """Run a hyperparameter search using an explicit searcher/config object."""
         searcher = _build_searcher(
             search_config,
             pipeline=self.pipeline,
