@@ -53,8 +53,8 @@ class MLflowLogger:
         if name is None:
             mlflow.log_artifact(path)
         else:
-            mlflow.log_artifact(path, artifact_path=name)
+            mlflow.log_artifact(path, name=name)
 
     def log_model(self, model: Any, name: str | None = None) -> None:
         mlflow = _require_mlflow()
-        mlflow.sklearn.log_model(model, artifact_path=name or "model")
+        mlflow.sklearn.log_model(model, name=name or "model")

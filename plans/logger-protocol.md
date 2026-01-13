@@ -137,13 +137,13 @@ class MLflowRunAdapter:
         if name is None:
             mlflow.log_artifact(path)
         else:
-            mlflow.log_artifact(path, artifact_path=name)
+            mlflow.log_artifact(path, name=name)
 
     def log_model(self, model: Any, name: str | None = None) -> None:
         if name is None:
             name = "model"
         # Minimal: let callers provide their own mlflow flavor wrappers.
-        mlflow.pyfunc.log_model(artifact_path=name, python_model=model)
+        mlflow.pyfunc.log_model(name=name, python_model=model)
 
     def finish(self, status: str = "success") -> None:
         # MLflow uses "FINISHED" or "FAILED".
