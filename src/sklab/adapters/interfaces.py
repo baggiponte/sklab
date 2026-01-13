@@ -1,8 +1,8 @@
 """Logger protocol used by experiment runs."""
 
 from collections.abc import Mapping
-from contextlib import contextmanager
-from typing import Any, ContextManager, Protocol, Self, runtime_checkable
+from contextlib import AbstractContextManager, contextmanager
+from typing import Any, Protocol, Self, runtime_checkable
 
 Metrics = Mapping[str, float]
 Params = Mapping[str, Any]
@@ -27,7 +27,7 @@ class LoggerProtocol(Protocol):
         config: Params | None = None,
         tags: Tags | None = None,
         nested: bool = False,
-    ) -> ContextManager[Self]: ...
+    ) -> AbstractContextManager[Self]: ...
 
     def log_params(self, params: Params) -> None: ...
 
