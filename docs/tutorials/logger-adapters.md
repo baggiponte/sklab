@@ -261,7 +261,7 @@ class PrintLogger:
 
 ### Using the custom logger
 
-```python
+```{.python continuation}
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline

@@ -29,6 +29,9 @@ without leaking information between training and test data.
 ## Step 1: Load and explore the data
 
 ```python
+import pytest
+pytest.importorskip("pandas")
+
 from sklearn.datasets import fetch_openml
 
 titanic = fetch_openml(data_id=40945, as_frame=True)
@@ -67,7 +70,7 @@ correct preprocessing to each.
 ```{.python continuation}
 feature_cols = ["pclass", "sex", "age", "fare", "embarked"]
 X = titanic_df[feature_cols].to_numpy()
-y = titanic_df["survived"].to_numpy()
+y = titanic_df["survived"].to_numpy().astype(int)  # Convert string labels to int
 
 # Column indices by type (after selecting feature_cols)
 categorical_cols = [0, 1, 4]  # pclass, sex, embarked
@@ -200,6 +203,9 @@ A good model has high F1, not just high accuracy.
 ## Complete example
 
 ```python
+import pytest
+pytest.importorskip("pandas")
+
 from sklearn.compose import ColumnTransformer
 from sklearn.datasets import fetch_openml
 from sklearn.impute import SimpleImputer
@@ -216,7 +222,7 @@ titanic_df = titanic.frame
 
 feature_cols = ["pclass", "sex", "age", "fare", "embarked"]
 X = titanic_df[feature_cols].to_numpy()
-y = titanic_df["survived"].to_numpy()
+y = titanic_df["survived"].to_numpy().astype(int)  # Convert string labels to int
 
 categorical_cols = [0, 1, 4]
 numeric_cols = [2, 3]

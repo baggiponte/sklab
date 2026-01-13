@@ -28,15 +28,22 @@ rooms, and location, estimate the median house value.
 ## Step 1: Load the data
 
 ```python
+import polars as pl
 from sklearn.datasets import fetch_california_housing
 
-housing = fetch_california_housing(as_frame=True)
-X = housing.data.to_numpy()
-y = housing.target.to_numpy()
+# Load the dataset
+housing = fetch_california_housing()
 
-print(f"Features: {housing.feature_names}")
-print(f"Samples: {X.shape[0]}, Features: {X.shape[1]}")
-print(f"Target range: ${y.min() * 100_000:.0f} - ${y.max() * 100_000:.0f}")
+# Keep data in Polars for exploration, convert to NumPy for sklearn
+housing_df = pl.DataFrame(housing.data, schema=housing.feature_names)
+housing_df = housing_df.with_columns(pl.Series("target", housing.target))
+
+print(housing_df.head())
+print(f"\nSamples: {housing_df.shape[0]}, Features: {len(housing.feature_names)}")
+print(f"Target range: ${housing_df['target'].min() * 100_000:.0f} - ${housing_df['target'].max() * 100_000:.0f}")
+
+X = housing_df.select(housing.feature_names).to_numpy()
+y = housing_df["target"].to_numpy()
 ```
 
 The first run downloads the dataset and caches it in the scikit-learn data
@@ -180,6 +187,7 @@ If results aren't good enough:
 Here's the full workflow in one block:
 
 ```python
+import polars as pl
 from sklearn.datasets import fetch_california_housing
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import KFold
@@ -189,9 +197,12 @@ from sklearn.preprocessing import StandardScaler
 from eksperiment.experiment import Experiment
 
 # 1. Load data
-housing = fetch_california_housing(as_frame=True)
-X = housing.data.to_numpy()
-y = housing.target.to_numpy()
+housing = fetch_california_housing()
+housing_df = pl.DataFrame(housing.data, schema=housing.feature_names)
+housing_df = housing_df.with_columns(pl.Series("target", housing.target))
+
+X = housing_df.select(housing.feature_names).to_numpy()
+y = housing_df["target"].to_numpy()
 
 # 2. Build pipeline
 pipeline = Pipeline([
