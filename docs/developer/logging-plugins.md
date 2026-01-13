@@ -8,6 +8,8 @@ backend-agnostic while letting you integrate any tracker.
 - `LoggerProtocol.start_run(...) -> RunProtocol`
 - `RunProtocol` is a context manager with methods for params, metrics, tags,
   artifacts, model, and finish.
+- These are protocols (structural typing), so you do **not** need to inherit
+  from them to be compatible.
 
 ## Minimal implementation
 
@@ -18,7 +20,7 @@ from typing import Any
 from eksperiment.logging.interfaces import LoggerProtocol, RunProtocol
 
 @dataclass
-class ConsoleRun(RunProtocol):
+class ConsoleRun:
     def __enter__(self) -> "ConsoleRun":
         return self
 
@@ -45,7 +47,7 @@ class ConsoleRun(RunProtocol):
 
 
 @dataclass
-class ConsoleLogger(LoggerProtocol):
+class ConsoleLogger:
     def start_run(self, name=None, config=None, tags=None, nested=False) -> ConsoleRun:
         run = ConsoleRun()
         if config:

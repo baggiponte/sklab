@@ -335,6 +335,7 @@ distribution to the objective landscape.
 ```python
 import pytest
 pytest.importorskip("optuna")
+pytest.importorskip("cmaes")
 
 import optuna
 from sklearn.datasets import load_iris

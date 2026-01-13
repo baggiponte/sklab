@@ -18,14 +18,32 @@ that enforces good practices while staying out of your way.
 
 Consider a typical ML workflow without eksperiment:
 
-```text
+```python
+# Optional: only run if mlflow is installed.
+import pytest
+pytest.importorskip("mlflow")
+
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.model_selection import GridSearchCV, cross_val_score, train_test_split
+import mlflow
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+model = LogisticRegression(max_iter=200)
+param_grid = {"C": [0.1, 1.0, 10.0]}
+
 # Fit
 model.fit(X_train, y_train)
 
 # Evaluate (hope you remembered all the metrics)
 y_pred = model.predict(X_test)
 print("accuracy:", accuracy_score(y_test, y_pred))
-print("f1:", f1_score(y_test, y_pred))
+print("f1:", f1_score(y_test, y_pred, average="macro"))
+acc = accuracy_score(y_test, y_pred)
 
 # Cross-validate (different API)
 scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
@@ -47,12 +65,35 @@ inconsistently.
 
 ### How eksperiment helps
 
-```text
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 from eksperiment.experiment import Experiment
+from eksperiment.logging.adapters import NoOpLogger
+from eksperiment.search import GridSearchConfig
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200)),
+])
+config = GridSearchConfig(
+    param_grid={"model__C": [0.1, 1.0, 10.0]},
+    refit="accuracy",
+)
+mlflow_logger = NoOpLogger()
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1": "f1"},
+    scorers={"accuracy": "accuracy", "f1_macro": "f1_macro"},
     logger=mlflow_logger,  # or wandb, or none
     name="my-experiment",
 )

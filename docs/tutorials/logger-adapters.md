@@ -1,7 +1,8 @@
 # Logger adapters
 
-Eksperiment is backend-agnostic: you can pass a logger adapter that implements
-`LoggerProtocol`. This tutorial shows the built-ins and a simple custom logger.
+Eksperiment is backend-agnostic: you can pass a logger adapter that conforms to
+`LoggerProtocol` (a protocol, so inheritance isn't required). This tutorial
+shows the built-ins and a simple custom logger.
 
 ## Default: No-op logger
 
@@ -110,7 +111,7 @@ from typing import Any
 from eksperiment.logging.interfaces import LoggerProtocol, RunProtocol
 
 @dataclass
-class PrintRun(RunProtocol):
+class PrintRun:
     def __enter__(self) -> "PrintRun":
         return self
 
@@ -137,7 +138,7 @@ class PrintRun(RunProtocol):
 
 
 @dataclass
-class PrintLogger(LoggerProtocol):
+class PrintLogger:
     def start_run(self, name=None, config=None, tags=None, nested=False) -> PrintRun:
         run = PrintRun()
         if config:

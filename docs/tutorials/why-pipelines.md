@@ -60,7 +60,7 @@ y_all = np.hstack([y_train, y_test])
 
 ### The wrong way: scale before splitting
 
-```python continuation
+```{.python continuation}
 # WRONG: Fit scaler on ALL data (including test)
 scaler_wrong = StandardScaler()
 X_all_scaled = scaler_wrong.fit_transform(X_all)
@@ -79,7 +79,7 @@ print(f"Score with leakage: {score_leaked:.3f}")
 
 ### The right way: scale after splitting
 
-```python continuation
+```{.python continuation}
 # RIGHT: Fit scaler only on training data
 scaler_right = StandardScaler()
 X_train_clean = scaler_right.fit_transform(X_train_raw)
@@ -102,7 +102,7 @@ The problem gets worse with cross-validation. If you scale before CV, *every*
 fold's validation data leaks into *every* fold's training data through the
 scaler statistics.
 
-```python continuation
+```{.python continuation}
 from sklearn.model_selection import cross_val_score
 
 # WRONG: Scale all data, then cross-validate
@@ -128,7 +128,7 @@ fold's training data.
 
 This means the scaler never sees validation data.
 
-```python continuation
+```{.python continuation}
 from sklearn.pipeline import Pipeline
 
 pipeline = Pipeline([
@@ -147,7 +147,7 @@ print(f"CV without leakage: {scores_clean.mean():.3f} (+/- {scores_clean.std():.
 eksperiment requires a Pipeline object—not a raw estimator. This isn't a
 limitation; it's a forcing function for correct methodology.
 
-```python continuation
+```{.python continuation}
 from eksperiment.experiment import Experiment
 
 experiment = Experiment(

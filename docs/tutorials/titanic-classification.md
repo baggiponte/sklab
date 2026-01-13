@@ -36,7 +36,7 @@ numeric_cols = [2, 3]
 
 ## Build the pipeline
 
-```python continuation
+```{.python continuation}
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold

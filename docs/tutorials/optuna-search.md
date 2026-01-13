@@ -327,7 +327,7 @@ random_result = experiment.search(random_searcher, X, y, run_name="random-30")
 print(f"Random (30 trials): {random_result.best_score:.4f}")
 ```
 
-```python continuation
+```{.python continuation}
 # Optuna: 30 trials
 def search_space(trial):
     return {

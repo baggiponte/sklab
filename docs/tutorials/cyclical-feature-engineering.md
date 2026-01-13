@@ -56,7 +56,7 @@ Scorers can be strings or callables; here we use sklearn scorer names. Note that
 sklearn’s MAE/RMSE scorers are **negative** by convention, so we flip the sign
 for readability when printing.
 
-```python continuation
+```{.python continuation}
 scorers = {
     "mae": "neg_mean_absolute_error",
     "rmse": "neg_root_mean_squared_error",
@@ -84,7 +84,7 @@ def show_metrics(result):
 Tree-based models can consume ordinal time features directly, while categorical
 variables are marked as categorical.
 
-```python continuation
+```{.python continuation}
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
@@ -111,7 +111,7 @@ show_metrics(result)
 A linear model with one-hot encoding for categorical features, but time features
 left as ordinal.
 
-```python continuation
+```{.python continuation}
 from sklearn.linear_model import RidgeCV
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 
@@ -135,7 +135,7 @@ show_metrics(result)
 ## Model 3: One-hot time steps
 Treat hour/weekday/month as categorical to avoid imposing monotonic ordering.
 
-```python continuation
+```{.python continuation}
 pipeline = make_pipeline(
     ColumnTransformer(
         transformers=[
@@ -157,7 +157,7 @@ show_metrics(result)
 ## Model 4: Trigonometric (sine/cosine) time features
 Encode periodic features with sine/cosine transforms to respect circularity.
 
-```python continuation
+```{.python continuation}
 from sklearn.preprocessing import FunctionTransformer
 
 
@@ -193,7 +193,7 @@ show_metrics(result)
 Spline features provide a smooth, periodic encoding with more expressivity than
 sine/cosine.
 
-```python continuation
+```{.python continuation}
 from sklearn.preprocessing import SplineTransformer
 
 

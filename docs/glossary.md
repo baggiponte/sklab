@@ -17,7 +17,20 @@ different scorers for training vs. evaluation, forget to log certain runs, or
 accidentally change preprocessing between experiments. The Experiment class
 prevents these inconsistencies.
 
-```text
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from eksperiment.experiment import Experiment
+from eksperiment.logging.adapters import NoOpLogger
+
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200)),
+])
+mlflow_logger = NoOpLogger()
+
 experiment = Experiment(
     pipeline=pipeline,
     scorers={"accuracy": "accuracy", "f1": "f1"},
@@ -41,7 +54,11 @@ A pipeline ensures that preprocessing is refit on each fold's training data
 during cross-validation. See [Why Pipelines Matter](tutorials/why-pipelines.md)
 for a detailed explanation.
 
-```text
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 pipeline = Pipeline([
     ("scale", StandardScaler()),      # preprocessing
     ("model", LogisticRegression()),  # estimator
@@ -142,15 +159,38 @@ with consistent logging.
 
 ## Searcher
 
-An object that implements `fit(X, y)` and exposes `best_params_`, `best_score_`,
+An object that conforms to the Searcher protocol: it provides `fit(X, y)` and
+exposes `best_params_`, `best_score_`,
 and `best_estimator_` after fitting. Searchers encapsulate hyperparameter
 search logic.
 
 **Why it matters:** eksperiment is searcher-agnostic. You can use sklearn's
 `GridSearchCV`, Optuna, or your own custom searcher. As long as it follows
-the protocol, eksperiment will log results consistently.
+the protocol (no inheritance required), eksperiment will log results consistently.
 
-```text
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from eksperiment.experiment import Experiment
+
+X, y = load_iris(return_X_y=True)
+
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200)),
+])
+param_grid = {"model__C": [0.1, 1.0, 10.0]}
+
+experiment = Experiment(
+    pipeline=pipeline,
+    scorers={"accuracy": "accuracy"},
+    name="search-demo",
+)
+
 searcher = GridSearchCV(pipeline, param_grid, cv=3, scoring="accuracy")
 result = experiment.search(searcher, X, y, run_name="grid-search")
 ```
@@ -159,8 +199,9 @@ result = experiment.search(searcher, X, y, run_name="grid-search")
 
 ## Search Config
 
-An object that implements `create_searcher(...)` and returns a Searcher. This
-provides a clean API for common configurations while allowing full
+An object that conforms to the SearchConfig protocol: it provides
+`create_searcher(...)` and returns a Searcher. This provides a clean API for
+common configurations while allowing full
 customization when needed.
 
 **Why it matters:** Configs keep the call site simple. Instead of constructing
@@ -180,15 +221,23 @@ result = experiment.search(
 
 ## Logger
 
-A backend-agnostic logger that creates runs. It implements `LoggerProtocol`
+A backend-agnostic logger that creates runs. It conforms to `LoggerProtocol`
 and returns a run handle from `start_run(...)`.
 
 **Why it matters:** Different teams use different experiment tracking tools
 (MLflow, Weights & Biases, Neptune, custom databases). eksperiment's logger
-protocol lets you swap backends without changing modeling code.
+protocol lets you swap backends without changing modeling code. No inheritance
+is required because it uses protocols.
 
-```text
+```python
+from sklearn.dummy import DummyClassifier
+from sklearn.pipeline import Pipeline
+
+from eksperiment.experiment import Experiment
 from eksperiment.logging.adapters import MLflowLogger, WandbLogger
+
+pipeline = Pipeline([("model", DummyClassifier(strategy="most_frequent"))])
+scorers = {"accuracy": "accuracy"}
 
 experiment = Experiment(
     pipeline=pipeline,

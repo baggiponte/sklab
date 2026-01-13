@@ -63,16 +63,16 @@ experiment = Experiment(
 
 Train the pipeline on your data.
 
-```python continuation
+```{.python continuation}
 fit_result = experiment.fit(X, y, run_name="fit")
 
-print(f"Fit time: {fit_result.fit_time:.3f}s")
 print(f"Estimator type: {type(fit_result.estimator).__name__}")
+print(f"Logged params: {fit_result.params}")
 ```
 
 **Returns:** `FitResult` with:
 - `estimator`: The fitted pipeline (cloned from original)
-- `fit_time`: Training duration in seconds
+- `params`: Parameters logged for the run
 
 **Use when:** Training on your full training set, or training a final model.
 
@@ -82,7 +82,7 @@ print(f"Estimator type: {type(fit_result.estimator).__name__}")
 
 Score a fitted model on held-out data.
 
-```python continuation
+```{.python continuation}
 # In practice, you'd evaluate on a separate test set
 # Here we reuse the data for demonstration
 eval_result = experiment.evaluate(
@@ -95,7 +95,7 @@ print(f"Metrics: {eval_result.metrics}")
 ```
 
 **Returns:** `EvalResult` with:
-- `metrics`: Dict of metric names to values (prefixed with `eval/`)
+- `metrics`: Dict of metric names to values
 
 **Use when:** Evaluating on a holdout test set after training.
 
@@ -106,7 +106,7 @@ print(f"Metrics: {eval_result.metrics}")
 Get a robust performance estimate by training and evaluating across multiple
 folds.
 
-```python continuation
+```{.python continuation}
 cv_result = experiment.cross_validate(
     X, y,
     cv=5,  # 5-fold cross-validation
@@ -128,7 +128,7 @@ selection.
 
 eksperiment accepts any sklearn splitter:
 
-```python continuation
+```{.python continuation}
 from sklearn.model_selection import StratifiedKFold, TimeSeriesSplit
 
 # Stratified (preserves class balance) - good for classification
@@ -137,7 +137,7 @@ strat_result = experiment.cross_validate(X, y, cv=skf, run_name="strat-cv")
 print(f"Stratified CV: {strat_result.metrics['cv/accuracy_mean']:.4f}")
 ```
 
-```python continuation
+```{.python continuation}
 # Time series split - respects temporal order
 import numpy as np
 
@@ -175,7 +175,7 @@ print(f"Time series CV: {ts_result.metrics['cv/accuracy_mean']:.4f}")
 
 Find better hyperparameters by searching over a parameter space.
 
-```python continuation
+```{.python continuation}
 from eksperiment.search import GridSearchConfig
 
 search_result = experiment.search(
@@ -200,7 +200,7 @@ print(f"Best score: {search_result.best_score:.4f}")
 
 eksperiment supports multiple search strategies:
 
-```python continuation
+```{.python continuation}
 # Grid search via config
 from eksperiment.search import GridSearchConfig
 
@@ -210,7 +210,7 @@ grid_result = experiment.search(
 )
 ```
 
-```python continuation
+```{.python continuation}
 # Random search via sklearn searcher
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import loguniform
@@ -316,13 +316,13 @@ print(f"Best params: {search_result.best_params}")
 print(f"Search CV: {search_result.best_score:.4f}")
 
 # 5. Final evaluation on holdout
-if search_result.best_estimator is not None:
+if search_result.estimator is not None:
     eval_result = experiment.evaluate(
-        search_result.best_estimator,
+        search_result.estimator,
         X_test, y_test,
         run_name="final-eval",
     )
-    print(f"Holdout accuracy: {eval_result.metrics['eval/accuracy']:.4f}")
+    print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```
 
 ---

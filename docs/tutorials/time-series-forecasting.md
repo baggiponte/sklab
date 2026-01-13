@@ -42,7 +42,7 @@ ts_cv = TimeSeriesSplit(n_splits=3)
 
 ## Build the pipeline
 
-```python continuation
+```{.python continuation}
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler

@@ -64,7 +64,7 @@ y = iris_df["target"].to_numpy()
 > sets matches the original data. Without it, you might accidentally put all
 > examples of one class in the training set.
 
-```python continuation
+```{.python continuation}
 from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -90,7 +90,7 @@ print(f"Holdout set: {len(X_test)} samples")
 >
 > See [Why Pipelines Matter](why-pipelines.md) for a detailed explanation.
 
-```python continuation
+```{.python continuation}
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -121,11 +121,11 @@ experiment = Experiment(
 
 ## Step 4: Fit the model
 
-```python continuation
+```{.python continuation}
 fit_result = experiment.fit(X_train, y_train, run_name="iris-fit")
 
-print(f"Fit time: {fit_result.fit_time:.3f}s")
 print(f"Fitted estimator: {type(fit_result.estimator).__name__}")
+print(f"Logged params: {fit_result.params}")
 ```
 
 **What `fit()` does:**
@@ -139,7 +139,7 @@ print(f"Fitted estimator: {type(fit_result.estimator).__name__}")
 
 ## Step 5: Evaluate on holdout data
 
-```python continuation
+```{.python continuation}
 eval_result = experiment.evaluate(
     fit_result.estimator,
     X_test,
@@ -147,7 +147,7 @@ eval_result = experiment.evaluate(
     run_name="iris-eval",
 )
 
-print(f"Holdout accuracy: {eval_result.metrics['eval/accuracy']:.4f}")
+print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```
 
 > **Concept: Holdout Evaluation**
@@ -207,7 +207,7 @@ eval_result = experiment.evaluate(
     fit_result.estimator, X_test, y_test, run_name="eval"
 )
 
-print(f"Holdout accuracy: {eval_result.metrics['eval/accuracy']:.4f}")
+print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```
 
 ---
@@ -218,7 +218,7 @@ A single holdout split is noisy—you might get lucky or unlucky with which
 samples end up in the holdout set. Cross-validation averages over multiple
 splits for a more robust estimate:
 
-```python continuation
+```{.python continuation}
 cv_result = experiment.cross_validate(X, y, cv=5, run_name="cv")
 
 print(f"CV accuracy: {cv_result.metrics['cv/accuracy_mean']:.4f}")

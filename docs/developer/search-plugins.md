@@ -5,10 +5,11 @@ object that can create one. This gives you a simple path and a power-user path.
 
 ## Protocols
 
-- `SearcherProtocol`: must implement `fit(X, y)` and may expose
+- `SearcherProtocol`: must provide `fit(X, y)` and may expose
   `best_params_`, `best_score_`, `best_estimator_`.
-- `SearchConfigProtocol`: must implement `create_searcher(...)` and return a
+- `SearchConfigProtocol`: must provide `create_searcher(...)` and return a
   `SearcherProtocol`.
+- These are protocols (structural typing), so inheritance is not required.
 
 ## Custom searcher (power user)
 
@@ -41,7 +42,7 @@ class MySearcher:
 
 ## Config wrapper (clean API)
 
-```python continuation
+```{.python continuation}
 from dataclasses import dataclass
 
 @dataclass

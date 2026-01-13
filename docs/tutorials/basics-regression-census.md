@@ -63,7 +63,7 @@ y = census_df["median_house_value"].to_numpy()
 
 ## Pipeline + cross-validation
 
-```python continuation
+```{.python continuation}
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import KFold
 from sklearn.pipeline import Pipeline

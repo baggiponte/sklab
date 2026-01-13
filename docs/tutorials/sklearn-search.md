@@ -317,7 +317,7 @@ param_distributions = {
 }
 ```
 
-```python continuation
+```{.python continuation}
 # Grid search: 3 × 4 × 3 = 36 combinations
 grid_searcher = GridSearchCV(
     pipeline,
@@ -330,7 +330,7 @@ grid_result = experiment.search(grid_searcher, X, y, run_name="grid")
 print(f"Grid: {grid_result.best_score:.4f} (36 combinations)")
 ```
 
-```python continuation
+```{.python continuation}
 # Random search: 20 random samples
 random_searcher = RandomizedSearchCV(
     pipeline,
@@ -345,7 +345,7 @@ random_result = experiment.search(random_searcher, X, y, run_name="random")
 print(f"Random: {random_result.best_score:.4f} (20 samples)")
 ```
 
-```python continuation
+```{.python continuation}
 # Halving: starts with many, progressively eliminates
 halving_searcher = HalvingRandomSearchCV(
     pipeline,
@@ -365,9 +365,9 @@ print(f"Halving: {halving_result.best_score:.4f} (32 initial candidates)")
 
 ## Bring your own searcher
 
-eksperiment doesn't lock you into specific searchers. Any object that
-implements `fit(X, y)` and exposes `best_params_`, `best_score_`, and
-`best_estimator_` works.
+eksperiment doesn't lock you into specific searchers. Any object that conforms to
+the Searcher protocol (structural typing, no inheritance required) and exposes
+`fit(X, y)`, `best_params_`, `best_score_`, and `best_estimator_` works.
 
 ```python
 from dataclasses import dataclass

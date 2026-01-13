@@ -46,7 +46,7 @@ Before explaining what something does, explain what problem it solves. The
 reader needs motivation before mechanics.
 
 **Bad:**
-```markdown
+````markdown
 ## Grid Search
 
 Grid search evaluates all combinations of parameter values.
@@ -54,10 +54,10 @@ Grid search evaluates all combinations of parameter values.
 ```python
 GridSearchConfig(param_grid={"model__C": [0.1, 1.0, 10.0]})
 ```
-```
+````
 
 **Good:**
-```markdown
+````markdown
 ## The Problem: Finding Good Hyperparameters
 
 Most models have hyperparameters—settings that control learning but aren't
@@ -72,7 +72,7 @@ parameter values you specify.
 ```python
 GridSearchConfig(param_grid={"model__C": [0.1, 1.0, 10.0]})
 ```
-```
+````
 
 ### 3. Use Concept Boxes for Theory
 
@@ -96,14 +96,14 @@ After code blocks, explain what the code did. Don't assume the reader
 understood everything from the code alone.
 
 **Bad:**
-```markdown
+````markdown
 ```python
 result = experiment.cross_validate(X, y, cv=5)
 ```
-```
+````
 
 **Good:**
-```markdown
+````markdown
 ```python
 result = experiment.cross_validate(X, y, cv=5)
 ```
@@ -114,7 +114,7 @@ result = experiment.cross_validate(X, y, cv=5)
 2. Trains on 4 folds, evaluates on 1, rotating through all combinations
 3. Returns mean and std of all metrics across folds
 4. Logs each fold's results to the configured logger
-```
+````
 
 ### 5. Provide Decision Guides
 
@@ -253,20 +253,28 @@ build fails. This is non-negotiable.
 
 ### Use Continuation Blocks
 
-For multi-part examples, use `python continuation` to indicate code that
-continues from the previous block:
+For multi-part examples, use the Superfences format with
+`{.python continuation}` to indicate code that continues from the previous
+block:
 
-```markdown
 ```python
-from eksperiment import Experiment
+import numpy as np
+from sklearn.dummy import DummyClassifier
+from sklearn.pipeline import Pipeline
+
+from eksperiment.experiment import Experiment
+
+X = np.zeros((10, 2))
+y = np.zeros(10)
+pipeline = Pipeline([("model", DummyClassifier(strategy="most_frequent"))])
+scorers = {"accuracy": "accuracy"}
 
 experiment = Experiment(pipeline=pipeline, scorers=scorers)
 ```
 
-```python continuation
+```{.python continuation}
 result = experiment.fit(X, y, run_name="fit")
 print(result.metrics)
-```
 ```
 
 ### Include Imports
@@ -275,16 +283,20 @@ Always show imports. Don't assume the reader knows which module a class
 comes from:
 
 **Bad:**
+````markdown
 ```python
 result = experiment.search(GridSearchConfig(...), X, y)
 ```
+````
 
 **Good:**
+````markdown
 ```python
 from eksperiment.search import GridSearchConfig
 
 result = experiment.search(GridSearchConfig(...), X, y)
 ```
+````
 
 ### Use Real Datasets
 
@@ -292,6 +304,8 @@ Prefer sklearn's built-in datasets (`load_iris`, `load_breast_cancer`) for
 reproducibility. When creating synthetic data, always set `random_state`:
 
 ```python
+import numpy as np
+
 rng = np.random.default_rng(42)
 X = rng.normal(0, 1, size=(100, 5))
 ```
