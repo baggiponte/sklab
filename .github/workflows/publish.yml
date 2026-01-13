@@ -6,26 +6,34 @@ on:
       - "v*"
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5 # zizmor: ignore[unpinned-uses]
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # zizmor: ignore[unpinned-uses]
         with:
           python-version: "3.11"
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v7 # zizmor: ignore[unpinned-uses]
+        with:
+          enable-cache: false
 
       - name: Build distributions
         run: uv build --no-sources
 
       - name: Upload distributions
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v5 # zizmor: ignore[unpinned-uses]
         with:
           name: python-package-distributions
           path: dist/
@@ -41,18 +49,20 @@ jobs:
       url: https://pypi.org/project/eksperiment/
     steps:
       - name: Download distributions
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v5 # zizmor: ignore[unpinned-uses]
         with:
           name: python-package-distributions
           path: dist/
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # zizmor: ignore[unpinned-uses]
         with:
           python-version: "3.11"
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v7 # zizmor: ignore[unpinned-uses]
+        with:
+          enable-cache: false
 
       - name: Publish to PyPI
         run: uv publish
