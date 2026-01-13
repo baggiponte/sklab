@@ -89,7 +89,6 @@ class Experiment:
         ) as run:
             estimator.fit(X, y)
             run.log_model(estimator, name="model")
-            run.finish()
         self._fitted_estimator = estimator
         return FitResult(estimator=estimator, metrics={}, params=merged_params)
 
@@ -110,7 +109,6 @@ class Experiment:
             tags=self.tags,
         ) as run:
             run.log_metrics(metrics)
-            run.finish()
         return EvalResult(metrics=metrics)
 
     def cross_validate(
@@ -147,7 +145,6 @@ class Experiment:
             run.log_metrics(metrics)
             if final_estimator is not None:
                 run.log_model(final_estimator, name="model")
-            run.finish()
         if final_estimator is not None:
             self._fitted_estimator = final_estimator
         return CVResult(
@@ -190,7 +187,6 @@ class Experiment:
             best_estimator = getattr(searcher, "best_estimator_", None)
             if best_estimator is not None:
                 run.log_model(best_estimator, name="model")
-            run.finish()
         if best_estimator is not None:
             self._fitted_estimator = best_estimator
         return SearchResult(

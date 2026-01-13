@@ -1,6 +1,7 @@
-"""Logger protocols used by experiment runs."""
+"""Logger protocol used by experiment runs."""
 
 from collections.abc import Mapping
+from contextlib import AbstractContextManager, contextmanager
 from typing import Any, Protocol, Self, runtime_checkable
 
 Metrics = Mapping[str, float]
@@ -9,12 +10,24 @@ Tags = Mapping[str, str]
 
 
 @runtime_checkable
-class RunProtocol(Protocol):
-    """Minimal run handle for experiment logging."""
+class LoggerProtocol(Protocol):
+    """Context-managed logger for experiment tracking.
 
-    def __enter__(self) -> Self: ...
+    The logger itself provides logging methods. `start_run()` is a context
+    manager that yields `self`, so usage is:
 
-    def __exit__(self, exc_type, exc, tb) -> bool | None: ...
+        with logger.start_run(name="exp-1") as run:
+            run.log_params({"lr": 0.01})
+            run.log_metrics({"accuracy": 0.95})
+    """
+
+    def start_run(
+        self,
+        name: str | None = None,
+        config: Params | None = None,
+        tags: Tags | None = None,
+        nested: bool = False,
+    ) -> AbstractContextManager[Self]: ...
 
     def log_params(self, params: Params) -> None: ...
 
@@ -25,18 +38,3 @@ class RunProtocol(Protocol):
     def log_artifact(self, path: str, name: str | None = None) -> None: ...
 
     def log_model(self, model: Any, name: str | None = None) -> None: ...
-
-    def finish(self, status: str = "success") -> None: ...
-
-
-@runtime_checkable
-class LoggerProtocol(Protocol):
-    """Factory for context-managed logging runs."""
-
-    def start_run(
-        self,
-        name: str | None = None,
-        config: Params | None = None,
-        tags: Tags | None = None,
-        nested: bool = False,
-    ) -> RunProtocol: ...

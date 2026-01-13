@@ -38,11 +38,11 @@ automatically when you provide a logger:
 
 ```
 experiment.fit(X, y)
-    └── logger.start_run()
-        └── log_params(pipeline params)
-        └── log_metrics(training metrics)
-        └── log_model(fitted pipeline) [if enabled]
-        └── finish()
+    └── with logger.start_run() as run:
+            └── run.log_params(pipeline params)
+            └── run.log_metrics(training metrics)
+            └── run.log_model(fitted pipeline) [if enabled]
+        └── (cleanup on context exit)
 ```
 
 Without a logger (the default), nothing is logged. With a logger, everything
@@ -200,21 +200,26 @@ Loggers are simple to build. Implement the protocol and you can log to any
 backend—databases, cloud storage, custom dashboards.
 
 ```python
+from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
 
-from sklab.adapters.interfaces import LoggerProtocol, RunProtocol
-
 
 @dataclass
-class PrintRun:
-    """A run that prints everything to stdout."""
+class PrintLogger:
+    """A logger that prints everything to stdout."""
 
-    def __enter__(self) -> "PrintRun":
-        return self
-
-    def __exit__(self, exc_type, exc, tb) -> bool | None:
-        return None
+    @contextmanager
+    def start_run(self, name=None, config=None, tags=None, nested=False):
+        print("start_run", name)
+        if config:
+            self.log_params(config)
+        if tags:
+            self.set_tags(tags)
+        try:
+            yield self
+        finally:
+            print("end_run")
 
     def log_params(self, params) -> None:
         print("params", params)
@@ -230,31 +235,14 @@ class PrintRun:
 
     def log_model(self, model: Any, name: str | None = None) -> None:
         print("model", name)
-
-    def finish(self, status: str = "success") -> None:
-        print("finish", status)
-
-
-@dataclass
-class PrintLogger:
-    """A logger that uses PrintRun for all runs."""
-
-    def start_run(
-        self, name=None, config=None, tags=None, nested=False
-    ) -> PrintRun:
-        run = PrintRun()
-        if config:
-            run.log_params(config)
-        if tags:
-            run.set_tags(tags)
-        return run
 ```
 
 > **Concept: The Logger Protocol**
 >
 > sklab uses structural typing (protocols) rather than inheritance.
-> Any object with `start_run()` that returns an object with `log_params()`,
-> `log_metrics()`, etc. is a valid logger.
+> A logger needs `start_run()` as a context manager that yields an object
+> with `log_params()`, `log_metrics()`, etc. The simplest approach is
+> `start_run()` yielding `self`.
 >
 > **Why it matters:** You don't need to inherit from a base class. Just
 > implement the methods and it works.

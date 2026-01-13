@@ -3,29 +3,34 @@
 Sklab loggers are defined by a small protocol. This keeps the core API
 backend-agnostic while letting you integrate any tracker.
 
-## Protocols
+## Protocol
 
-- `LoggerProtocol.start_run(...) -> RunProtocol`
-- `RunProtocol` is a context manager with methods for params, metrics, tags,
-  artifacts, model, and finish.
-- These are protocols (structural typing), so you do **not** need to inherit
-  from them to be compatible.
+- `LoggerProtocol.start_run(...)` is a context manager that yields `self`
+- The logger provides methods for params, metrics, tags, artifacts, and model
+- This is a protocol (structural typing), so you do **not** need to inherit
+  from it to be compatible
 
 ## Minimal implementation
 
 ```python
+from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
 
-from sklab.adapters.interfaces import LoggerProtocol, RunProtocol
 
 @dataclass
-class ConsoleRun:
-    def __enter__(self) -> "ConsoleRun":
-        return self
-
-    def __exit__(self, exc_type, exc, tb) -> bool | None:
-        return None
+class ConsoleLogger:
+    @contextmanager
+    def start_run(self, name=None, config=None, tags=None, nested=False):
+        print("start_run", name)
+        if config:
+            self.log_params(config)
+        if tags:
+            self.set_tags(tags)
+        try:
+            yield self
+        finally:
+            print("end_run")
 
     def log_params(self, params) -> None:
         print("params", params)
@@ -41,24 +46,10 @@ class ConsoleRun:
 
     def log_model(self, model: Any, name: str | None = None) -> None:
         print("model", name)
-
-    def finish(self, status: str = "success") -> None:
-        print("finish", status)
-
-
-@dataclass
-class ConsoleLogger:
-    def start_run(self, name=None, config=None, tags=None, nested=False) -> ConsoleRun:
-        run = ConsoleRun()
-        if config:
-            run.log_params(config)
-        if tags:
-            run.set_tags(tags)
-        return run
 ```
 
 ## Best practices
 
 - Keep logging I/O light; avoid blocking in `log_metrics`.
 - Log params once at run start, and metrics at evaluation time.
-- Use `finish(status="failed")` if an exception bubbles up.
+- Use the context manager's `finally` block for cleanup on errors.

@@ -276,7 +276,7 @@ into the specific API of an external tool.
 - `MLflowLogger` — Logs to MLflow tracking server
 - `WandbLogger` — Logs to Weights & Biases
 
-**Custom adapters:** Implement `LoggerProtocol` and `RunProtocol`. See
+**Custom loggers:** Implement `LoggerProtocol`. See
 [Logger Plugins](developer/logging-plugins.md) for details.
 
 ---

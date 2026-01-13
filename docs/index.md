@@ -57,6 +57,7 @@ print("best:", grid.best_params_)
 # Log somewhere (MLflow? W&B? CSV?)
 mlflow.log_metric("accuracy", acc)
 mlflow.log_params(grid.best_params_)
+mlflow.end_run()  # Don't forget to clean up!
 ```
 
 Each operation has a different API. Logging is tightly coupled to a specific

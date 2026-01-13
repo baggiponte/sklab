@@ -1,44 +1,34 @@
+"""No-op logger that drops all logging calls."""
+
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
 
 
 @dataclass
-class NoOpRun:
-    """Run adapter that drops logging calls.
+class NoOpLogger:
+    """Logger that drops all logging calls.
 
-    Useful as the default run when no external logging backend is configured.
+    Useful as the default logger when no external tracking backend is configured.
     """
 
-    def __enter__(self) -> NoOpRun:
-        return self
-
-    def __exit__(self, exc_type, exc, tb) -> bool | None:
-        return None
+    @contextmanager
+    def start_run(self, name=None, config=None, tags=None, nested=False):
+        yield self
 
     def log_params(self, params) -> None:
-        return None
+        pass
 
     def log_metrics(self, metrics, step: int | None = None) -> None:
-        return None
+        pass
 
     def set_tags(self, tags) -> None:
-        return None
+        pass
 
     def log_artifact(self, path: str, name: str | None = None) -> None:
-        return None
+        pass
 
     def log_model(self, model: Any, name: str | None = None) -> None:
-        return None
-
-    def finish(self, status: str = "success") -> None:
-        return None
-
-
-@dataclass
-class NoOpLogger:
-    """Logger adapter that produces no-op runs."""
-
-    def start_run(self, name=None, config=None, tags=None, nested=False) -> NoOpRun:
-        return NoOpRun()
+        pass
