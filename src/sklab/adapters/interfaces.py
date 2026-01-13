@@ -1,12 +1,14 @@
 """Logger protocols used by experiment runs."""
 
-from typing import Any, Mapping, Protocol, Self
+from collections.abc import Mapping
+from typing import Any, Protocol, Self, runtime_checkable
 
 Metrics = Mapping[str, float]
 Params = Mapping[str, Any]
 Tags = Mapping[str, str]
 
 
+@runtime_checkable
 class RunProtocol(Protocol):
     """Minimal run handle for experiment logging."""
 
@@ -27,6 +29,7 @@ class RunProtocol(Protocol):
     def finish(self, status: str = "success") -> None: ...
 
 
+@runtime_checkable
 class LoggerProtocol(Protocol):
     """Factory for context-managed logging runs."""
 
