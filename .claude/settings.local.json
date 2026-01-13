@@ -3,7 +3,10 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:news.ycombinator.com)",
-      "WebFetch(domain:inria.github.io)"
+      "WebFetch(domain:inria.github.io)",
+      "Bash(uv run:*)",
+      "Bash(uv add:*)",
+      "Bash(uv sync:*)"
     ]
   }
 }
