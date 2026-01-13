@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from eksperiment.logging.adapters import MLflowLogger, NoOpLogger, WandbLogger
+from sklab.logging.adapters import MLflowLogger, NoOpLogger, WandbLogger
 
 
 def test_noop_logger_run_context_and_methods() -> None:

@@ -1,31 +1,31 @@
-# eksperiment.logging.adapters
+# sklab.logging.adapters
 
-::: eksperiment.logging.adapters.NoOpLogger
+::: sklab.logging.adapters.NoOpLogger
     options:
       show_root_heading: true
       show_object_full_path: false
 
-::: eksperiment.logging.adapters.NoOpRun
+::: sklab.logging.adapters.NoOpRun
     options:
       show_root_heading: true
       show_object_full_path: false
 
-::: eksperiment.logging.adapters.MLflowLogger
+::: sklab.logging.adapters.MLflowLogger
     options:
       show_root_heading: true
       show_object_full_path: false
 
-::: eksperiment.logging.adapters.MLflowRunAdapter
+::: sklab.logging.adapters.MLflowRunAdapter
     options:
       show_root_heading: true
       show_object_full_path: false
 
-::: eksperiment.logging.adapters.WandbLogger
+::: sklab.logging.adapters.WandbLogger
     options:
       show_root_heading: true
       show_object_full_path: false
 
-::: eksperiment.logging.adapters.WandbRunAdapter
+::: sklab.logging.adapters.WandbRunAdapter
     options:
       show_root_heading: true
       show_object_full_path: false

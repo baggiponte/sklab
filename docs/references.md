@@ -1,7 +1,7 @@
 # References
 
 A curated list of papers, documentation, and resources referenced throughout
-the eksperiment documentation. Organized by topic for easy browsing.
+the sklab documentation. Organized by topic for easy browsing.
 
 ---
 
@@ -161,14 +161,14 @@ overfitting, and evaluation errors.
 
 ---
 
-## How to cite eksperiment
+## How to cite sklab
 
-If you use eksperiment in your research, please cite this repository:
+If you use sklab in your research, please cite this repository:
 
 ```bibtex
-@software{eksperiment,
-  title = {eksperiment: A lightweight experiment runner for sklearn pipelines},
-  url = {https://github.com/your-username/eksperiment},
+@software{sklab,
+  title = {sklab: A lightweight experiment runner for sklearn pipelines},
+  url = {https://github.com/your-username/sklab},
   year = {2024}
 }
 ```

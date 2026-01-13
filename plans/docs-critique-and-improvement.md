@@ -61,7 +61,7 @@ This is fine for API reference but makes tutorials feel like checklists rather t
 
 The same pipeline (StandardScaler + LogisticRegression on Iris) appears in almost every tutorial. This:
 - Makes tutorials feel copy-pasted
-- Doesn't demonstrate eksperiment's value across diverse problems
+- Doesn't demonstrate sklab's value across diverse problems
 - Misses opportunities to show real complexity
 
 #### 5. "Best Practices" Are Underjustified
@@ -90,7 +90,7 @@ This means:
 
 1. **Don't assume prior knowledge** of ML concepts. A junior data scientist should be able to follow along.
 2. **Don't write textbooks**. Provide enough context to use the feature correctly, then link to authoritative sources.
-3. **Always connect theory to eksperiment**. Don't explain cross-validation in the abstract—explain it in terms of what `experiment.cross_validate()` is doing.
+3. **Always connect theory to sklab**. Don't explain cross-validation in the abstract—explain it in terms of what `experiment.cross_validate()` is doing.
 
 ### Depth Guidelines
 
@@ -117,7 +117,7 @@ Introduce collapsible or highlighted "Concept" sections:
 > The scaler "sees" test data statistics, giving artificially optimistic
 > results.
 >
-> eksperiment prevents this by keeping preprocessing inside the pipeline.
+> sklab prevents this by keeping preprocessing inside the pipeline.
 > sklearn's cross-validation fits the scaler separately on each fold's
 > training data.
 >
@@ -194,7 +194,7 @@ Each tutorial should follow this structure:
 **What you'll learn**:
 - What data leakage is and why it destroys model validity
 - How sklearn pipelines prevent leakage automatically
-- Why eksperiment enforces pipeline-first design
+- Why sklab enforces pipeline-first design
 
 ## The Problem: Data Leakage
 
@@ -227,12 +227,12 @@ data. The scaler never sees validation data.
 
 [Code showing pipeline-based approach]
 
-## How eksperiment Enforces This
+## How sklab Enforces This
 
-eksperiment requires a Pipeline object. This isn't arbitrary—it's a
+sklab requires a Pipeline object. This isn't arbitrary—it's a
 forcing function for correct experimental methodology.
 
-[Code showing eksperiment usage]
+[Code showing sklab usage]
 ```
 
 ### Tutorial: Hyperparameter Search (REWRITE)
@@ -322,7 +322,7 @@ models good and bad parameter regions separately.
 
 ### Recommended Tone
 
-1. **Direct and confident**: "eksperiment does X because Y"
+1. **Direct and confident**: "sklab does X because Y"
 2. **Second person**: "You'll notice that..." "When you run this..."
 3. **Problem-first**: Start with the pain, then the solution
 4. **Honest about tradeoffs**: Don't oversell; acknowledge limitations
@@ -330,12 +330,12 @@ models good and bad parameter regions separately.
 ### Examples
 
 **Before**:
-> Eksperiment can search hyperparameters using native sklearn searchers.
+> Sklab can search hyperparameters using native sklearn searchers.
 
 **After**:
 > You've built a pipeline and it works. But is it *good*? Hyperparameter
 > search systematically tries different configurations to find better
-> ones. eksperiment wraps sklearn's searchers to keep your code clean
+> ones. sklab wraps sklearn's searchers to keep your code clean
 > and your results logged.
 
 **Before**:
@@ -351,7 +351,7 @@ models good and bad parameter regions separately.
 
 ## Part 6: Theory Deep-Dives for Search Algorithms
 
-These sections should be comprehensive because search is where eksperiment adds the most value over raw sklearn.
+These sections should be comprehensive because search is where sklab adds the most value over raw sklearn.
 
 ### Grid Search Theory Section
 
@@ -492,7 +492,7 @@ theoretical foundation of random search.
 
 ### Phase 1: Foundation (High Impact)
 
-1. **Rewrite index.md**: Add a "Why eksperiment?" section with concrete benefits
+1. **Rewrite index.md**: Add a "Why sklab?" section with concrete benefits
 2. **Create "Why Pipelines" tutorial**: Demonstrate leakage concretely
 3. **Expand glossary**: Add 2-3 sentences of explanation per term
 4. **Add concept boxes**: To existing tutorials for leakage, CV, etc.
@@ -522,18 +522,18 @@ When writing or reviewing a tutorial, verify:
 - [ ] **Inline commentary**: Do code comments explain *why*, not just *what*?
 - [ ] **Tradeoffs**: Are limitations and alternatives acknowledged?
 - [ ] **Further reading**: Are there links for deeper exploration?
-- [ ] **Connection to eksperiment**: Does the tutorial show eksperiment's value?
+- [ ] **Connection to sklab**: Does the tutorial show sklab's value?
 
 ---
 
 ## Conclusion
 
-Your documentation has a solid foundation—runnable examples, consistent structure, and good coverage of features. The main gap is the **explanatory layer**: helping users understand not just how to use eksperiment, but why its patterns lead to better experiments.
+Your documentation has a solid foundation—runnable examples, consistent structure, and good coverage of features. The main gap is the **explanatory layer**: helping users understand not just how to use sklab, but why its patterns lead to better experiments.
 
 The recommendations above prioritize:
 1. Teaching concepts at point of use
-2. Providing deep coverage of search algorithms (eksperiment's differentiator)
-3. Linking out for theory that's tangential to eksperiment itself
+2. Providing deep coverage of search algorithms (sklab's differentiator)
+3. Linking out for theory that's tangential to sklab itself
 4. Maintaining a confident, problem-first tone
 
-This approach keeps tutorials focused on eksperiment while ensuring users can follow along regardless of their ML background.
+This approach keeps tutorials focused on sklab while ensuring users can follow along regardless of their ML background.

@@ -8,7 +8,7 @@ from typing import Any, Callable, Mapping, Sequence
 from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
 
-from eksperiment.search import Scorer, Scorers
+from sklab.search import Scorer, Scorers
 
 
 @dataclass(slots=True)

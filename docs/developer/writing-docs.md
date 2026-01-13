@@ -1,6 +1,6 @@
 # Writing Documentation
 
-This guide defines how we write documentation for eksperiment. Follow it
+This guide defines how we write documentation for sklab. Follow it
 religiously. Good docs are not optional—they're part of the product.
 
 ---
@@ -87,7 +87,7 @@ the idea in 2-4 sentences:
 > on all data before splitting. The scaler "sees" test set statistics,
 > giving artificially optimistic results.
 >
-> eksperiment prevents this by requiring pipelines.
+> sklab prevents this by requiring pipelines.
 ```
 
 ### 4. Show "What Just Happened"
@@ -219,7 +219,7 @@ Every tutorial follows this template:
 
 ### Do
 
-- **Be direct:** "eksperiment requires pipelines" not "you might want to consider using pipelines"
+- **Be direct:** "sklab requires pipelines" not "you might want to consider using pipelines"
 - **Be confident:** "This prevents leakage" not "This can help prevent leakage"
 - **Use second person:** "You'll notice that..." not "One notices that..."
 - **Acknowledge tradeoffs:** "TPE may miss complex interactions" not just praise
@@ -227,7 +227,7 @@ Every tutorial follows this template:
 ### Don't
 
 - **Don't hedge:** Avoid "might", "could", "perhaps" when stating facts
-- **Don't oversell:** Don't claim eksperiment is "revolutionary" or "game-changing"
+- **Don't oversell:** Don't claim sklab is "revolutionary" or "game-changing"
 - **Don't use jargon without explanation:** Define terms at first use
 - **Don't be cute:** No jokes, puns, or cleverness that obscures meaning
 
@@ -262,7 +262,7 @@ import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.pipeline import Pipeline
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X = np.zeros((10, 2))
 y = np.zeros(10)
@@ -292,7 +292,7 @@ result = experiment.search(GridSearchConfig(...), X, y)
 **Good:**
 ````markdown
 ```python
-from eksperiment.search import GridSearchConfig
+from sklab.search import GridSearchConfig
 
 result = experiment.search(GridSearchConfig(...), X, y)
 ```

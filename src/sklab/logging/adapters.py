@@ -61,7 +61,7 @@ def _require_wandb() -> Any:
         import wandb  # type: ignore[import-not-found]
     except ModuleNotFoundError as exc:
         raise ModuleNotFoundError(
-            "wandb is not installed. Install eksperiment with the 'wandb' extra."
+            "wandb is not installed. Install sklab with the 'wandb' extra."
         ) from exc
     return wandb
 

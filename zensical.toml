@@ -1,5 +1,5 @@
 [project]
-site_name = "Eksperiment"
+site_name = "Sklab"
 nav = [
   {"Home" = "index.md"},
   {"Glossary" = "glossary.md"},
@@ -21,11 +21,11 @@ nav = [
     "developer/search-plugins.md",
   ]},
   {"API Reference" = [
-    "api/eksperiment/experiment.md",
-    "api/eksperiment/search.md",
-    "api/eksperiment/optuna.md",
-    "api/eksperiment/logging/interfaces.md",
-    "api/eksperiment/logging/adapters.md",
+    "api/sklab/experiment.md",
+    "api/sklab/search.md",
+    "api/sklab/optuna.md",
+    "api/sklab/logging/interfaces.md",
+    "api/sklab/logging/adapters.md",
   ]},
 ]
 

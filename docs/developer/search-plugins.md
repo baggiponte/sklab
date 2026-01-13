@@ -1,6 +1,6 @@
 # Search plugins
 
-Eksperiment’s `Experiment.search()` accepts either a searcher object or a config
+Sklab’s `Experiment.search()` accepts either a searcher object or a config
 object that can create one. This gives you a simple path and a power-user path.
 
 ## Protocols

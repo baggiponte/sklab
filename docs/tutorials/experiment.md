@@ -4,13 +4,13 @@
 
 - The four core operations: `fit`, `evaluate`, `cross_validate`, `search`
 - When to use each operation
-- How eksperiment standardizes the ML workflow
+- How sklab standardizes the ML workflow
 
 **Time to complete:** 5 minutes.
 
 ## The Experiment class at a glance
 
-The `Experiment` class is the heart of eksperiment. It wraps a sklearn pipeline
+The `Experiment` class is the heart of sklab. It wraps a sklearn pipeline
 with consistent scoring, logging, and methods for the full ML lifecycle:
 
 | Method | Purpose | When to use |
@@ -33,7 +33,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -126,7 +126,7 @@ selection.
 
 ### Cross-validation variants
 
-eksperiment accepts any sklearn splitter:
+sklab accepts any sklearn splitter:
 
 ```{.python continuation}
 from sklearn.model_selection import StratifiedKFold, TimeSeriesSplit
@@ -176,7 +176,7 @@ print(f"Time series CV: {ts_result.metrics['cv/accuracy_mean']:.4f}")
 Find better hyperparameters by searching over a parameter space.
 
 ```{.python continuation}
-from eksperiment.search import GridSearchConfig
+from sklab.search import GridSearchConfig
 
 search_result = experiment.search(
     GridSearchConfig(param_grid={"model__C": [0.1, 1.0, 10.0]}),
@@ -198,11 +198,11 @@ print(f"Best score: {search_result.best_score:.4f}")
 
 ### Search options
 
-eksperiment supports multiple search strategies:
+sklab supports multiple search strategies:
 
 ```{.python continuation}
 # Grid search via config
-from eksperiment.search import GridSearchConfig
+from sklab.search import GridSearchConfig
 
 grid_result = experiment.search(
     GridSearchConfig(param_grid={"model__C": [0.1, 1.0, 10.0]}),
@@ -241,7 +241,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -280,8 +280,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.search import GridSearchConfig
+from sklab.experiment import Experiment
+from sklab.search import GridSearchConfig
 
 # 1. Load and split data
 X, y = load_breast_cancer(return_X_y=True)

@@ -112,7 +112,7 @@ converges quickly or slowly.
 
 ---
 
-## Using pruners with eksperiment
+## Using pruners with sklab
 
 ### With OptunaConfig and study_factory
 
@@ -127,8 +127,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.optuna import OptunaConfig
+from sklab.experiment import Experiment
+from sklab.optuna import OptunaConfig
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -197,7 +197,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -343,8 +343,8 @@ from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.optuna import OptunaConfig
+from sklab.experiment import Experiment
+from sklab.optuna import OptunaConfig
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -407,8 +407,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.optuna import OptunaConfig
+from sklab.experiment import Experiment
+from sklab.optuna import OptunaConfig
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 

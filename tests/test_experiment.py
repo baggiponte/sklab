@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 
 def _make_pipeline() -> Pipeline:

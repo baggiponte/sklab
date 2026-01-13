@@ -3,7 +3,7 @@
 **What you'll learn:**
 
 - Why experiment tracking matters for reproducibility
-- How eksperiment's logging works with MLflow and W&B
+- How sklab's logging works with MLflow and W&B
 - When to use each logging backend
 - How to build custom loggers for other backends
 
@@ -26,12 +26,12 @@ Experiment tracking solves this by automatically logging:
 - **Artifacts:** Models, plots, predictions
 - **Metadata:** Timestamps, run names, tags
 
-eksperiment integrates with logging backends through **adapters**—pluggable
+sklab integrates with logging backends through **adapters**—pluggable
 components that translate experiment events into backend-specific API calls.
 
 ---
 
-## How eksperiment logging works
+## How sklab logging works
 
 Every `Experiment` method (`fit`, `evaluate`, `cross_validate`, `search`) logs
 automatically when you provide a logger:
@@ -52,7 +52,7 @@ is captured consistently across all operations.
 
 ## Default: No-op logger
 
-If you don't specify a logger, eksperiment uses a no-op that does nothing.
+If you don't specify a logger, sklab uses a no-op that does nothing.
 This is useful for development and testing when you don't need tracking.
 
 ```python
@@ -61,7 +61,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -96,8 +96,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.logging.adapters import WandbLogger
+from sklab.experiment import Experiment
+from sklab.logging.adapters import WandbLogger
 
 X, y = load_iris(return_X_y=True)
 
@@ -107,7 +107,7 @@ experiment = Experiment(
         ("model", LogisticRegression(max_iter=200)),
     ]),
     scorers={"accuracy": "accuracy"},
-    logger=WandbLogger(project="eksperiment-demo"),
+    logger=WandbLogger(project="sklab-demo"),
     name="wandb-demo",
 )
 
@@ -142,8 +142,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.logging.adapters import MLflowLogger
+from sklab.experiment import Experiment
+from sklab.logging.adapters import MLflowLogger
 
 X, y = load_iris(return_X_y=True)
 
@@ -153,7 +153,7 @@ experiment = Experiment(
         ("model", LogisticRegression(max_iter=200)),
     ]),
     scorers={"accuracy": "accuracy"},
-    logger=MLflowLogger(experiment_name="eksperiment-demo"),
+    logger=MLflowLogger(experiment_name="sklab-demo"),
     name="mlflow-demo",
 )
 
@@ -203,7 +203,7 @@ backend—databases, cloud storage, custom dashboards.
 from dataclasses import dataclass
 from typing import Any
 
-from eksperiment.logging.interfaces import LoggerProtocol, RunProtocol
+from sklab.logging.interfaces import LoggerProtocol, RunProtocol
 
 
 @dataclass
@@ -252,7 +252,7 @@ class PrintLogger:
 
 > **Concept: The Logger Protocol**
 >
-> eksperiment uses structural typing (protocols) rather than inheritance.
+> sklab uses structural typing (protocols) rather than inheritance.
 > Any object with `start_run()` that returns an object with `log_params()`,
 > `log_metrics()`, etc. is a valid logger.
 >
@@ -267,7 +267,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -288,7 +288,7 @@ result = experiment.fit(X, y, run_name="custom-fit")
 
 ## What gets logged
 
-Every eksperiment operation logs specific data:
+Every sklab operation logs specific data:
 
 | Method | Logged Data |
 |--------|-------------|

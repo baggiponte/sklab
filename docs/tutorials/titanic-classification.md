@@ -146,7 +146,7 @@ preprocess = ColumnTransformer(
 ```{.python continuation}
 from sklearn.linear_model import LogisticRegression
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 pipeline = Pipeline([
     ("prep", preprocess),
@@ -214,7 +214,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 # 1. Load data
 titanic = fetch_openml(data_id=40945, as_frame=True)

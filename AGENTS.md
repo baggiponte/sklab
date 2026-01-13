@@ -2,7 +2,7 @@
 
 ## What This Project Is
 
-Eksperiment is an experiment runner for sklearn pipelines. One thing, done well: **run experiments**.
+Sklab is an experiment runner for sklearn pipelines. One thing, done well: **run experiments**.
 
 It removes the tedious parts of ML experimentation so you can iterate faster.
 
@@ -121,7 +121,7 @@ Documentation is a product. We ship it like one.
 > **Concept: Data Leakage**
 >
 > Data leakage occurs when information from outside the training set
-> influences model training. eksperiment prevents this by requiring pipelines.
+> influences model training. sklab prevents this by requiring pipelines.
 ```
 
 **Show "what just happened."** After code blocks, explain what the code did.
@@ -142,7 +142,7 @@ Documentation is a product. We ship it like one.
 
 ### Tone
 
-- **Be direct:** "eksperiment requires pipelines" not "you might want to consider..."
+- **Be direct:** "sklab requires pipelines" not "you might want to consider..."
 - **Be confident:** "This prevents leakage" not "This can help prevent..."
 - **Use second person:** "You'll notice..." not "One notices..."
 - **Acknowledge tradeoffs:** Don't just praise; note limitations

@@ -1,13 +1,13 @@
 ---
 title: Feature Vision
-description: Essential feature set for eksperiment based on real data scientist needs
+description: Essential feature set for sklab based on real data scientist needs
 date: 2026-01-12
 ---
 
-# Feature Vision: What Eksperiment Should Be
+# Feature Vision: What Sklab Should Be
 
 ## Goal
-Define the essential feature set for eksperiment based on real data scientist needs. Strip away bloat. Focus on what makes experimentation faster and less tedious.
+Define the essential feature set for sklab based on real data scientist needs. Strip away bloat. Focus on what makes experimentation faster and less tedious.
 
 ## References
 - `AGENTS.md`
@@ -28,7 +28,7 @@ Data scientists waste time on:
 
 > "The faster you iterate, the better, because you try more things."
 
-Eksperiment removes friction between "I have a pipeline" and "I understand what happened."
+Sklab removes friction between "I have a pipeline" and "I understand what happened."
 
 ## Design
 

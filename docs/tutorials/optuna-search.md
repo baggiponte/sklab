@@ -5,7 +5,7 @@
 - Why Bayesian optimization outperforms random search for expensive models
 - How Optuna's TPE sampler works at a conceptual level
 - When to choose Optuna over simpler search strategies
-- How to use OptunaConfig and custom searchers with eksperiment
+- How to use OptunaConfig and custom searchers with sklab
 
 **Prerequisites:** [Hyperparameter Search](sklearn-search.md), understanding of cross-validation.
 
@@ -83,7 +83,7 @@ have relatively simple structure.
 
 ## Quick Optuna search with OptunaConfig
 
-The easiest way to use Optuna with eksperiment is through `OptunaConfig`:
+The easiest way to use Optuna with sklab is through `OptunaConfig`:
 
 ```python
 import pytest
@@ -96,8 +96,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.optuna import OptunaConfig
+from sklab.experiment import Experiment
+from sklab.optuna import OptunaConfig
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -179,7 +179,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -291,8 +291,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import loguniform, randint
 
-from eksperiment.experiment import Experiment
-from eksperiment.optuna import OptunaConfig
+from sklab.experiment import Experiment
+from sklab.optuna import OptunaConfig
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -371,7 +371,7 @@ With enough trials, both methods find good solutions. The difference shows in
 
 - `OptunaConfig` uses the experiment's first scorer when `scoring` is not set.
 - If you pass multiple scorers, OptunaConfig optimizes the first one.
-- eksperiment only requires `fit()` and optionally `best_params_`, `best_score_`,
+- sklab only requires `fit()` and optionally `best_params_`, `best_score_`,
   `best_estimator_` attributes on custom searchers.
 
 ## Further reading

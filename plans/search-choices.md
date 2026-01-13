@@ -7,10 +7,10 @@ date: 2026-01-12
 # Search choices
 
 ## Goal
-Capture the search API choices for Eksperiment: sklearn-native searchers, a simple Optuna config, and a power-user escape hatch that keeps the core API backend-agnostic.
+Capture the search API choices for Sklab: sklearn-native searchers, a simple Optuna config, and a power-user escape hatch that keeps the core API backend-agnostic.
 
 ## References
-- `src/eksperiment/experiment.py` (Experiment.search contract)
+- `src/sklab/experiment.py` (Experiment.search contract)
 - `docs/tutorials/sklearn-search.md` (sklearn searcher usage)
 
 ## Design
@@ -22,8 +22,8 @@ Capture the search API choices for Eksperiment: sklearn-native searchers, a simp
 
 ### Option A: sklearn primitives (lowest friction)
 - Users pass `GridSearchCV`, `RandomizedSearchCV`, or halving searchers directly.
-- Eksperiment does not override `scoring`, `refit`, or `cv` on the searcher. Users configure those explicitly.
-- Eksperiment logs `best_params_`, `best_score_`, and `best_estimator_` when available.
+- Sklab does not override `scoring`, `refit`, or `cv` on the searcher. Users configure those explicitly.
+- Sklab logs `best_params_`, `best_score_`, and `best_estimator_` when available.
 
 ### Option B: OptunaConfig (simple, batteries-included)
 Provide a thin config that removes boilerplate without coupling core types to Optuna.
@@ -72,7 +72,7 @@ class SearcherProtocol:
 
 ### Recommendation
 - Keep Option A and Option C (already aligned with the current contract).
-- Add Option B as an optional adapter module (e.g., `eksperiment/optuna.py`) that implements `OptunaConfig`.
+- Add Option B as an optional adapter module (e.g., `sklab/optuna.py`) that implements `OptunaConfig`.
 - Document Option C as the escape hatch to preserve hackability.
 
 ## How to test

@@ -1,6 +1,6 @@
 # Logger plugins
 
-Eksperiment loggers are defined by a small protocol. This keeps the core API
+Sklab loggers are defined by a small protocol. This keeps the core API
 backend-agnostic while letting you integrate any tracker.
 
 ## Protocols
@@ -17,7 +17,7 @@ backend-agnostic while letting you integrate any tracker.
 from dataclasses import dataclass
 from typing import Any
 
-from eksperiment.logging.interfaces import LoggerProtocol, RunProtocol
+from sklab.logging.interfaces import LoggerProtocol, RunProtocol
 
 @dataclass
 class ConsoleRun:

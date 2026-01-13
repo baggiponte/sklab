@@ -1,6 +1,6 @@
 # Glossary
 
-A reference for the core concepts in eksperiment. Each term includes a brief
+A reference for the core concepts in sklab. Each term includes a brief
 definition and, where relevant, why it matters for experiment design.
 
 ---
@@ -22,8 +22,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.logging.adapters import NoOpLogger
+from sklab.experiment import Experiment
+from sklab.logging.adapters import NoOpLogger
 
 pipeline = Pipeline([
     ("scale", StandardScaler()),
@@ -81,14 +81,14 @@ model appears to perform well in development but fails in production because
 it was "cheating" during evaluation.
 
 **Prevention:** Keep all data-dependent preprocessing inside the pipeline.
-eksperiment enforces this by requiring a Pipeline object.
+sklab enforces this by requiring a Pipeline object.
 
 ---
 
 ## Scorer
 
 A metric definition passed to sklearn. Can be a string (e.g., `"accuracy"`) or
-a callable that takes `(y_true, y_pred)` and returns a float. eksperiment
+a callable that takes `(y_true, y_pred)` and returns a float. sklab
 accepts a mapping of names to scorers, and uses them consistently across all
 operations.
 
@@ -106,7 +106,7 @@ scorers = {
 
 **Note:** sklearn's regression metrics like MAE and RMSE are negated by
 convention (`neg_mean_absolute_error`). This allows sklearn to maximize scores
-uniformly. eksperiment follows this convention.
+uniformly. sklab follows this convention.
 
 ---
 
@@ -144,7 +144,7 @@ depth, learning rate.
 
 **Why it matters:** Default hyperparameters rarely give best performance.
 Search systematically explores the parameter space to find better
-configurations. eksperiment's `search()` method wraps various search strategies
+configurations. sklab's `search()` method wraps various search strategies
 with consistent logging.
 
 **Strategies:**
@@ -164,9 +164,9 @@ exposes `best_params_`, `best_score_`,
 and `best_estimator_` after fitting. Searchers encapsulate hyperparameter
 search logic.
 
-**Why it matters:** eksperiment is searcher-agnostic. You can use sklearn's
+**Why it matters:** sklab is searcher-agnostic. You can use sklearn's
 `GridSearchCV`, Optuna, or your own custom searcher. As long as it follows
-the protocol (no inheritance required), eksperiment will log results consistently.
+the protocol (no inheritance required), sklab will log results consistently.
 
 ```python
 from sklearn.datasets import load_iris
@@ -175,7 +175,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -205,11 +205,11 @@ common configurations while allowing full
 customization when needed.
 
 **Why it matters:** Configs keep the call site simple. Instead of constructing
-a complex searcher manually, you pass a config object and eksperiment handles
+a complex searcher manually, you pass a config object and sklab handles
 the rest.
 
 ```text
-from eksperiment.search import GridSearchConfig
+from sklab.search import GridSearchConfig
 
 result = experiment.search(
     GridSearchConfig(param_grid={"model__C": [0.1, 1.0, 10.0]}),
@@ -225,7 +225,7 @@ A backend-agnostic logger that creates runs. It conforms to `LoggerProtocol`
 and returns a run handle from `start_run(...)`.
 
 **Why it matters:** Different teams use different experiment tracking tools
-(MLflow, Weights & Biases, Neptune, custom databases). eksperiment's logger
+(MLflow, Weights & Biases, Neptune, custom databases). sklab's logger
 protocol lets you swap backends without changing modeling code. No inheritance
 is required because it uses protocols.
 
@@ -233,8 +233,8 @@ is required because it uses protocols.
 from sklearn.dummy import DummyClassifier
 from sklearn.pipeline import Pipeline
 
-from eksperiment.experiment import Experiment
-from eksperiment.logging.adapters import MLflowLogger, WandbLogger
+from sklab.experiment import Experiment
+from sklab.logging.adapters import MLflowLogger, WandbLogger
 
 pipeline = Pipeline([("model", DummyClassifier(strategy="most_frequent"))])
 scorers = {"accuracy": "accuracy"}
@@ -251,7 +251,7 @@ experiment = Experiment(
 ## Run
 
 A context-managed handle for logging params, metrics, tags, artifacts, and
-models. Runs are created by logger adapters and used internally by eksperiment
+models. Runs are created by logger adapters and used internally by sklab
 methods.
 
 **Why it matters:** Runs provide isolation and organization. Each call to
@@ -263,11 +263,11 @@ reproduce results.
 
 ## Adapter
 
-A thin wrapper that bridges eksperiment's logging protocols to an external
+A thin wrapper that bridges sklab's logging protocols to an external
 tool (MLflow, W&B, etc.) without coupling the core API to that SDK.
 
-**Why it matters:** Adapters let eksperiment stay lightweight while supporting
-multiple backends. Each adapter translates eksperiment's simple protocol calls
+**Why it matters:** Adapters let sklab stay lightweight while supporting
+multiple backends. Each adapter translates sklab's simple protocol calls
 into the specific API of an external tool.
 
 **Built-in adapters:**

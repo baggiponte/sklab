@@ -3,7 +3,7 @@
 ![Ruff Format](https://img.shields.io/badge/format-ruff-2f6feb)
 ![Ty](https://img.shields.io/badge/type%20check-ty-6e56cf)
 
-# Eksperiment
+# Sklab
 
 A zero-boilerplate experiment runner for sklearn pipelines. One thing, done well: **run experiments**.
 
@@ -12,7 +12,7 @@ A zero-boilerplate experiment runner for sklearn pipelines. One thing, done well
 ## What It Does
 
 ```python
-from eksperiment import Experiment
+from sklab import Experiment
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -48,7 +48,7 @@ Data scientists waste time on:
 - Copy-pasting matplotlib code for confusion matrices and ROC curves
 - Getting a single number from `cross_val_score` with no insight into fold variance
 
-Eksperiment removes this friction. Results include predictions, probabilities, and diagnostics automatically. Inject a logger once, everything gets tracked. No sprinkling `mlflow.log_*` through your code.
+Sklab removes this friction. Results include predictions, probabilities, and diagnostics automatically. Inject a logger once, everything gets tracked. No sprinkling `mlflow.log_*` through your code.
 
 ## Philosophy
 
@@ -64,12 +64,12 @@ Eksperiment removes this friction. Results include predictions, probabilities, a
 ## Install
 
 ```bash
-pip install eksperiment
+pip install sklab
 
 # With optional integrations
-pip install eksperiment[optuna]   # Optuna search
-pip install eksperiment[mlflow]   # MLflow logging
-pip install eksperiment[wandb]    # W&B logging
+pip install sklab[optuna]   # Optuna search
+pip install sklab[mlflow]   # MLflow logging
+pip install sklab[wandb]    # W&B logging
 ```
 
 ## Documentation

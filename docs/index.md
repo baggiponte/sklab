@@ -1,22 +1,22 @@
-# Eksperiment
+# Sklab
 
-Eksperiment is a lightweight experiment runner for sklearn pipelines. It keeps
+Sklab is a lightweight experiment runner for sklearn pipelines. It keeps
 modeling code focused on data and pipelines while standardizing the fit/evaluate
 loop, logging, and hyperparameter search workflows.
 
-## Why eksperiment?
+## Why sklab?
 
 Machine learning code tends to accumulate boilerplate: fitting models, computing
 metrics, logging results, running cross-validation, searching hyperparameters.
 Each project reinvents this wheel slightly differently, making code harder to
 review, test, and reproduce.
 
-eksperiment solves this by providing a thin, opinionated wrapper around sklearn
+sklab solves this by providing a thin, opinionated wrapper around sklearn
 that enforces good practices while staying out of your way.
 
 ### The problem it solves
 
-Consider a typical ML workflow without eksperiment:
+Consider a typical ML workflow without sklab:
 
 ```python
 # Optional: only run if mlflow is installed.
@@ -63,7 +63,7 @@ Each operation has a different API. Logging is tightly coupled to a specific
 backend. Metrics are computed ad-hoc. It's easy to forget a step or log
 inconsistently.
 
-### How eksperiment helps
+### How sklab helps
 
 ```python
 from sklearn.datasets import load_iris
@@ -72,9 +72,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.logging.adapters import NoOpLogger
-from eksperiment.search import GridSearchConfig
+from sklab.experiment import Experiment
+from sklab.logging.adapters import NoOpLogger
+from sklab.search import GridSearchConfig
 
 X, y = load_iris(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(
@@ -122,12 +122,12 @@ they're used consistently everywhere.
 **2. Backend-agnostic logging**
 
 Swap between MLflow, Weights & Biases, or no logging at all without changing
-your modeling code. eksperiment uses a simple protocol—write your own adapter
+your modeling code. sklab uses a simple protocol—write your own adapter
 in 20 lines if needed.
 
 **3. Pipeline-first design**
 
-eksperiment requires sklearn Pipelines, not raw estimators. This isn't
+sklab requires sklearn Pipelines, not raw estimators. This isn't
 arbitrary—pipelines prevent data leakage by keeping preprocessing inside the
 cross-validation loop. If you're not using pipelines, you're probably leaking.
 
@@ -139,7 +139,7 @@ configurations.
 
 **5. Testable tutorials**
 
-Because eksperiment tutorials are runnable Python, they double as integration
+Because sklab tutorials are runnable Python, they double as integration
 tests. Your documentation stays in sync with your code.
 
 ## Quick example
@@ -150,7 +150,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -176,18 +176,18 @@ print(f"CV accuracy: {cv_result.metrics['cv/accuracy_mean']:.3f}")
 
 ## What's next
 
-- [Tutorials](tutorials/experiment.md): Learn eksperiment step by step
+- [Tutorials](tutorials/experiment.md): Learn sklab step by step
 - [API Reference](api/index.md): Detailed method documentation
 - [Glossary](glossary.md): Core concepts explained
 
 ## Installation
 
 ```bash
-pip install eksperiment
+pip install sklab
 ```
 
 For Optuna support:
 
 ```bash
-pip install eksperiment[optuna]
+pip install sklab[optuna]
 ```

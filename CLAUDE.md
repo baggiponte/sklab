@@ -4,7 +4,7 @@ Quick reference for AI agents working on this codebase.
 
 ## Project in One Sentence
 
-Eksperiment is a zero-boilerplate experiment runner for sklearn pipelines. One thing, done well: **run experiments**. Automatically captures predictions, metrics, and diagnostics.
+Sklab is a zero-boilerplate experiment runner for sklearn pipelines. One thing, done well: **run experiments**. Automatically captures predictions, metrics, and diagnostics.
 
 ## The Four Methods
 
@@ -89,9 +89,9 @@ just docs      # Serve docs locally
 
 ## Key Files
 
-- `src/eksperiment/experiment.py` — Core Experiment class
-- `src/eksperiment/search.py` — Search configs (Grid, Random)
-- `src/eksperiment/optuna.py` — Optional Optuna integration
+- `src/sklab/experiment.py` — Core Experiment class
+- `src/sklab/search.py` — Search configs (Grid, Random)
+- `src/sklab/optuna.py` — Optional Optuna integration
 - `plans/feature-vision.md` — Product vision and feature scope
 
 ---
@@ -124,7 +124,7 @@ For theory, use blockquotes:
 > **Concept: Data Leakage**
 >
 > Data leakage occurs when information from outside the training set
-> influences model training. eksperiment prevents this by requiring pipelines.
+> influences model training. sklab prevents this by requiring pipelines.
 ```
 
 ### Tutorial Structure
@@ -159,7 +159,7 @@ For theory, use blockquotes:
 
 ### Tone
 
-- **Direct:** "eksperiment requires pipelines" not "you might want to consider..."
+- **Direct:** "sklab requires pipelines" not "you might want to consider..."
 - **Confident:** "This prevents leakage" not "This can help prevent..."
 - **Honest:** Note tradeoffs, don't just praise
 

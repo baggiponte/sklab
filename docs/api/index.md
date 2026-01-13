@@ -1,5 +1,5 @@
 # API Reference
 
-- `eksperiment.experiment.Experiment`
-- `eksperiment.logging.interfaces`
-- `eksperiment.logging.adapters`
+- `sklab.experiment.Experiment`
+- `sklab.logging.interfaces`
+- `sklab.logging.adapters`

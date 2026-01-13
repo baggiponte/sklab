@@ -2,7 +2,7 @@
 
 **What you'll learn:**
 
-- How to structure a classification experiment with eksperiment
+- How to structure a classification experiment with sklab
 - The importance of stratified splits for balanced evaluation
 - How to interpret holdout vs. training metrics
 
@@ -19,7 +19,7 @@ Every classification experiment follows the same pattern:
 4. **Fit** — Train on the training set
 5. **Evaluate** — Score on the holdout set
 
-eksperiment standardizes steps 3-5 while keeping your code focused on the
+sklab standardizes steps 3-5 while keeping your code focused on the
 data-specific parts (1-2).
 
 ---
@@ -95,7 +95,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 # Bundle preprocessing and model
 pipeline = Pipeline([
@@ -171,7 +171,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 # 1. Load data
 iris = load_iris()
@@ -232,7 +232,7 @@ print(f"CV std: {cv_result.metrics['cv/accuracy_std']:.4f}")
 > k scores that are averaged. The result is less sensitive to a single
 > lucky/unlucky split.
 >
-> For classification, use `StratifiedKFold` (eksperiment uses this by default
+> For classification, use `StratifiedKFold` (sklab uses this by default
 > when you pass `cv=5` to `cross_validate()`).
 
 ---

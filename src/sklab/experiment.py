@@ -9,9 +9,9 @@ from sklearn.base import clone
 from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.metrics import get_scorer
 
-from eksperiment.logging.adapters import NoOpLogger
-from eksperiment.logging.interfaces import LoggerProtocol
-from eksperiment.search import SearchConfigProtocol, SearcherProtocol
+from sklab.logging.adapters import NoOpLogger
+from sklab.logging.interfaces import LoggerProtocol
+from sklab.search import SearchConfigProtocol, SearcherProtocol
 
 MetricFunc = Callable[[Any, Any, Any], float]
 Scorer = MetricFunc | str

@@ -2,7 +2,7 @@
 
 **What you'll learn:**
 
-- How to structure a regression experiment with eksperiment
+- How to structure a regression experiment with sklab
 - Why cross-validation gives more reliable estimates than a single holdout split
 - How to interpret MAE and RMSE metrics
 - The importance of scaling features for linear models
@@ -95,7 +95,7 @@ pipeline = Pipeline([
 ## Step 3: Set up the experiment
 
 ```{.python continuation}
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 experiment = Experiment(
     pipeline=pipeline,
@@ -194,7 +194,7 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 # 1. Load data
 housing = fetch_california_housing()

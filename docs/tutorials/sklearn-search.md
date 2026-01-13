@@ -21,7 +21,7 @@ cause underfitting (too strong) or overfitting (too weak). Default values
 are reasonable starting points, but rarely optimal for your specific data.
 
 Hyperparameter search systematically explores the parameter space to find
-better configurations. eksperiment's `search()` method wraps various search
+better configurations. sklab's `search()` method wraps various search
 strategies with consistent logging.
 
 ---
@@ -48,7 +48,7 @@ Grid search evaluates all 6 combinations:
 
 **Complexity:** O(∏ᵢ |Vᵢ|) where Vᵢ is the set of values for parameter i.
 
-### Grid search with eksperiment
+### Grid search with sklab
 
 ```python
 from sklearn.datasets import load_iris
@@ -56,8 +56,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
-from eksperiment.search import GridSearchConfig
+from sklab.experiment import Experiment
+from sklab.search import GridSearchConfig
 
 X, y = load_iris(return_X_y=True)
 
@@ -147,7 +147,7 @@ dimension.                 dimension.
 The grid wastes 6 evaluations testing the same 3 values repeatedly. Random
 search explores 9 unique values on the dimension that matters.
 
-### Random search with eksperiment
+### Random search with sklab
 
 ```python
 from sklearn.datasets import load_iris
@@ -157,7 +157,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import loguniform
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -219,7 +219,7 @@ progressively increase the budget while keeping only the best performers.
 This is related to the **successive halving** algorithm, which inspired
 Hyperband (used in Optuna's pruning).
 
-### Halving search with eksperiment
+### Halving search with sklab
 
 ```python
 from sklearn.experimental import enable_halving_search_cv  # noqa: F401
@@ -230,7 +230,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import loguniform
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_iris(return_X_y=True)
 
@@ -288,7 +288,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import randint
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 X, y = load_breast_cancer(return_X_y=True)
 
@@ -365,7 +365,7 @@ print(f"Halving: {halving_result.best_score:.4f} (32 initial candidates)")
 
 ## Bring your own searcher
 
-eksperiment doesn't lock you into specific searchers. Any object that conforms to
+sklab doesn't lock you into specific searchers. Any object that conforms to
 the Searcher protocol (structural typing, no inheritance required) and exposes
 `fit(X, y)`, `best_params_`, `best_score_`, and `best_estimator_` works.
 
@@ -380,7 +380,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 @dataclass
 class SimpleRandomSearch:
@@ -474,7 +474,7 @@ print(f"Best score: {result.best_score:.4f}")
 3. **Set a budget, not a grid size.** Decide how many evaluations you can
    afford, then choose a strategy that uses that budget well.
 
-4. **Log everything.** eksperiment logs all search results automatically.
+4. **Log everything.** sklab logs all search results automatically.
    Review them to understand which parameters matter.
 
 5. **Don't over-tune.** Hyperparameter optimization has diminishing returns.

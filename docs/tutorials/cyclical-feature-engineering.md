@@ -37,7 +37,7 @@ import polars as pl
 
 from sklearn.model_selection import TimeSeriesSplit
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 rng = np.random.default_rng(42)
 n_samples = 360

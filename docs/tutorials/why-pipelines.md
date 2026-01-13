@@ -4,7 +4,7 @@
 
 - What data leakage is and why it invalidates your model
 - How sklearn pipelines prevent leakage automatically
-- Why eksperiment enforces pipeline-first design
+- Why sklab enforces pipeline-first design
 
 **Prerequisites:** Basic familiarity with sklearn estimators and train/test splits.
 
@@ -142,13 +142,13 @@ scores_clean = cross_val_score(pipeline, X_all, y_all, cv=5)
 print(f"CV without leakage: {scores_clean.mean():.3f} (+/- {scores_clean.std():.3f})")
 ```
 
-## How eksperiment enforces this
+## How sklab enforces this
 
-eksperiment requires a Pipeline object—not a raw estimator. This isn't a
+sklab requires a Pipeline object—not a raw estimator. This isn't a
 limitation; it's a forcing function for correct methodology.
 
 ```{.python continuation}
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 experiment = Experiment(
     pipeline=pipeline,
@@ -156,13 +156,13 @@ experiment = Experiment(
     name="leakage-demo",
 )
 
-# Every eksperiment method uses the pipeline correctly
+# Every sklab method uses the pipeline correctly
 cv_result = experiment.cross_validate(X_all, y_all, cv=5, run_name="cv")
 
-print(f"eksperiment CV: {cv_result.metrics['cv/accuracy_mean']:.3f}")
+print(f"sklab CV: {cv_result.metrics['cv/accuracy_mean']:.3f}")
 ```
 
-When you use eksperiment:
+When you use sklab:
 
 - `fit()` fits the entire pipeline
 - `evaluate()` uses the fitted pipeline to transform and predict

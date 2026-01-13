@@ -12,7 +12,7 @@ artifacts so downstream features (reports, feature importance, SHAP, conformal
 predictions via MAPIE, etc.) can be built on top of a consistent result API.
 
 ## References
-- `src/eksperiment/experiment.py` (FitResult/EvalResult/CVResult/SearchResult)
+- `src/sklab/experiment.py` (FitResult/EvalResult/CVResult/SearchResult)
 - `docs/tutorials/*` (expected user workflows and outputs)
 
 ## Design

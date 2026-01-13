@@ -1,6 +1,6 @@
-# eksperiment.optuna
+# sklab.optuna
 
-::: eksperiment.optuna.OptunaConfig
+::: sklab.optuna.OptunaConfig
     options:
       show_root_heading: true
       show_object_full_path: false
@@ -11,7 +11,7 @@
         - create_searcher
         - __init__
 
-::: eksperiment.optuna.OptunaSearcher
+::: sklab.optuna.OptunaSearcher
     options:
       show_root_heading: true
       show_object_full_path: false

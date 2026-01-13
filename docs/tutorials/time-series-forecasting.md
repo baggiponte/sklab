@@ -151,7 +151,7 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 pipeline = Pipeline([
     ("scale", StandardScaler()),
@@ -223,7 +223,7 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+from sklab.experiment import Experiment
 
 # 1. Load data
 co2 = fetch_openml(data_id=41187, as_frame=False, parser="liac-arff")
