@@ -4,8 +4,3 @@
     options:
       show_root_heading: true
       show_object_full_path: false
-
-::: sklab.adapters.interfaces.RunProtocol
-    options:
-      show_root_heading: true
-      show_object_full_path: false
