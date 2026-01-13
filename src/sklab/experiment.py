@@ -133,9 +133,7 @@ class Experiment:
             cv=cv,
             return_train_score=False,
         )
-        fold_metrics = {
-            name: list(scores[f"test_{name}"]) for name in scoring.keys()
-        }
+        fold_metrics = {name: list(scores[f"test_{name}"]) for name in scoring.keys()}
         metrics = _aggregate_cv_metrics(fold_metrics)
         final_estimator = None
         if refit:

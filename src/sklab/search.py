@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping, Protocol
+from typing import Any, Protocol
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
@@ -34,8 +35,7 @@ class SearchConfigProtocol(Protocol):
         cv: Any | None,
         n_trials: int | None,
         timeout: float | None,
-    ) -> SearcherProtocol:
-        ...
+    ) -> SearcherProtocol: ...
 
 
 @dataclass(slots=True)

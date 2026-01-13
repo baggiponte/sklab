@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
@@ -30,7 +31,7 @@ class OptunaConfig:
         cv: Any | None,
         n_trials: int | None,
         timeout: float | None,
-    ) -> "OptunaSearcher":
+    ) -> OptunaSearcher:
         return OptunaSearcher(
             pipeline=pipeline,
             scorers=scorers,
@@ -62,7 +63,7 @@ class OptunaSearcher:
     best_score_: float | None = None
     best_estimator_: Any | None = None
 
-    def fit(self, X: Any, y: Any | None = None) -> "OptunaSearcher":  # noqa: N803
+    def fit(self, X: Any, y: Any | None = None) -> OptunaSearcher:  # noqa: N803
         optuna = _require_optuna()
         scoring = _resolve_scoring(self.scoring, self.scorers)
         scorer = _pick_primary_scorer(scoring)
@@ -94,9 +95,7 @@ class OptunaSearcher:
         self.best_score_ = float(study.best_value)
         self.best_params_ = dict(study.best_trial.user_attrs["params"])
         self.best_estimator_ = (
-            clone(self.pipeline)
-            .set_params(**self.best_params_)
-            .fit(X, y)
+            clone(self.pipeline).set_params(**self.best_params_).fit(X, y)
         )
         return self
 
