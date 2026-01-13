@@ -10,6 +10,7 @@ dependencies = [
 
 [project.optional-dependencies]
 optuna = [
+    "cmaes>=0.11.1",
     "optuna>=4.6.0",
 ]
 wandb = [

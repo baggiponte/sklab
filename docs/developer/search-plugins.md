@@ -62,9 +62,6 @@ class MySearchConfig:
 Use a custom searcher when you need Optuna features beyond the quick config.
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 from dataclasses import dataclass
 from typing import Any

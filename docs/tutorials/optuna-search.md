@@ -86,9 +86,6 @@ have relatively simple structure.
 The easiest way to use Optuna with sklab is through `OptunaConfig`:
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 
 from sklearn.datasets import load_iris
@@ -167,9 +164,6 @@ implement a custom searcher:
 
 ```python
 from dataclasses import dataclass
-
-import pytest
-pytest.importorskip("optuna")
 
 import optuna
 from sklearn.base import clone
@@ -280,9 +274,6 @@ compared to training time, and smarter sampling pays off.
 Let's compare convergence on a problem with a clear optimal region:
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 from sklearn.datasets import load_breast_cancer
 from sklearn.ensemble import GradientBoostingClassifier

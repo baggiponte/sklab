@@ -1,6 +1,6 @@
-# Sklab
+# sklab
 
-Sklab is a lightweight experiment runner for sklearn pipelines. It keeps
+sklab is a lightweight experiment runner for sklearn pipelines. It keeps
 modeling code focused on data and pipelines while standardizing the fit/evaluate
 loop, logging, and hyperparameter search workflows.
 
@@ -19,10 +19,6 @@ that enforces good practices while staying out of your way.
 Consider a typical ML workflow without sklab:
 
 ```python
-# Optional: only run if mlflow is installed.
-import pytest
-pytest.importorskip("mlflow")
-
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score

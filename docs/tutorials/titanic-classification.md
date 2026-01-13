@@ -29,9 +29,6 @@ without leaking information between training and test data.
 ## Step 1: Load and explore the data
 
 ```python
-import pytest
-pytest.importorskip("pandas")
-
 from sklearn.datasets import fetch_openml
 
 titanic = fetch_openml(data_id=40945, as_frame=True)
@@ -203,9 +200,6 @@ A good model has high F1, not just high accuracy.
 ## Complete example
 
 ```python
-import pytest
-pytest.importorskip("pandas")
-
 from sklearn.compose import ColumnTransformer
 from sklearn.datasets import fetch_openml
 from sklearn.impute import SimpleImputer

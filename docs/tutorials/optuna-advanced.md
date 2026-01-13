@@ -117,9 +117,6 @@ converges quickly or slowly.
 ### With OptunaConfig and study_factory
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 
 from sklearn.datasets import load_iris
@@ -183,9 +180,6 @@ For models that support incremental training (e.g., neural networks,
 gradient boosting with warm_start), you can report intermediate scores:
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 from dataclasses import dataclass
 import numpy as np
@@ -333,10 +327,6 @@ optimizer for continuous parameter spaces. It adapts a multivariate normal
 distribution to the objective landscape.
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-pytest.importorskip("cmaes")
-
 import optuna
 from sklearn.datasets import load_iris
 from sklearn.svm import SVC
@@ -398,9 +388,6 @@ print(f"Best score: {result.best_score:.4f}")
 For long-running searches, persist the study to disk or database:
 
 ```python
-import pytest
-pytest.importorskip("optuna")
-
 import optuna
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression

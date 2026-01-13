@@ -1,8 +1,7 @@
 [project]
-site_name = "Sklab"
+site_name = "sklab"
 nav = [
   {"Home" = "index.md"},
-  {"Glossary" = "glossary.md"},
   {"Tutorials" = [
     "tutorials/experiment.md",
     "tutorials/why-pipelines.md",
@@ -16,6 +15,7 @@ nav = [
     "tutorials/logger-adapters.md",
     "tutorials/cyclical-feature-engineering.md",
   ]},
+  {"Glossary" = "glossary.md"},
   {"Developer" = [
     "developer/logging-plugins.md",
     "developer/search-plugins.md",

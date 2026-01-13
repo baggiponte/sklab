@@ -310,18 +310,6 @@ rng = np.random.default_rng(42)
 X = rng.normal(0, 1, size=(100, 5))
 ```
 
-### Skip Optional Dependencies Gracefully
-
-For optional features (Optuna, MLflow), guard with pytest.importorskip:
-
-```python
-import pytest
-pytest.importorskip("optuna")
-
-import optuna
-# ... rest of example
-```
-
 ---
 
 ## Glossary Entries

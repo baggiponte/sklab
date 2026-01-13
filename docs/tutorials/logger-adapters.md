@@ -88,9 +88,6 @@ W&B provides cloud-based experiment tracking with rich visualization. The
 adapter logs everything to your W&B project.
 
 ```python
-import pytest
-pytest.importorskip("wandb")
-
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
@@ -134,9 +131,6 @@ MLflow provides open-source experiment tracking with local or remote storage.
 Good for teams that want control over their tracking infrastructure.
 
 ```python
-import pytest
-pytest.importorskip("mlflow")
-
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
