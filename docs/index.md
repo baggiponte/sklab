@@ -99,8 +99,8 @@ experiment = Experiment(
 )
 
 # Consistent API for everything
-fit_result = experiment.fit(X_train, y_train, run_name="fit")
-eval_result = experiment.evaluate(fit_result.estimator, X_test, y_test, run_name="eval")
+experiment.fit(X_train, y_train, run_name="fit")
+eval_result = experiment.evaluate(X_test, y_test, run_name="eval")
 cv_result = experiment.cross_validate(X, y, cv=5, run_name="cv")
 search_result = experiment.search(config, X, y, cv=5, run_name="search")
 ```

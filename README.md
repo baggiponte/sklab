@@ -28,10 +28,10 @@ experiment = Experiment(
 )
 
 # Fit — train, get params logged
-result = experiment.fit(X_train, y_train)
+experiment.fit(X_train, y_train)
 
 # Evaluate — metrics + predictions + diagnostics, no boilerplate
-result = experiment.evaluate(result.estimator, X_test, y_test)
+result = experiment.evaluate(X_test, y_test)
 
 # Cross-validate — per-fold transparency, not just a number
 result = experiment.cross_validate(X, y, cv=5)

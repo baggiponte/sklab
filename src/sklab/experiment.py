@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping
+from typing import Any
 
 from sklearn.base import clone
-from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.metrics import get_scorer
+from sklearn.model_selection import cross_validate as sklearn_cross_validate
+from sklearn.utils.validation import check_is_fitted
 
 from sklab.logging.adapters import NoOpLogger
 from sklab.logging.interfaces import LoggerProtocol
@@ -61,6 +63,7 @@ class Experiment:
     scorers: Scorers | None = None
     name: str | None = None
     tags: Mapping[str, str] | None = None
+    _fitted_estimator: Any | None = None
 
     def __post_init__(self) -> None:
         if self.logger is None:
@@ -87,19 +90,20 @@ class Experiment:
             estimator.fit(X, y)
             run.log_model(estimator, name="model")
             run.finish()
+        self._fitted_estimator = estimator
         return FitResult(estimator=estimator, metrics={}, params=merged_params)
 
     def evaluate(
         self,
-        estimator: Any,
         X: Any,
         y: Any | None = None,
         *,
         run_name: str | None = None,
     ) -> EvalResult:
-        """Evaluate a fitted estimator using experiment scorers and log metrics."""
+        """Evaluate the fitted estimator using experiment scorers and log metrics."""
+        check_is_fitted(self._fitted_estimator)
         scorers = _require_scorers(self.scorers)
-        metrics = _score_estimator(estimator, X, y, scorers)
+        metrics = _score_estimator(self._fitted_estimator, X, y, scorers)
         with self.logger.start_run(
             name=run_name or self.name,
             config=None,
@@ -146,6 +150,8 @@ class Experiment:
             if final_estimator is not None:
                 run.log_model(final_estimator, name="model")
             run.finish()
+        if final_estimator is not None:
+            self._fitted_estimator = final_estimator
         return CVResult(
             metrics=metrics,
             fold_metrics=fold_metrics,
@@ -187,10 +193,12 @@ class Experiment:
             if best_estimator is not None:
                 run.log_model(best_estimator, name="model")
             run.finish()
+        if best_estimator is not None:
+            self._fitted_estimator = best_estimator
         return SearchResult(
             best_params=best_params,
             best_score=best_score,
-            estimator=getattr(searcher, "best_estimator_", None),
+            estimator=best_estimator,
         )
 
 

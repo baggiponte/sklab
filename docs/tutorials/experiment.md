@@ -86,7 +86,6 @@ Score a fitted model on held-out data.
 # In practice, you'd evaluate on a separate test set
 # Here we reuse the data for demonstration
 eval_result = experiment.evaluate(
-    fit_result.estimator,
     X, y,
     run_name="eval",
 )
@@ -315,14 +314,12 @@ search_result = experiment.search(
 print(f"Best params: {search_result.best_params}")
 print(f"Search CV: {search_result.best_score:.4f}")
 
-# 5. Final evaluation on holdout
-if search_result.estimator is not None:
-    eval_result = experiment.evaluate(
-        search_result.estimator,
-        X_test, y_test,
-        run_name="final-eval",
-    )
-    print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
+# 5. Final evaluation on holdout (search already stored the best estimator)
+eval_result = experiment.evaluate(
+    X_test, y_test,
+    run_name="final-eval",
+)
+print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```
 
 ---

@@ -141,7 +141,6 @@ print(f"Logged params: {fit_result.params}")
 
 ```{.python continuation}
 eval_result = experiment.evaluate(
-    fit_result.estimator,
     X_test,
     y_test,
     run_name="iris-eval",
@@ -203,9 +202,7 @@ experiment = Experiment(
 fit_result = experiment.fit(X_train, y_train, run_name="fit")
 
 # 5. Evaluate
-eval_result = experiment.evaluate(
-    fit_result.estimator, X_test, y_test, run_name="eval"
-)
+eval_result = experiment.evaluate(X_test, y_test, run_name="eval")
 
 print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```

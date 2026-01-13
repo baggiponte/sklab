@@ -75,8 +75,8 @@ experiment = Experiment(
     name="no-logging",
 )
 
-fit_result = experiment.fit(X, y, run_name="noop-fit")
-eval_result = experiment.evaluate(fit_result.estimator, X, y, run_name="noop-eval")
+experiment.fit(X, y, run_name="noop-fit")
+eval_result = experiment.evaluate(X, y, run_name="noop-eval")
 print(eval_result.metrics)
 ```
 
@@ -111,8 +111,8 @@ experiment = Experiment(
     name="wandb-demo",
 )
 
-fit_result = experiment.fit(X, y, run_name="wandb-fit")
-eval_result = experiment.evaluate(fit_result.estimator, X, y, run_name="wandb-eval")
+experiment.fit(X, y, run_name="wandb-fit")
+eval_result = experiment.evaluate(X, y, run_name="wandb-eval")
 print(eval_result.metrics)
 ```
 
@@ -157,8 +157,8 @@ experiment = Experiment(
     name="mlflow-demo",
 )
 
-fit_result = experiment.fit(X, y, run_name="mlflow-fit")
-eval_result = experiment.evaluate(fit_result.estimator, X, y, run_name="mlflow-eval")
+experiment.fit(X, y, run_name="mlflow-fit")
+eval_result = experiment.evaluate(X, y, run_name="mlflow-eval")
 print(eval_result.metrics)
 ```
 

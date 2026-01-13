@@ -39,9 +39,9 @@ def test_fit_returns_estimator() -> None:
 def test_evaluate_uses_init_scorers() -> None:
     X, y = _make_data()
     experiment = Experiment(pipeline=_make_pipeline(), scorers={"acc": "accuracy"})
-    fit_result = experiment.fit(X, y)
+    experiment.fit(X, y)
 
-    eval_result = experiment.evaluate(fit_result.estimator, X, y)
+    eval_result = experiment.evaluate(X, y)
     assert "acc" in eval_result.metrics
     assert 0.0 <= eval_result.metrics["acc"] <= 1.0
 
@@ -49,10 +49,10 @@ def test_evaluate_uses_init_scorers() -> None:
 def test_evaluate_requires_scorers() -> None:
     X, y = _make_data()
     experiment = Experiment(pipeline=_make_pipeline())
-    fit_result = experiment.fit(X, y)
+    experiment.fit(X, y)
 
     with pytest.raises(ValueError, match="scorers are required"):
-        experiment.evaluate(fit_result.estimator, X, y)
+        experiment.evaluate(X, y)
 
 
 def test_cross_validate_logs_metrics_and_refit() -> None:

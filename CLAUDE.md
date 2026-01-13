@@ -9,8 +9,8 @@ Sklab is a zero-boilerplate experiment runner for sklearn pipelines. One thing, 
 ## The Four Methods
 
 ```python
-experiment.fit(X, y)              # Train, log params
-experiment.evaluate(est, X, y)    # Metrics + predictions + plots
+experiment.fit(X, y)              # Train, log params, store estimator
+experiment.evaluate(X, y)         # Metrics + predictions + plots (uses stored estimator)
 experiment.cross_validate(X, y)   # Per-fold everything
 experiment.search(config, X, y)   # All trials logged
 ```
