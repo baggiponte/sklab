@@ -8,7 +8,7 @@ lint:
     uvx ty check
 
 test:
-    uv run --extra optuna pytest
+    uv run --all-extras -- pytest
 
 docs:
     uv run zensical serve
