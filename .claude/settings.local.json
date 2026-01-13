@@ -10,7 +10,7 @@
       "Bash(just test:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
-      "Bash(gh run view:*)",
+      "Bash(gh run view:*)"
     ]
   }
 }
