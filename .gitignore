@@ -1,4 +1,5 @@
 wandb
+mlflow.db
 optuna_study.db
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,pycharm+all,macos,windows,python,linux,asdf
