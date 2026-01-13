@@ -1,7 +1,7 @@
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Ruff](https://img.shields.io/badge/lint-ruff-2f6feb)
-![Ruff Format](https://img.shields.io/badge/format-ruff-2f6feb)
-![Ty](https://img.shields.io/badge/type%20check-ty-6e56cf)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v2.json)](https://github.com/astral-sh/ty)
 
 # Sklab
 
