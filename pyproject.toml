@@ -47,6 +47,7 @@ line-length = 88
 
 [tool.ruff.lint]
 extend-select = ["I", "UP", "TID"]
+fixable = ["I", "UP", "TID"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
