@@ -1,82 +1,94 @@
-# Basics: Census Housing Regression
+# Regression Workflow: California Housing
 
-This tutorial uses a small excerpt inspired by the California housing census
-features to show a regression workflow. The goal is to demonstrate best
-practices with pipelines and cross-validation while keeping the example
-runnable offline.
+**What you'll learn:**
 
-## Prepare data with Polars
+- How to structure a regression experiment with eksperiment
+- Why cross-validation gives more reliable estimates than a single holdout split
+- How to interpret MAE and RMSE metrics
+- The importance of scaling features for linear models
+
+**Prerequisites:** Basic Python and sklearn familiarity. If you're new to pipelines,
+read [Why Pipelines Matter](why-pipelines.md) first.
+
+## The problem: predicting house prices
+
+Predicting continuous values—prices, temperatures, sales figures—is fundamentally
+different from classification. Instead of "which category?", we ask "how much?".
+
+This difference affects everything: which metrics make sense, how to interpret
+errors, and what pitfalls to avoid. A classifier that's wrong is just wrong,
+but a regressor can be wrong by a little (off by $1,000) or a lot (off by $1,000,000).
+
+We'll use California housing data to predict median house values for districts.
+This is a classic regression task: given features like median income, average
+rooms, and location, estimate the median house value.
+
+---
+
+## Step 1: Load the data
 
 ```python
-import polars as pl
+from sklearn.datasets import fetch_california_housing
 
-rows = [
-    {"median_income": 8.3, "housing_median_age": 41, "total_rooms": 880, "population": 322,
-     "households": 126, "latitude": 37.88, "longitude": -122.23, "median_house_value": 4.526},
-    {"median_income": 8.3, "housing_median_age": 21, "total_rooms": 7099, "population": 2401,
-     "households": 1138, "latitude": 37.86, "longitude": -122.22, "median_house_value": 3.585},
-    {"median_income": 7.2, "housing_median_age": 52, "total_rooms": 1467, "population": 496,
-     "households": 177, "latitude": 37.85, "longitude": -122.24, "median_house_value": 3.521},
-    {"median_income": 5.6, "housing_median_age": 52, "total_rooms": 1274, "population": 558,
-     "households": 219, "latitude": 37.85, "longitude": -122.25, "median_house_value": 3.413},
-    {"median_income": 4.5, "housing_median_age": 52, "total_rooms": 1627, "population": 565,
-     "households": 259, "latitude": 37.85, "longitude": -122.25, "median_house_value": 3.422},
-    {"median_income": 4.2, "housing_median_age": 52, "total_rooms": 919, "population": 413,
-     "households": 193, "latitude": 37.85, "longitude": -122.25, "median_house_value": 2.697},
-    {"median_income": 3.6, "housing_median_age": 52, "total_rooms": 2535, "population": 1094,
-     "households": 485, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.992},
-    {"median_income": 3.1, "housing_median_age": 52, "total_rooms": 3104, "population": 1157,
-     "households": 584, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.414},
-    {"median_income": 3.2, "housing_median_age": 52, "total_rooms": 2555, "population": 1206,
-     "households": 595, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.267},
-    {"median_income": 2.8, "housing_median_age": 42, "total_rooms": 3549, "population": 2208,
-     "households": 1041, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.611},
-    {"median_income": 2.5, "housing_median_age": 52, "total_rooms": 2202, "population": 803,
-     "households": 325, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.804},
-    {"median_income": 2.8, "housing_median_age": 52, "total_rooms": 3503, "population": 1660,
-     "households": 731, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.67},
-    {"median_income": 3.0, "housing_median_age": 52, "total_rooms": 2491, "population": 877,
-     "households": 355, "latitude": 37.84, "longitude": -122.24, "median_house_value": 2.701},
-    {"median_income": 3.1, "housing_median_age": 52, "total_rooms": 696, "population": 191,
-     "households": 90, "latitude": 37.84, "longitude": -122.25, "median_house_value": 2.863},
-    {"median_income": 2.6, "housing_median_age": 52, "total_rooms": 2643, "population": 1194,
-     "households": 412, "latitude": 37.84, "longitude": -122.24, "median_house_value": 2.252},
-]
+housing = fetch_california_housing(as_frame=True)
+X = housing.data.to_numpy()
+y = housing.target.to_numpy()
 
-# Repeat rows to create a small, stable dataset.
-rows = rows * 3
-census_df = pl.DataFrame(rows)
-
-feature_cols = [
-    "median_income",
-    "housing_median_age",
-    "total_rooms",
-    "population",
-    "households",
-    "latitude",
-    "longitude",
-]
-
-X = census_df.select(feature_cols).to_numpy()
-y = census_df["median_house_value"].to_numpy()
+print(f"Features: {housing.feature_names}")
+print(f"Samples: {X.shape[0]}, Features: {X.shape[1]}")
+print(f"Target range: ${y.min() * 100_000:.0f} - ${y.max() * 100_000:.0f}")
 ```
 
-## Pipeline + cross-validation
+The first run downloads the dataset and caches it in the scikit-learn data
+directory (defaults to `~/scikit_learn_data`).
+
+> **Concept: Regression Targets**
+>
+> Unlike classification (discrete labels like "spam" or "not spam"), regression
+> predicts continuous values. The California housing target is median house value
+> in $100,000s—so a prediction of 2.5 means $250,000.
+>
+> **Why it matters:** Regression errors are distances, not just "right or wrong."
+> A prediction of $245,000 when the true value is $250,000 is much better than
+> predicting $150,000.
+
+---
+
+## Step 2: Build the pipeline
 
 ```{.python continuation}
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eksperiment.experiment import Experiment
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", Ridge(alpha=1.0)),
+])
+```
 
-pipeline = Pipeline(
-    [
-        ("scale", StandardScaler()),
-        ("model", Ridge(alpha=1.0)),
-    ]
-)
+**What this does:**
+
+- `StandardScaler()` centers features to mean=0 and std=1
+- `Ridge` is linear regression with L2 regularization (prevents overfitting)
+- The `alpha` parameter controls regularization strength
+
+> **Concept: Why Scale for Linear Models?**
+>
+> Linear models are sensitive to feature scales. If "median income" ranges from
+> 0-15 while "latitude" ranges from 32-42, the model will weight them unevenly
+> based on magnitude, not importance.
+>
+> **Why it matters:** Without scaling, features with larger ranges dominate
+> the model. Scaling puts all features on equal footing, letting the model
+> learn which features actually matter.
+
+---
+
+## Step 3: Set up the experiment
+
+```{.python continuation}
+from eksperiment.experiment import Experiment
 
 experiment = Experiment(
     pipeline=pipeline,
@@ -84,17 +96,148 @@ experiment = Experiment(
         "mae": "neg_mean_absolute_error",
         "rmse": "neg_root_mean_squared_error",
     },
-    name="census-housing",
+    name="california-housing",
+)
+```
+
+> **Concept: Regression Metrics**
+>
+> - **MAE (Mean Absolute Error):** Average of |predicted - actual|. Intuitive:
+>   "on average, predictions are off by X dollars."
+> - **RMSE (Root Mean Squared Error):** Square root of average squared errors.
+>   Penalizes large errors more heavily than MAE.
+>
+> **Why it matters:** MAE treats all errors equally; RMSE punishes big mistakes
+> more. If being off by $100,000 is much worse than being off by $10,000 ten times,
+> optimize RMSE. If all errors matter equally, use MAE.
+>
+> Note: sklearn's scorers are *negated* by convention (higher is better), so we
+> flip the sign when interpreting results.
+
+---
+
+## Step 4: Cross-validate
+
+A single train/test split is noisy—you might get lucky or unlucky with which
+samples end up in the holdout set. Cross-validation averages over multiple splits
+for a more robust estimate.
+
+```{.python continuation}
+from sklearn.model_selection import KFold
+
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+result = experiment.cross_validate(X, y, cv=cv, run_name="california-cv")
+
+# Flip signs for readability (sklearn uses negative scores)
+mae = -result.metrics["cv/mae_mean"]
+rmse = -result.metrics["cv/rmse_mean"]
+
+print(f"MAE:  ${mae * 100_000:,.0f} (average error)")
+print(f"RMSE: ${rmse * 100_000:,.0f} (penalizes large errors)")
+```
+
+**What just happened:**
+
+1. Split the data into 5 folds
+2. For each fold: trained on 4 folds, evaluated on the held-out fold
+3. Computed MAE and RMSE on each fold's predictions
+4. Averaged the metrics across all 5 folds
+
+> **Concept: Cross-Validation for Regression**
+>
+> Unlike classification, regression doesn't need stratified splits (there are no
+> classes to balance). Standard `KFold` works well. However, if your target has
+> outliers or is heavily skewed, consider stratified regression splits.
+>
+> **Why it matters:** A single holdout split might accidentally put all the
+> expensive houses in the test set. Cross-validation averages over many splits,
+> giving you a more reliable performance estimate.
+
+---
+
+## Interpreting the results
+
+The metrics tell you how well your model generalizes:
+
+- **MAE of ~$50,000** means predictions are typically off by about $50,000
+- **RMSE higher than MAE** indicates some predictions have large errors
+
+For California housing (median values ~$200,000), an MAE of $50,000 means
+~25% average error. Whether that's acceptable depends on your use case.
+
+### What to try next
+
+If results aren't good enough:
+
+1. **Try a more complex model:** Gradient boosting often outperforms linear models
+2. **Engineer features:** Combine latitude/longitude into distance-from-coast
+3. **Tune hyperparameters:** Search over `alpha` values with `experiment.search()`
+
+---
+
+## Complete example
+
+Here's the full workflow in one block:
+
+```python
+from sklearn.datasets import fetch_california_housing
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import KFold
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from eksperiment.experiment import Experiment
+
+# 1. Load data
+housing = fetch_california_housing(as_frame=True)
+X = housing.data.to_numpy()
+y = housing.target.to_numpy()
+
+# 2. Build pipeline
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", Ridge(alpha=1.0)),
+])
+
+# 3. Create experiment
+experiment = Experiment(
+    pipeline=pipeline,
+    scorers={
+        "mae": "neg_mean_absolute_error",
+        "rmse": "neg_root_mean_squared_error",
+    },
+    name="california-housing",
 )
 
-cv = KFold(n_splits=3, shuffle=True, random_state=42)
-result = experiment.cross_validate(X, y, cv=cv, run_name="census-cv")
+# 4. Cross-validate
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+result = experiment.cross_validate(X, y, cv=cv, run_name="cv")
 
-print(result.metrics)
+mae = -result.metrics["cv/mae_mean"]
+print(f"Cross-validated MAE: ${mae * 100_000:,.0f}")
 ```
+
+---
 
 ## Best practices
 
-- Use cross-validation to estimate generalization error.
-- Keep data prep inside the pipeline.
-- Standardize numeric features for linear models.
+1. **Always cross-validate.** A single split is unreliable for estimating
+   generalization performance.
+
+2. **Scale features for linear models.** Tree-based models don't need scaling,
+   but linear models do.
+
+3. **Use appropriate metrics.** MAE for interpretability, RMSE if large errors
+   are especially costly.
+
+4. **Shuffle before splitting.** Unless you have time-series data—then use
+   `TimeSeriesSplit` instead.
+
+5. **Compare to a baseline.** A model that predicts the mean value for everything
+   gives you a floor. If your model barely beats this, something's wrong.
+
+## Next steps
+
+- [Hyperparameter Search](sklearn-search.md) — Find better `alpha` values
+- [Time Series Forecasting](time-series-forecasting.md) — When temporal order matters
+- [Logger Adapters](logger-adapters.md) — Track experiments with MLflow or W&B
