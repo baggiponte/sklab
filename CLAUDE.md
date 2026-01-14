@@ -17,14 +17,15 @@ experiment.search(config, X, y)   # All trials logged
 
 ## Philosophy
 
-> **Be useful. No bloat. So elegant it's familiar. Abstractions that are not obstructions. Provide value.**
+Documentation, code and abstraction strive to adhere to the following principles:
 
-- **BE USEFUL** — Solve real pain points or don't build it
-- **NO BLOAT** — No distributed, no deployment, no MLOps platform. Just experiments.
-- **SO ELEGANT IT'S FAMILIAR** — Feel like sklearn, no new abstractions to learn
-- **ABSTRACTIONS, NOT OBSTRUCTIONS** — Remove tedium, not control
-- **PROVIDE VALUE** — Every feature must earn its place
-- **DOCS ARE CODE** — Every code example runs. If the docs lie, the build fails.
+- **Be useful** — Solve real pain points or don't build it
+- **Provide value** — Every feature must earn its place
+- **Abstractions, not obstructions** — Remove tedium, not control
+- **Docs are code** — Every code example runs. If the docs lie, the build fails.
+- **No bloat** — No distributed, no deployment, no MLOps platform. Just experiments.
+- **Elegance stems from familiarity** — Feel like sklearn, no new abstractions to learn
+- **A library, not a framework** — No glossary needed. Study sklearn, HuggingFace, PyTorch—adopt, don't reinvent. Every abstraction must earn its place. Slim, transparent wrappers.
 
 ## Results Are Not Dumb Containers
 

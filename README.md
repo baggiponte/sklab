@@ -11,11 +11,12 @@ A zero-boilerplate experiment runner for sklearn pipelines. One thing, done well
 ## What It Does
 
 ```python
-from sklab import Experiment
-from sklab.search import GridSearchConfig
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+
+from sklab import Experiment
+from sklab.search import GridSearchConfig
 
 pipeline = Pipeline([
     ("scale", StandardScaler()),
@@ -27,22 +28,18 @@ experiment = Experiment(
     scorers={"accuracy": "accuracy", "f1": "f1_macro"},
 )
 
-# Fit — train, get params logged
 experiment.fit(X_train, y_train)
 
-# Evaluate — metrics + predictions + diagnostics, no boilerplate
 result = experiment.evaluate(X_test, y_test)
 
-# Cross-validate — per-fold transparency, not just a number
 result = experiment.cross_validate(X, y, cv=5)
 
-# Search — all trials logged, not just the winner
 result = experiment.search(GridSearchConfig(param_grid={...}), X, y, cv=5)
 ```
 
 ## 🪄 Why
 
-Data scientists waste time on:
+sklab wants to help data scientist avoid:
 - Writing the same logging code for every experiment
 - Forgetting to save predictions, then needing them later
 - Copy-pasting matplotlib code for confusion matrices and ROC curves
@@ -65,34 +62,36 @@ uv add "sklab[wandb]"    # W&B logging
 
 ### Philosophy
 
-> **Be useful. No bloat. So elegant it's familiar. Abstractions that are not obstructions. Provide value.**
+Documentation, code and abstraction strive to adhere to the following principles:
 
 - **Be useful** — Every feature solves a real pain point. If it doesn't help you iterate faster, it doesn't belong.
-- **No bloat** — No distributed training, no deployment, no MLOps platform. Just experiments, done well.
-- **So elegant it's familiar** — The API feels like sklearn because sklearn got it right. No new abstractions to learn.
-- **Abstractions, not obstructions** — We remove tedium, not control. You can always drop down to raw sklearn.
 - **Provide value** — Every line of code must earn its place. We ship what helps, not what's clever.
+- **Abstractions, not obstructions** — We remove tedium, not control. You can always drop down to raw sklearn.
 - **Docs are code** — Every code example runs. If the docs lie, the build fails.
+- **No bloat** — No distributed training, no deployment, no MLOps platform. Just experiments, done well.
+- **Elegance stems from familiarity** — The API feels like sklearn because sklearn got it right, and that's what everybody uses. Don't make people learn new abstractions.
+- **A library, not a framework** — Libraries use familiar concepts; frameworks invent new ones. Study what works in sklearn, HuggingFace, PyTorch - then adopt, don't reinvent. Every new abstraction must earn its place. Design slim wrappers users can see through.
 
-### Process
+### Coding guidelines
 
-1. Draft a plan in `plans/` before coding (Goal, Design, How to test)
-2. Sketch the API before implementing
-3. Keep changes small and reviewable
+1. Disclose usage of AI Agents. You are free to use them to contribute. We strive to keep this codebase as agent-friendly as possible. However, you **must** own every line of code the agent writes. This means, as a starter, that you must be able to explain and justify the choice. No slop.
+2. Start your feature request in the [discussions](https://github.com/baggiponte/sklab/discussions) tab. Once the core details are ironed out, we'll move it to the issue tracker.
+3. Agents are encouraged to explore the [plans/](plans/) folder to get a sense of the big picture of the ongoing/relevant developments and to create a new plan if needed.
+4. Code is now free to write. The value we bring is in the ideas, taste and judgment to assert the adherence to the principles above. Let's discuss thoroughly those ideas - including the final API - and code will follow naturally. In other words, treat code as an implementation detail, not as the end goal - this is, and always has been, the ideas we bring.
+5. Keep changes small and reviewable
 
 ### Setup
 
 ```bash
-# Prerequisites: Python 3.11+, uv, just
-uv sync                    # Install deps (dev + docs groups)
+uv sync
 ```
 
 ### Commands
 
 ```bash
+just format    # Ruff format
 just test      # Run tests with optuna extra
 just lint      # Ruff check + type check
-just format    # Ruff format
 just docs      # Serve docs locally
 ```
 

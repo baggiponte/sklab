@@ -2,7 +2,7 @@
 
 ## What This Project Is
 
-Sklab is an experiment runner for sklearn pipelines. One thing, done well: **run experiments**.
+sklab is an experiment runner for sklearn pipelines. One thing, done well: **run experiments**.
 
 It removes the tedious parts of ML experimentation so you can iterate faster.
 
@@ -17,21 +17,23 @@ It removes the tedious parts of ML experimentation so you can iterate faster.
 
 ## Philosophy
 
-> **Be useful. No bloat. So elegant it's familiar. Abstractions that are not obstructions. Provide value.**
+Documentation, code and abstraction strive to adhere to the following principles:
 
-**BE USEFUL.** Every feature must solve a real pain point. If you can't explain who needs it and why, don't build it.
+**Be useful.** Every feature must solve a real pain point. If you can't explain who needs it and why, don't build it.
 
-**NO BLOAT.** If sklearn, Polars, or the logger backend already does it, we don't duplicate it. No distributed training, no deployment pipelines, no MLOps platform features. Just experiments, done well.
+**Provide value.** Every line of code must earn its place. We ship what helps data scientists iterate faster, not what sounds impressive.
 
-**SO ELEGANT IT'S FAMILIAR.** The API feels like sklearn because sklearn got it right. No new mental models. No surprising behaviors. Muscle memory works here.
+**Abstractions, not obstructions.** We remove tedium, not control. You can always drop down to raw sklearn when needed. We wrap, we don't trap.
 
-**ABSTRACTIONS, NOT OBSTRUCTIONS.** We remove tedium, not control. You can always drop down to raw sklearn when needed. We wrap, we don't trap.
+**Docs are code.** Documentation is tested with the same rigor as source code. Every code example runs. If the docs lie, the build fails. High-quality docs are not optional — they're part of the product.
 
-**PROVIDE VALUE.** Every line of code must earn its place. We ship what helps data scientists iterate faster, not what sounds impressive.
+**No bloat.** If sklearn, Polars, or the logger backend already does it, we don't duplicate it. No distributed training, no deployment pipelines, no MLOps platform features. Just experiments, done well.
 
-**DOCS ARE CODE.** Documentation is tested with the same rigor as source code. Every code example runs. If the docs lie, the build fails. High-quality docs are not optional — they're part of the product.
+**Elegance stems from familiarity.** The API feels like sklearn because sklearn got it right, and that's what everybody uses. Don't make people learn new abstractions. No new mental models. No surprising behaviors. Muscle memory works here.
 
-**ZERO SPRINKLING.** Inject the logger once. Everything else logs automatically. No `mlflow.log_*` scattered through your code.
+**A library, not a framework.** Libraries use familiar concepts; frameworks invent new ones. If we need a glossary to explain our API, we've failed.
+
+Study what works across the ML ecosystem—sklearn, HuggingFace, PyTorch—and adopt patterns users already know. Every new abstraction has a cost; it must pay for itself in clarity or capability. Design slim, transparent wrappers. Be opinionated when conventions are widely adopted; stay neutral when they aren't.
 
 ## What We Always Capture
 
