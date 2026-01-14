@@ -1,7 +1,7 @@
 """Logger protocol used by experiment runs."""
 
 from collections.abc import Mapping
-from contextlib import AbstractContextManager, contextmanager
+from contextlib import AbstractContextManager
 from typing import Any, Protocol, Self, runtime_checkable
 
 Metrics = Mapping[str, float]
