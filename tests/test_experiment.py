@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 import pytest
 from sklearn.base import clone
@@ -72,20 +73,20 @@ def test_search_accepts_searcher() -> None:
     pipeline = _make_pipeline()
 
     @dataclass
-    class DummySearch(SearcherProtocol):
+    class DummySearch:
         estimator: Pipeline
         best_params_: dict[str, float] | None = None
         best_score_: float | None = None
         best_estimator_: Pipeline | None = None
 
-        def fit(self, X, y=None) -> SearcherProtocol:
+        def fit(self, X, y=None) -> DummySearch:
             self.best_params_ = {"model__C": 1.0}
             self.best_score_ = 0.5
             self.best_estimator_ = clone(self.estimator).fit(X, y)
             return self
 
     experiment = Experiment(pipeline=pipeline, scorers={"acc": "accuracy"})
-    searcher = DummySearch(pipeline)
+    searcher = cast(SearcherProtocol, DummySearch(pipeline))
 
     result = experiment.search(searcher, X, y)
 
