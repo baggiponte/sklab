@@ -2,15 +2,33 @@ name: CI
 
 on:
   pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/ci.yml"
   push:
     branches:
       - main
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
 
 permissions: {}
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  ci:
+  test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,4 +59,74 @@ jobs:
         env:
           WANDB_MODE: offline
           WANDB_SILENT: "true"
-        run: uv run pytest
+        run: uv run pytest --ignore=docs
+
+  doctest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5 # zizmor: ignore[unpinned-uses]
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5 # zizmor: ignore[unpinned-uses]
+        with:
+          python-version: "3.11"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7 # zizmor: ignore[unpinned-uses]
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run doctests
+        env:
+          WANDB_MODE: offline
+          WANDB_SILENT: "true"
+        run: uv run pytest docs
+
+  deploy:
+    needs: doctest
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5 # zizmor: ignore[unpinned-uses]
+        with:
+          persist-credentials: false
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5 # zizmor: ignore[unpinned-uses]
+
+      - name: Set up Python
+        uses: actions/setup-python@v5 # zizmor: ignore[unpinned-uses]
+        with:
+          python-version: "3.11"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7 # zizmor: ignore[unpinned-uses]
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build docs
+        run: uv run zensical build --clean
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v4 # zizmor: ignore[unpinned-uses]
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # zizmor: ignore[unpinned-uses]
