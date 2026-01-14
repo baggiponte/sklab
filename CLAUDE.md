@@ -79,6 +79,17 @@ just format    # Ruff format
 just docs      # Serve docs locally
 ```
 
+## Git Workflow
+
+**Only when explicitly requested by the user:**
+
+1. **Commit logically** with conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`)
+2. **Push** to remote branch
+3. **Open PR** with summary and test plan
+4. **Enable automerge** with squash: `gh pr merge <number> --squash --auto`
+
+The PR will auto-merge when CI passes. Do not commit, push, or open PRs unless the user explicitly asks.
+
 ## Code Style
 
 - Python 3.11+ types: `list[str]`, `X | None`, `Self`
