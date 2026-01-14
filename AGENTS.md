@@ -66,6 +66,17 @@ No flags to enable. No forgetting. It just happens.
 4. **Small steps.** Prefer small, reviewable PRs over big jumps.
 5. **Ask if blocked.** One brief clarifying question, not a brainstorm session.
 
+## Git Workflow
+
+**Only when explicitly requested by the user:**
+
+1. **Commit logically** with conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`)
+2. **Push** to remote branch
+3. **Open PR** with summary and test plan
+4. **Enable automerge** with squash: `gh pr merge <number> --squash --auto`
+
+The PR will auto-merge when CI passes. Do not commit, push, or open PRs unless the user explicitly asks.
+
 ## Style and Conventions
 
 - Python 3.11+ type hints (`|`, `Self`, `list[str]`)
