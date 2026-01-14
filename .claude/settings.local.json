@@ -1,16 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
-      "WebFetch(domain:news.ycombinator.com)",
-      "WebFetch(domain:inria.github.io)",
-      "Bash(uv run:*)",
-      "Bash(uv add:*)",
-      "Bash(uv sync:*)",
-      "Bash(just test:*)",
-      "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh pr list:*)",
+      "Bash(gh run view:*)",
+      "Bash(just test:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run:*)",
+      "Bash(uv sync:*)",
+      "WebFetch(domain:inria.github.io)",
+      "WebFetch(domain:laike9m.com)",
+      "WebFetch(domain:news.ycombinator.com)",
+      "WebSearch",
     ]
   }
 }
