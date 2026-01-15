@@ -47,8 +47,9 @@ class OptunaConfig:
 
     direction
         Optimization direction: ``Direction.MAXIMIZE`` (default) or
-        ``Direction.MINIMIZE``. Use ``MAXIMIZE`` for metrics like accuracy;
-        ``MINIMIZE`` for metrics like log_loss.
+        ``Direction.MINIMIZE``. Since ``Direction`` is a ``StrEnum``, you can
+        also pass ``"maximize"`` or ``"minimize"`` directly. Use maximize for
+        metrics like accuracy; minimize for metrics like log_loss.
 
     callbacks
         Optional sequence of callbacks invoked after each trial completes.
@@ -119,7 +120,7 @@ class OptunaConfig:
             n_trials=n_trials or self.n_trials,
             timeout=timeout,
             search_space=self.search_space,
-            direction=self.direction.value,
+            direction=self.direction,
             callbacks=self.callbacks,
             study_factory=self.study_factory,
             scoring=self.scoring,
