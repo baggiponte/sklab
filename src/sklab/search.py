@@ -6,8 +6,10 @@ from sklab._search.sklearn import (
     RandomSearchConfig,
 )
 from sklab.adapters.search import SearchConfigProtocol, SearcherProtocol
+from sklab.type_aliases import Direction
 
 __all__ = [
+    "Direction",
     "GridSearchConfig",
     "RandomSearchConfig",
     "OptunaConfig",
