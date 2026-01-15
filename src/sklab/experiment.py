@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from sklearn.base import clone
@@ -59,15 +59,11 @@ class Experiment:
     """Bundle experiment inputs for an sklearn-style run."""
 
     pipeline: Any
-    logger: LoggerProtocol | None = None
+    logger: LoggerProtocol = field(default_factory=NoOpLogger)
     scorers: Scorers | None = None
     name: str | None = None
     tags: Mapping[str, str] | None = None
     _fitted_estimator: Any | None = None
-
-    def __post_init__(self) -> None:
-        if self.logger is None:
-            self.logger = NoOpLogger()
 
     def fit(
         self,
