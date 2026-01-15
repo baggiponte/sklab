@@ -1,4 +1,4 @@
-# Regression Workflow: California Housing
+# Regression Workflow: Diabetes Progression
 
 **What you'll learn:**
 
@@ -10,18 +10,18 @@
 **Prerequisites:** Basic Python and sklearn familiarity. If you're new to pipelines,
 read [Why Pipelines Matter](why-pipelines.md) first.
 
-## The problem: predicting house prices
+## The problem: predicting disease progression
 
 Predicting continuous values—prices, temperatures, sales figures—is fundamentally
 different from classification. Instead of "which category?", we ask "how much?".
 
 This difference affects everything: which metrics make sense, how to interpret
 errors, and what pitfalls to avoid. A classifier that's wrong is just wrong,
-but a regressor can be wrong by a little (off by $1,000) or a lot (off by $1,000,000).
+but a regressor can be wrong by a little (off by 5 points) or a lot (off by 200 points).
 
-We'll use California housing data to predict median house values for districts.
-This is a classic regression task: given features like median income, average
-rooms, and location, estimate the median house value.
+We'll use the scikit-learn diabetes dataset to predict a quantitative disease
+progression score. This is a classic regression task: given features like age,
+BMI, blood pressure, and blood serum measurements, estimate a continuous target.
 
 ---
 
@@ -29,35 +29,32 @@ rooms, and location, estimate the median house value.
 
 ```python
 import polars as pl
-from sklearn.datasets import fetch_california_housing
+from sklearn.datasets import load_diabetes
 
-# Load the dataset
-housing = fetch_california_housing()
+# Load the dataset (bundled with sklearn, no download needed)
+diabetes = load_diabetes()
 
 # Keep data in Polars for exploration, convert to NumPy for sklearn
-housing_df = pl.DataFrame(housing.data, schema=housing.feature_names)
-housing_df = housing_df.with_columns(pl.Series("target", housing.target))
+diabetes_df = pl.DataFrame(diabetes.data, schema=diabetes.feature_names)
+diabetes_df = diabetes_df.with_columns(pl.Series("target", diabetes.target))
 
-print(housing_df.head())
-print(f"\nSamples: {housing_df.shape[0]}, Features: {len(housing.feature_names)}")
-print(f"Target range: ${housing_df['target'].min() * 100_000:.0f} - ${housing_df['target'].max() * 100_000:.0f}")
+print(diabetes_df.head())
+print(f"\nSamples: {diabetes_df.shape[0]}, Features: {len(diabetes.feature_names)}")
+print(f"Target range: {diabetes_df['target'].min():.1f} - {diabetes_df['target'].max():.1f}")
 
-X = housing_df.select(housing.feature_names).to_numpy()
-y = housing_df["target"].to_numpy()
+X = diabetes_df.select(diabetes.feature_names).to_numpy()
+y = diabetes_df["target"].to_numpy()
 ```
-
-The first run downloads the dataset and caches it in the scikit-learn data
-directory (defaults to `~/scikit_learn_data`).
 
 > **Concept: Regression Targets**
 >
 > Unlike classification (discrete labels like "spam" or "not spam"), regression
-> predicts continuous values. The California housing target is median house value
-> in $100,000s—so a prediction of 2.5 means $250,000.
+> predicts continuous values. The diabetes target is a disease progression score
+> in arbitrary units—so a prediction of 150 means a higher expected progression
+> than a prediction of 100.
 >
 > **Why it matters:** Regression errors are distances, not just "right or wrong."
-> A prediction of $245,000 when the true value is $250,000 is much better than
-> predicting $150,000.
+> A prediction of 145 when the true value is 150 is much better than predicting 80.
 
 ---
 
@@ -82,8 +79,8 @@ pipeline = Pipeline([
 
 > **Concept: Why Scale for Linear Models?**
 >
-> Linear models are sensitive to feature scales. If "median income" ranges from
-> 0-15 while "latitude" ranges from 32-42, the model will weight them unevenly
+> Linear models are sensitive to feature scales. If "age" ranges from
+> 18-80 while a blood serum feature spans 0-300, the model will weight them unevenly
 > based on magnitude, not importance.
 >
 > **Why it matters:** Without scaling, features with larger ranges dominate
@@ -103,7 +100,7 @@ experiment = Experiment(
         "mae": "neg_mean_absolute_error",
         "rmse": "neg_root_mean_squared_error",
     },
-    name="california-housing",
+    name="diabetes-progression",
 )
 ```
 
@@ -133,14 +130,14 @@ for a more robust estimate.
 from sklearn.model_selection import KFold
 
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
-result = experiment.cross_validate(X, y, cv=cv, run_name="california-cv")
+result = experiment.cross_validate(X, y, cv=cv, run_name="diabetes-cv")
 
 # Flip signs for readability (sklearn uses negative scores)
 mae = -result.metrics["cv/mae_mean"]
 rmse = -result.metrics["cv/rmse_mean"]
 
-print(f"MAE:  ${mae * 100_000:,.0f} (average error)")
-print(f"RMSE: ${rmse * 100_000:,.0f} (penalizes large errors)")
+print(f"MAE:  {mae:.1f} (average error)")
+print(f"RMSE: {rmse:.1f} (penalizes large errors)")
 ```
 
 **What just happened:**
@@ -166,18 +163,18 @@ print(f"RMSE: ${rmse * 100_000:,.0f} (penalizes large errors)")
 
 The metrics tell you how well your model generalizes:
 
-- **MAE of ~$50,000** means predictions are typically off by about $50,000
+- **MAE of ~50** means predictions are typically off by about 50 units
 - **RMSE higher than MAE** indicates some predictions have large errors
 
-For California housing (median values ~$200,000), an MAE of $50,000 means
-~25% average error. Whether that's acceptable depends on your use case.
+For the diabetes dataset (targets ~25–350), an MAE of 50 means
+~15–20% average error. Whether that's acceptable depends on your use case.
 
 ### What to try next
 
 If results aren't good enough:
 
 1. **Try a more complex model:** Gradient boosting often outperforms linear models
-2. **Engineer features:** Combine latitude/longitude into distance-from-coast
+2. **Engineer features:** Add interactions or non-linear transformations
 3. **Tune hyperparameters:** Search over `alpha` values with `experiment.search()`
 
 ---
@@ -188,7 +185,7 @@ Here's the full workflow in one block:
 
 ```python
 import polars as pl
-from sklearn.datasets import fetch_california_housing
+from sklearn.datasets import load_diabetes
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import KFold
 from sklearn.pipeline import Pipeline
@@ -197,12 +194,12 @@ from sklearn.preprocessing import StandardScaler
 from sklab.experiment import Experiment
 
 # 1. Load data
-housing = fetch_california_housing()
-housing_df = pl.DataFrame(housing.data, schema=housing.feature_names)
-housing_df = housing_df.with_columns(pl.Series("target", housing.target))
+diabetes = load_diabetes()
+diabetes_df = pl.DataFrame(diabetes.data, schema=diabetes.feature_names)
+diabetes_df = diabetes_df.with_columns(pl.Series("target", diabetes.target))
 
-X = housing_df.select(housing.feature_names).to_numpy()
-y = housing_df["target"].to_numpy()
+X = diabetes_df.select(diabetes.feature_names).to_numpy()
+y = diabetes_df["target"].to_numpy()
 
 # 2. Build pipeline
 pipeline = Pipeline([
@@ -217,7 +214,7 @@ experiment = Experiment(
         "mae": "neg_mean_absolute_error",
         "rmse": "neg_root_mean_squared_error",
     },
-    name="california-housing",
+    name="diabetes-progression",
 )
 
 # 4. Cross-validate
@@ -225,7 +222,7 @@ cv = KFold(n_splits=5, shuffle=True, random_state=42)
 result = experiment.cross_validate(X, y, cv=cv, run_name="cv")
 
 mae = -result.metrics["cv/mae_mean"]
-print(f"Cross-validated MAE: ${mae * 100_000:,.0f}")
+print(f"Cross-validated MAE: {mae:.1f}")
 ```
 
 ---
