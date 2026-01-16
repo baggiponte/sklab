@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from sklearn.base import clone
 from sklearn.metrics import get_scorer
@@ -14,10 +14,7 @@ from sklearn.utils.validation import check_is_fitted
 from sklab.adapters.logging import LoggerProtocol
 from sklab.logging import NoOpLogger
 from sklab.search import SearchConfigProtocol, SearcherProtocol
-
-MetricFunc = Callable[[Any, Any, Any], float]
-Scorer = MetricFunc | str
-Scorers = Mapping[str, Scorer]
+from sklab.type_aliases import ScorerFunc, ScorerName, Scoring
 
 
 @dataclass(slots=True)
@@ -60,7 +57,7 @@ class Experiment:
 
     pipeline: Any
     logger: LoggerProtocol = field(default_factory=NoOpLogger)
-    scorers: Scorers | None = None
+    scoring: Scoring | Sequence[Scoring] | None = None
     name: str | None = None
     tags: Mapping[str, str] | None = None
     _fitted_estimator: Any | None = None
@@ -95,10 +92,10 @@ class Experiment:
         *,
         run_name: str | None = None,
     ) -> EvalResult:
-        """Evaluate the fitted estimator using experiment scorers and log metrics."""
+        """Evaluate the fitted estimator using experiment scoring and log metrics."""
         check_is_fitted(self._fitted_estimator)
-        scorers = _require_scorers(self.scorers)
-        metrics = _score_estimator(self._fitted_estimator, X, y, scorers)
+        scoring = _require_scoring(self.scoring)
+        metrics = _score_estimator(self._fitted_estimator, X, y, scoring)
         with self.logger.start_run(
             name=run_name or self.name,
             config=None,
@@ -117,8 +114,8 @@ class Experiment:
         run_name: str | None = None,
     ) -> CVResult:
         """Run sklearn cross-validation, aggregate metrics, and optionally refit."""
-        scorers = _require_scorers(self.scorers)
-        scoring = _sklearn_scoring(scorers)
+        scoring_dict = _require_scoring(self.scoring)
+        scoring = _sklearn_scoring(scoring_dict)
         scores = sklearn_cross_validate(
             self.pipeline,
             X,
@@ -164,7 +161,7 @@ class Experiment:
         searcher = _build_searcher(
             search,
             pipeline=self.pipeline,
-            scorers=self.scorers,
+            scoring=self.scoring,
             cv=cv,
             n_trials=n_trials,
             timeout=timeout,
@@ -202,32 +199,58 @@ def _merge_params(estimator: Any, params: Mapping[str, Any] | None) -> dict[str,
     return merged
 
 
-def _require_scorers(scorers: Scorers | None) -> Scorers:
-    if not scorers:
-        raise ValueError("Experiment scorers are required for evaluation.")
-    return scorers
+def _normalize_scoring(
+    scoring: Scoring | Sequence[Scoring] | None,
+) -> dict[str, Scoring]:
+    """Convert scoring input to a dict of {name: scorer}."""
+    if scoring is None:
+        return {}
+    if isinstance(scoring, str):
+        return {scoring: scoring}
+    if not isinstance(scoring, Sequence):
+        # Must be ScorerFunc (callable)
+        name = getattr(scoring, "__name__", "custom_scorer")
+        return {name: scoring}
+    scorers = cast(Sequence[Scoring], scoring)
+    return {_scorer_name(s): s for s in scorers}
+
+
+def _scorer_name(scorer: Scoring) -> str:
+    """Get the name for a scorer."""
+    if isinstance(scorer, str):
+        return scorer
+    if callable(scorer):
+        return getattr(scorer, "__name__", "custom_scorer")
+    return str(scorer)
+
+
+def _require_scoring(
+    scoring: Scoring | Sequence[Scoring] | None,
+) -> dict[str, Scoring]:
+    """Normalize scoring and raise if empty."""
+    normalized = _normalize_scoring(scoring)
+    if not normalized:
+        raise ValueError("Experiment scoring is required for evaluation.")
+    return normalized
 
 
 def _score_estimator(
-    estimator: Any, X: Any, y: Any | None, scorers: Scorers
+    estimator: Any, X: Any, y: Any | None, scoring: dict[str, Scoring]
 ) -> dict[str, float]:
     metrics: dict[str, float] = {}
-    for name, scorer in scorers.items():
+    for name, scorer in scoring.items():
         scorer_fn = _resolve_scorer(scorer)
         metrics[name] = float(scorer_fn(estimator, X, y))
     return metrics
 
 
-def _resolve_scorer(scorer: Scorer) -> MetricFunc:
+def _resolve_scorer(scorer: Scoring) -> ScorerFunc:
     if isinstance(scorer, str):
         return get_scorer(scorer)
     return scorer
 
 
-def _sklearn_scoring(scorers: Scorers) -> dict[str, Scorer]:
-    scoring: dict[str, Scorer] = {}
-    for name, scorer in scorers.items():
-        scoring[name] = scorer
+def _sklearn_scoring(scoring: dict[str, Scoring]) -> dict[str, Scoring]:
     return scoring
 
 
@@ -247,7 +270,7 @@ def _build_searcher(
     search: SearcherProtocol | SearchConfigProtocol,
     *,
     pipeline: Any,
-    scorers: Scorers | None,
+    scoring: Scoring | Sequence[Scoring] | None,
     cv: Any | None,
     n_trials: int | None,
     timeout: float | None,
@@ -255,7 +278,7 @@ def _build_searcher(
     if isinstance(search, SearchConfigProtocol):
         return search.create_searcher(
             pipeline=pipeline,
-            scorers=scorers,
+            scoring=scoring,
             cv=cv,
             n_trials=n_trials,
             timeout=timeout,

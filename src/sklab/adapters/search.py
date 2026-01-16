@@ -1,9 +1,9 @@
 """Protocols to add new searchers that are not supported by sklab."""
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import Any, Protocol, runtime_checkable
 
-from sklab.type_aliases import Scorers
+from sklab.type_aliases import Scoring
 
 
 @runtime_checkable
@@ -26,7 +26,7 @@ class SearchConfigProtocol(Protocol):
         self,
         *,
         pipeline: Any,
-        scorers: Scorers | None,
+        scoring: Scoring | Sequence[Scoring] | None,
         cv: Any | None,
         n_trials: int | None,
         timeout: float | None,

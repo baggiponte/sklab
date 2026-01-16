@@ -78,28 +78,28 @@ class TestFit:
 class TestEvaluate:
     def test_requires_prior_fit(self) -> None:
         X, y = make_data()
-        experiment = Experiment(pipeline=make_pipeline(), scorers={"acc": "accuracy"})
+        experiment = Experiment(pipeline=make_pipeline(), scoring="accuracy")
 
         with pytest.raises((NotFittedError, TypeError)):
             experiment.evaluate(X, y)
 
-    def test_requires_scorers(self) -> None:
+    def test_requires_scoring(self) -> None:
         X, y = make_data()
         experiment = Experiment(pipeline=make_pipeline())
         experiment.fit(X, y)
 
-        with pytest.raises(ValueError, match="scorers are required"):
+        with pytest.raises(ValueError, match="scoring is required"):
             experiment.evaluate(X, y)
 
-    def test_uses_init_scorers(self) -> None:
+    def test_uses_init_scoring(self) -> None:
         X, y = make_data()
-        experiment = Experiment(pipeline=make_pipeline(), scorers={"acc": "accuracy"})
+        experiment = Experiment(pipeline=make_pipeline(), scoring="accuracy")
         experiment.fit(X, y)
 
         result = experiment.evaluate(X, y)
 
-        assert "acc" in result.metrics
-        assert 0.0 <= result.metrics["acc"] <= 1.0
+        assert "accuracy" in result.metrics
+        assert 0.0 <= result.metrics["accuracy"] <= 1.0
 
     def test_works_with_callable_scorer(self) -> None:
         def dummy_scorer(estimator, X, y):
@@ -108,14 +108,14 @@ class TestEvaluate:
         X, y = make_data()
         experiment = Experiment(
             pipeline=make_pipeline(),
-            scorers={"acc": "accuracy", "dummy": dummy_scorer},
+            scoring=["accuracy", dummy_scorer],
         )
         experiment.fit(X, y)
 
         result = experiment.evaluate(X, y)
 
-        assert result.metrics["dummy"] == 0.42
-        assert "acc" in result.metrics
+        assert result.metrics["dummy_scorer"] == 0.42
+        assert "accuracy" in result.metrics
 
     def test_logs_metrics_only(self) -> None:
         X, y = make_data()
@@ -123,7 +123,7 @@ class TestEvaluate:
         experiment = Experiment(
             pipeline=make_pipeline(),
             logger=logger,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
             name="test-eval",
         )
         experiment.fit(X, y)
@@ -134,28 +134,28 @@ class TestEvaluate:
         assert eval_run.name == "test-eval"
         assert eval_run.config is None
         assert len(eval_run.metrics_calls) == 1
-        assert "acc" in eval_run.metrics_calls[0][0]
+        assert "accuracy" in eval_run.metrics_calls[0][0]
         assert len(eval_run.model_calls) == 0
         assert len(eval_run.params_calls) == 0
 
 
 class TestCrossValidate:
-    def test_requires_scorers(self) -> None:
+    def test_requires_scoring(self) -> None:
         X, y = make_data()
         experiment = Experiment(pipeline=make_pipeline())
 
-        with pytest.raises(ValueError, match="scorers are required"):
+        with pytest.raises(ValueError, match="scoring is required"):
             experiment.cross_validate(X, y, cv=2)
 
     def test_returns_fold_metrics(self) -> None:
         X, y = make_data()
-        experiment = Experiment(pipeline=make_pipeline(), scorers={"acc": "accuracy"})
+        experiment = Experiment(pipeline=make_pipeline(), scoring="accuracy")
 
         result = experiment.cross_validate(X, y, cv=3, refit=False)
 
-        assert len(result.fold_metrics["acc"]) == 3
-        assert "cv/acc_mean" in result.metrics
-        assert "cv/acc_std" in result.metrics
+        assert len(result.fold_metrics["accuracy"]) == 3
+        assert "cv/accuracy_mean" in result.metrics
+        assert "cv/accuracy_std" in result.metrics
 
     def test_refit_true_returns_estimator(self) -> None:
         X, y = make_data()
@@ -163,7 +163,7 @@ class TestCrossValidate:
         experiment = Experiment(
             pipeline=make_pipeline(),
             logger=logger,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
         )
 
         result = experiment.cross_validate(X, y, cv=2, refit=True)
@@ -179,7 +179,7 @@ class TestCrossValidate:
         experiment = Experiment(
             pipeline=make_pipeline(),
             logger=logger,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
         )
         original_fitted = experiment._fitted_estimator
 
@@ -196,7 +196,7 @@ class TestCrossValidate:
         experiment = Experiment(
             pipeline=make_pipeline(),
             logger=logger,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
         )
 
         experiment.cross_validate(X, y, cv=2, refit=False)
@@ -204,8 +204,8 @@ class TestCrossValidate:
         cv_run = logger.runs[0]
         assert len(cv_run.metrics_calls) == 1
         metrics = cv_run.metrics_calls[0][0]
-        assert "cv/acc_mean" in metrics
-        assert "cv/acc_std" in metrics
+        assert "cv/accuracy_mean" in metrics
+        assert "cv/accuracy_std" in metrics
 
 
 class TestSearch:
@@ -225,7 +225,7 @@ class TestSearch:
     def test_accepts_searcher_protocol(self) -> None:
         X, y = make_data()
         pipeline = make_pipeline()
-        experiment = Experiment(pipeline=pipeline, scorers={"acc": "accuracy"})
+        experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
 
         result = experiment.search(searcher, X, y)
@@ -241,7 +241,7 @@ class TestSearch:
         experiment = Experiment(
             pipeline=pipeline,
             logger=logger,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
         )
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
 
@@ -259,7 +259,7 @@ class TestSearch:
     def test_updates_fitted_estimator(self) -> None:
         X, y = make_data()
         pipeline = make_pipeline()
-        experiment = Experiment(pipeline=pipeline, scorers={"acc": "accuracy"})
+        experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
 
         result = experiment.search(searcher, X, y)
@@ -319,10 +319,10 @@ class TestSearch:
         class DummyConfig:
             created_with: dict[str, Any] | None = None
 
-            def create_searcher(self, pipeline, scorers, cv, n_trials, timeout):
+            def create_searcher(self, pipeline, scoring, cv, n_trials, timeout):
                 self.created_with = {
                     "pipeline": pipeline,
-                    "scorers": scorers,
+                    "scoring": scoring,
                     "cv": cv,
                     "n_trials": n_trials,
                     "timeout": timeout,
@@ -334,14 +334,14 @@ class TestSearch:
         config = DummyConfig()
         experiment = Experiment(
             pipeline=pipeline,
-            scorers={"acc": "accuracy"},
+            scoring="accuracy",
         )
 
         result = experiment.search(config, X, y, cv=3, n_trials=10, timeout=60.0)
 
         assert config.created_with is not None
         assert config.created_with["pipeline"] is pipeline
-        assert config.created_with["scorers"] == {"acc": "accuracy"}
+        assert config.created_with["scoring"] == "accuracy"
         assert config.created_with["cv"] == 3
         assert config.created_with["n_trials"] == 10
         assert config.created_with["timeout"] == 60.0

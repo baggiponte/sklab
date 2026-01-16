@@ -10,7 +10,7 @@ from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
 
 from sklab._lazy import LazyModule
-from sklab.type_aliases import Direction, Scorer, Scorers
+from sklab.type_aliases import Direction, ScorerName, Scoring
 
 if TYPE_CHECKING:
     from optuna.study import Study
@@ -84,8 +84,8 @@ class OptunaConfig:
 
     scoring
         Scorer to use for evaluating trials. If None, uses the first scorer
-        from the Experiment's scorers. Can be a string (e.g., ``"accuracy"``),
-        a callable, or a mapping of names to scorers (first one is used).
+        from the Experiment's scoring. Can be a string (e.g., ``"accuracy"``),
+        a ScorerName enum, or a callable.
 
     References
     ----------
@@ -102,20 +102,20 @@ class OptunaConfig:
     direction: Direction = Direction.MAXIMIZE
     callbacks: Sequence[Callable[[Study, FrozenTrial], None]] | None = None
     study_factory: Callable[..., Study] | None = None
-    scoring: Scorer | Mapping[str, Scorer] | None = None
+    scoring: Scoring | None = None
 
     def create_searcher(
         self,
         *,
         pipeline: Any,
-        scorers: Scorers | None,
+        scoring: Scoring | Sequence[Scoring] | None,
         cv: Any | None,
         n_trials: int | None,
         timeout: float | None,
     ) -> OptunaSearcher:
         return OptunaSearcher(
             pipeline=pipeline,
-            scorers=scorers,
+            experiment_scoring=scoring,
             cv=cv,
             n_trials=n_trials or self.n_trials,
             timeout=timeout,
@@ -123,14 +123,14 @@ class OptunaConfig:
             direction=self.direction,
             callbacks=self.callbacks,
             study_factory=self.study_factory,
-            scoring=self.scoring,
+            config_scoring=self.scoring,
         )
 
 
 @dataclass(slots=True)
 class OptunaSearcher:
     pipeline: Any
-    scorers: Scorers | None
+    experiment_scoring: Scoring | Sequence[Scoring] | None
     cv: Any | None
     n_trials: int
     timeout: float | None
@@ -138,15 +138,14 @@ class OptunaSearcher:
     direction: str
     callbacks: Sequence[Callable[[Study, FrozenTrial], None]] | None
     study_factory: Callable[..., Study] | None
-    scoring: Scorer | Mapping[str, Scorer] | None
+    config_scoring: Scoring | None
 
     best_params_: Mapping[str, Any] | None = None
     best_score_: float | None = None
     best_estimator_: Any | None = None
 
     def fit(self, X: Any, y: Any | None = None) -> OptunaSearcher:  # noqa: N803
-        scoring = _resolve_scoring(self.scoring, self.scorers)
-        scorer = _pick_primary_scorer(scoring)
+        scorer = _resolve_scoring(self.config_scoring, self.experiment_scoring)
 
         def objective(trial: Any) -> float:
             params = dict(self.search_space(trial))
@@ -181,19 +180,27 @@ class OptunaSearcher:
 
 
 def _resolve_scoring(
-    scoring: Scorer | Mapping[str, Scorer] | None,
-    scorers: Scorers | None,
-) -> Scorer | Mapping[str, Scorer]:
-    if scoring is not None:
+    config_scoring: Scoring | None,
+    experiment_scoring: Scoring | Sequence[Scoring] | None,
+) -> Scoring:
+    """Resolve scoring, preferring config. Returns a single scorer for Optuna."""
+    if config_scoring is not None:
+        return config_scoring
+    if experiment_scoring is None:
+        raise ValueError("scoring or experiment scoring is required for search.")
+    # Pick first scorer from experiment
+    return _pick_primary_scorer(experiment_scoring)
+
+
+def _pick_primary_scorer(scoring: Scoring | Sequence[Scoring]) -> Scoring:
+    """Pick the primary scorer from scoring input."""
+    if isinstance(scoring, str):
         return scoring
-    if scorers is None:
-        raise ValueError("scoring or experiment scorers are required for search.")
-    return dict(scorers)
-
-
-def _pick_primary_scorer(scoring: Scorer | Mapping[str, Scorer]) -> Scorer:
-    if isinstance(scoring, Mapping):
-        if not scoring:
-            raise ValueError("At least one scorer is required for search.")
-        return next(iter(scoring.values()))
-    return scoring
+    if not isinstance(scoring, Sequence):
+        # Must be ScorerFunc (callable)
+        return scoring
+    # Sequence - pick first
+    scoring_list = list(scoring)
+    if not scoring_list:
+        raise ValueError("At least one scorer is required for search.")
+    return scoring_list[0]
