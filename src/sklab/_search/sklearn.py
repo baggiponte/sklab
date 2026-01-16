@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
@@ -103,10 +103,14 @@ def _normalize_scoring(
     scoring: Scoring | Sequence[Scoring],
 ) -> Scoring | dict[str, Scoring]:
     """Normalize scoring to what sklearn expects."""
-    if isinstance(scoring, (str, ScorerName)) or callable(scoring):
+    if isinstance(scoring, str):
+        return scoring
+    if not isinstance(scoring, Sequence):
+        # Must be ScorerFunc (callable)
         return scoring
     # Sequence of scorers -> dict
-    result = {_scorer_name(s): s for s in scoring}
+    scorers = cast(Sequence[Scoring], scoring)
+    result = {_scorer_name(s): s for s in scorers}
     if len(result) == 1:
         return next(iter(result.values()))
     return result

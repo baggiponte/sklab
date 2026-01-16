@@ -194,7 +194,10 @@ def _resolve_scoring(
 
 def _pick_primary_scorer(scoring: Scoring | Sequence[Scoring]) -> Scoring:
     """Pick the primary scorer from scoring input."""
-    if isinstance(scoring, (str, ScorerName)) or callable(scoring):
+    if isinstance(scoring, str):
+        return scoring
+    if not isinstance(scoring, Sequence):
+        # Must be ScorerFunc (callable)
         return scoring
     # Sequence - pick first
     scoring_list = list(scoring)

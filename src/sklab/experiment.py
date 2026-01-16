@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from sklearn.base import clone
 from sklearn.metrics import get_scorer
@@ -205,10 +205,14 @@ def _normalize_scoring(
     """Convert scoring input to a dict of {name: scorer}."""
     if scoring is None:
         return {}
-    if isinstance(scoring, (str, ScorerName)) or callable(scoring):
-        name = _scorer_name(scoring)
+    if isinstance(scoring, str):
+        return {scoring: scoring}
+    if not isinstance(scoring, Sequence):
+        # Must be ScorerFunc (callable)
+        name = getattr(scoring, "__name__", "custom_scorer")
         return {name: scoring}
-    return {_scorer_name(s): s for s in scoring}
+    scorers = cast(Sequence[Scoring], scoring)
+    return {_scorer_name(s): s for s in scorers}
 
 
 def _scorer_name(scorer: Scoring) -> str:
