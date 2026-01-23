@@ -152,7 +152,7 @@ Types that work together should live in the same module. Don't split them across
 src/sklab/_explain.py
 ├── ExplainerModel
 ├── ExplainerOutput
-├── PlotKind
+├── ExplainerPlotKind
 ├── ExplainResult
 └── compute_shap_explanation()
 
