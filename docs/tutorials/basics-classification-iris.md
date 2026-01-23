@@ -53,16 +53,16 @@ y = iris_df["target"].to_numpy()
 
 ## Step 2: Split into train and holdout
 
-> **Concept: Train/Test Splits**
->
-> The fundamental rule of ML evaluation: never evaluate on data you trained on.
-> A model that memorizes training data looks perfect on that data but fails
-> on new data. The holdout set simulates "new data" by keeping it hidden
-> during training.
->
-> **Stratification** ensures the class distribution in training and holdout
-> sets matches the original data. Without it, you might accidentally put all
-> examples of one class in the training set.
+!!! note "Concept: Train/Test Splits"
+
+    The fundamental rule of ML evaluation: never evaluate on data you trained on.
+    A model that memorizes training data looks perfect on that data but fails
+    on new data. The holdout set simulates "new data" by keeping it hidden
+    during training.
+
+    **Stratification** ensures the class distribution in training and holdout
+    sets matches the original data. Without it, you might accidentally put all
+    examples of one class in the training set.
 
 ```{.python continuation}
 from sklearn.model_selection import train_test_split
@@ -82,13 +82,13 @@ print(f"Holdout set: {len(X_test)} samples")
 
 ## Step 3: Build a pipeline and experiment
 
-> **Concept: Why Pipelines?**
->
-> If you scale features before splitting, the scaler "learns" statistics from
-> the holdout data—this is data leakage. Pipelines prevent this by ensuring
-> preprocessing is refit on each split's training data.
->
-> See [Why Pipelines Matter](why-pipelines.md) for a detailed explanation.
+!!! note "Concept: Why Pipelines?"
+
+    If you scale features before splitting, the scaler "learns" statistics from
+    the holdout data—this is data leakage. Pipelines prevent this by ensuring
+    preprocessing is refit on each split's training data.
+
+    See [Why Pipelines Matter](why-pipelines.md) for a detailed explanation.
 
 ```{.python continuation}
 from sklearn.linear_model import LogisticRegression
@@ -149,12 +149,12 @@ eval_result = experiment.evaluate(
 print(f"Holdout accuracy: {eval_result.metrics['accuracy']:.4f}")
 ```
 
-> **Concept: Holdout Evaluation**
->
-> The holdout score estimates how well your model will perform on new,
-> unseen data. If holdout accuracy is much lower than training accuracy,
-> your model is overfitting—memorizing training patterns rather than
-> learning generalizable ones.
+!!! note "Concept: Holdout Evaluation"
+
+    The holdout score estimates how well your model will perform on new,
+    unseen data. If holdout accuracy is much lower than training accuracy,
+    your model is overfitting—memorizing training patterns rather than
+    learning generalizable ones.
 
 ---
 
@@ -222,15 +222,15 @@ print(f"CV accuracy: {cv_result.metrics['cv/accuracy_mean']:.4f}")
 print(f"CV std: {cv_result.metrics['cv/accuracy_std']:.4f}")
 ```
 
-> **Concept: Cross-Validation**
->
-> Cross-validation splits the data into k folds, trains on k-1 folds, and
-> evaluates on the remaining fold. This rotates through all folds, giving
-> k scores that are averaged. The result is less sensitive to a single
-> lucky/unlucky split.
->
-> For classification, use `StratifiedKFold` (sklab uses this by default
-> when you pass `cv=5` to `cross_validate()`).
+!!! note "Concept: Cross-Validation"
+
+    Cross-validation splits the data into k folds, trains on k-1 folds, and
+    evaluates on the remaining fold. This rotates through all folds, giving
+    k scores that are averaged. The result is less sensitive to a single
+    lucky/unlucky split.
+
+    For classification, use `StratifiedKFold` (sklab uses this by default
+    when you pass `cv=5` to `cross_validate()`).
 
 ---
 

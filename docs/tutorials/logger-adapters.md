@@ -113,15 +113,15 @@ eval_result = experiment.evaluate(X, y, run_name="wandb-eval")
 print(eval_result.metrics)
 ```
 
-> **Concept: W&B Projects**
->
-> W&B organizes runs into projects. Each run tracks one experiment execution.
-> The project dashboard shows all runs with their parameters and metrics,
-> making comparison easy.
->
-> **Why it matters:** You can filter, sort, and compare runs across days or
-> weeks of experimentation. The web UI handles visualization so you don't
-> have to build custom dashboards.
+!!! note "Concept: W&B Projects"
+
+    W&B organizes runs into projects. Each run tracks one experiment execution.
+    The project dashboard shows all runs with their parameters and metrics,
+    making comparison easy.
+
+    **Why it matters:** You can filter, sort, and compare runs across days or
+    weeks of experimentation. The web UI handles visualization so you don't
+    have to build custom dashboards.
 
 ---
 
@@ -156,13 +156,13 @@ eval_result = experiment.evaluate(X, y, run_name="mlflow-eval")
 print(eval_result.metrics)
 ```
 
-> **Concept: MLflow Tracking Server**
->
-> MLflow can store runs locally (default) or on a remote tracking server.
-> Local storage is simple but team collaboration requires a server.
->
-> **Why it matters:** For personal projects, local MLflow "just works." For
-> teams, deploy a tracking server to share experiments.
+!!! note "Concept: MLflow Tracking Server"
+
+    MLflow can store runs locally (default) or on a remote tracking server.
+    Local storage is simple but team collaboration requires a server.
+
+    **Why it matters:** For personal projects, local MLflow "just works." For
+    teams, deploy a tracking server to share experiments.
 
 ---
 
@@ -231,15 +231,15 @@ class PrintLogger:
         print("model", name)
 ```
 
-> **Concept: The Logger Protocol**
->
-> sklab uses structural typing (protocols) rather than inheritance.
-> A logger needs `start_run()` as a context manager that yields an object
-> with `log_params()`, `log_metrics()`, etc. The simplest approach is
-> `start_run()` yielding `self`.
->
-> **Why it matters:** You don't need to inherit from a base class. Just
-> implement the methods and it works.
+!!! note "Concept: The Logger Protocol"
+
+    sklab uses structural typing (protocols) rather than inheritance.
+    A logger needs `start_run()` as a context manager that yields an object
+    with `log_params()`, `log_metrics()`, etc. The simplest approach is
+    `start_run()` yielding `self`.
+
+    **Why it matters:** You don't need to inherit from a base class. Just
+    implement the methods and it works.
 
 ### Using the custom logger
 

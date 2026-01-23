@@ -179,12 +179,26 @@ print(f"CV accuracy: {cv_result.metrics['cv/accuracy_mean']:.3f}")
 
 ## Installation
 
-```bash
-pip install sklab
-```
+=== "uv (recommended)"
 
-For Optuna support:
+    ```bash
+    uv add sklab
+    ```
 
-```bash
-pip install sklab[optuna]
-```
+    For Optuna support:
+
+    ```bash
+    uv add "sklab[optuna]"
+    ```
+
+=== "pip"
+
+    ```bash
+    pip install sklab
+    ```
+
+    For Optuna support:
+
+    ```bash
+    pip install sklab[optuna]
+    ```

@@ -44,18 +44,18 @@ print(f"\nTarget distribution:")
 print(titanic_df["survived"].value_counts())
 ```
 
-> **Concept: Mixed Data Types**
->
-> Datasets often contain different types of features:
-> - **Numeric:** age, fare, continuous measurements
-> - **Categorical:** gender, port of embarkation, discrete labels
-> - **Ordinal:** passenger class (1st > 2nd > 3rd), education level
->
-> Each type needs different preprocessing. Scalers work on numbers. Encoders
-> work on categories. Applying the wrong transform corrupts your data.
->
-> **Why it matters:** A pipeline that treats "sex" as numeric will try to
-> compute its mean—nonsense that sklearn might not catch.
+!!! note "Concept: Mixed Data Types"
+
+    Datasets often contain different types of features:
+    - **Numeric:** age, fare, continuous measurements
+    - **Categorical:** gender, port of embarkation, discrete labels
+    - **Ordinal:** passenger class (1st > 2nd > 3rd), education level
+
+    Each type needs different preprocessing. Scalers work on numbers. Encoders
+    work on categories. Applying the wrong transform corrupts your data.
+
+    **Why it matters:** A pipeline that treats "sex" as numeric will try to
+    compute its mean—nonsense that sklearn might not catch.
 
 ---
 
@@ -116,25 +116,25 @@ preprocess = ColumnTransformer(
 - **Numeric columns:** Fill missing with median, then scale to mean=0, std=1
 - **Other columns:** Dropped (we've selected only the features we want)
 
-> **Concept: Imputation Inside the Pipeline**
->
-> Missing values must be handled *inside* the pipeline, not before. Why?
->
-> If you impute before splitting, the imputer sees test data statistics—leakage.
-> The median age in your training set shouldn't include test passengers.
->
-> **Why it matters:** Inside the pipeline, imputation is refit on each fold's
-> training data. The test fold's missing values are filled using only training
-> statistics—the correct approach.
+!!! note "Concept: Imputation Inside the Pipeline"
 
-> **Concept: OneHotEncoder Options**
->
-> `handle_unknown="ignore"` prevents errors when the test set contains
-> categories not seen during training. Instead of crashing, it creates a
-> row of zeros for that observation.
->
-> **Why it matters:** In production, you might see a new embarkation port
-> or edge case. The model should handle it gracefully, not crash.
+    Missing values must be handled *inside* the pipeline, not before. Why?
+
+    If you impute before splitting, the imputer sees test data statistics—leakage.
+    The median age in your training set shouldn't include test passengers.
+
+    **Why it matters:** Inside the pipeline, imputation is refit on each fold's
+    training data. The test fold's missing values are filled using only training
+    statistics—the correct approach.
+
+!!! note "Concept: OneHotEncoder Options"
+
+    `handle_unknown="ignore"` prevents errors when the test set contains
+    categories not seen during training. Instead of crashing, it creates a
+    row of zeros for that observation.
+
+    **Why it matters:** In production, you might see a new embarkation port
+    or edge case. The model should handle it gracefully, not crash.
 
 ---
 
@@ -171,16 +171,16 @@ print(f"Accuracy: {result.metrics['cv/accuracy_mean']:.3f} (+/- {result.metrics[
 print(f"F1 Score: {result.metrics['cv/f1_mean']:.3f} (+/- {result.metrics['cv/f1_std']:.3f})")
 ```
 
-> **Concept: Stratified Splits for Imbalanced Data**
->
-> The Titanic dataset is imbalanced—more passengers died than survived. Random
-> splits might accidentally put most survivors in one fold, distorting metrics.
->
-> `StratifiedKFold` ensures each fold has the same proportion of survivors and
-> non-survivors as the original data.
->
-> **Why it matters:** Without stratification, fold metrics vary wildly based on
-> random chance rather than model quality.
+!!! note "Concept: Stratified Splits for Imbalanced Data"
+
+    The Titanic dataset is imbalanced—more passengers died than survived. Random
+    splits might accidentally put most survivors in one fold, distorting metrics.
+
+    `StratifiedKFold` ensures each fold has the same proportion of survivors and
+    non-survivors as the original data.
+
+    **Why it matters:** Without stratification, fold metrics vary wildly based on
+    random chance rather than model quality.
 
 ---
 

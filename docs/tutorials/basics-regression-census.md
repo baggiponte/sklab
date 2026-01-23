@@ -46,15 +46,15 @@ X = diabetes_df.select(diabetes.feature_names).to_numpy()
 y = diabetes_df["target"].to_numpy()
 ```
 
-> **Concept: Regression Targets**
->
-> Unlike classification (discrete labels like "spam" or "not spam"), regression
-> predicts continuous values. The diabetes target is a disease progression score
-> in arbitrary units—so a prediction of 150 means a higher expected progression
-> than a prediction of 100.
->
-> **Why it matters:** Regression errors are distances, not just "right or wrong."
-> A prediction of 145 when the true value is 150 is much better than predicting 80.
+!!! note "Concept: Regression Targets"
+
+    Unlike classification (discrete labels like "spam" or "not spam"), regression
+    predicts continuous values. The diabetes target is a disease progression score
+    in arbitrary units—so a prediction of 150 means a higher expected progression
+    than a prediction of 100.
+
+    **Why it matters:** Regression errors are distances, not just "right or wrong."
+    A prediction of 145 when the true value is 150 is much better than predicting 80.
 
 ---
 
@@ -77,15 +77,15 @@ pipeline = Pipeline([
 - `Ridge` is linear regression with L2 regularization (prevents overfitting)
 - The `alpha` parameter controls regularization strength
 
-> **Concept: Why Scale for Linear Models?**
->
-> Linear models are sensitive to feature scales. If "age" ranges from
-> 18-80 while a blood serum feature spans 0-300, the model will weight them unevenly
-> based on magnitude, not importance.
->
-> **Why it matters:** Without scaling, features with larger ranges dominate
-> the model. Scaling puts all features on equal footing, letting the model
-> learn which features actually matter.
+!!! note "Concept: Why Scale for Linear Models?"
+
+    Linear models are sensitive to feature scales. If "age" ranges from
+    18-80 while a blood serum feature spans 0-300, the model will weight them unevenly
+    based on magnitude, not importance.
+
+    **Why it matters:** Without scaling, features with larger ranges dominate
+    the model. Scaling puts all features on equal footing, letting the model
+    learn which features actually matter.
 
 ---
 
@@ -101,19 +101,19 @@ experiment = Experiment(
 )
 ```
 
-> **Concept: Regression Metrics**
->
-> - **MAE (Mean Absolute Error):** Average of |predicted - actual|. Intuitive:
->   "on average, predictions are off by X dollars."
-> - **RMSE (Root Mean Squared Error):** Square root of average squared errors.
->   Penalizes large errors more heavily than MAE.
->
-> **Why it matters:** MAE treats all errors equally; RMSE punishes big mistakes
-> more. If being off by $100,000 is much worse than being off by $10,000 ten times,
-> optimize RMSE. If all errors matter equally, use MAE.
->
-> Note: sklearn's scorers are *negated* by convention (higher is better), so we
-> flip the sign when interpreting results.
+!!! note "Concept: Regression Metrics"
+
+    - **MAE (Mean Absolute Error):** Average of |predicted - actual|. Intuitive:
+      "on average, predictions are off by X dollars."
+    - **RMSE (Root Mean Squared Error):** Square root of average squared errors.
+      Penalizes large errors more heavily than MAE.
+
+    **Why it matters:** MAE treats all errors equally; RMSE punishes big mistakes
+    more. If being off by $100,000 is much worse than being off by $10,000 ten times,
+    optimize RMSE. If all errors matter equally, use MAE.
+
+    Note: sklearn's scorers are *negated* by convention (higher is better), so we
+    flip the sign when interpreting results.
 
 ---
 
@@ -144,15 +144,15 @@ print(f"RMSE: {rmse:.1f} (penalizes large errors)")
 3. Computed MAE and RMSE on each fold's predictions
 4. Averaged the metrics across all 5 folds
 
-> **Concept: Cross-Validation for Regression**
->
-> Unlike classification, regression doesn't need stratified splits (there are no
-> classes to balance). Standard `KFold` works well. However, if your target has
-> outliers or is heavily skewed, consider stratified regression splits.
->
-> **Why it matters:** A single holdout split might accidentally put all the
-> expensive houses in the test set. Cross-validation averages over many splits,
-> giving you a more reliable performance estimate.
+!!! note "Concept: Cross-Validation for Regression"
+
+    Unlike classification, regression doesn't need stratified splits (there are no
+    classes to balance). Standard `KFold` works well. However, if your target has
+    outliers or is heavily skewed, consider stratified regression splits.
+
+    **Why it matters:** A single holdout split might accidentally put all the
+    expensive houses in the test set. Cross-validation averages over many splits,
+    giving you a more reliable performance estimate.
 
 ---
 

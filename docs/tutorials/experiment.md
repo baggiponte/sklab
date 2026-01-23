@@ -161,12 +161,12 @@ ts_result = ts_experiment.cross_validate(X_ts, y_ts_binary, cv=tscv, run_name="t
 print(f"Time series CV: {ts_result.metrics['cv/accuracy_mean']:.4f}")
 ```
 
-> **Concept: Choosing a Splitter**
->
-> - **Classification:** Use `StratifiedKFold` to preserve class balance
-> - **Regression:** Use `KFold` (or pass an integer like `cv=5`)
-> - **Time series:** Use `TimeSeriesSplit` to avoid using future data to predict past
-> - **Grouped data:** Use `GroupKFold` to keep groups together
+!!! note "Concept: Choosing a Splitter"
+
+    - **Classification:** Use `StratifiedKFold` to preserve class balance
+    - **Regression:** Use `KFold` (or pass an integer like `cv=5`)
+    - **Time series:** Use `TimeSeriesSplit` to avoid using future data to predict past
+    - **Grouped data:** Use `GroupKFold` to keep groups together
 
 ---
 

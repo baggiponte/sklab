@@ -51,15 +51,15 @@ print(f"Date range: {series['date'].min()} to {series['date'].max()}")
 print(f"CO2 range: {series['co2'].min():.1f} to {series['co2'].max():.1f} ppm")
 ```
 
-> **Concept: The Mauna Loa Dataset**
->
-> Scientists at Mauna Loa, Hawaii have measured atmospheric CO2 since 1958.
-> The data shows two patterns: a long-term upward trend (from fossil fuels)
-> and an annual cycle (plants absorb CO2 in summer, release it in winter).
->
-> **Why it matters:** This combination of trend and seasonality is common in
-> real-world time series—sales, traffic, energy usage. Learning to model it
-> here transfers to many practical problems.
+!!! note "Concept: The Mauna Loa Dataset"
+
+    Scientists at Mauna Loa, Hawaii have measured atmospheric CO2 since 1958.
+    The data shows two patterns: a long-term upward trend (from fossil fuels)
+    and an annual cycle (plants absorb CO2 in summer, release it in winter).
+
+    **Why it matters:** This combination of trend and seasonality is common in
+    real-world time series—sales, traffic, energy usage. Learning to model it
+    here transfers to many practical problems.
 
 ---
 
@@ -100,18 +100,18 @@ print(f"Samples: {X.shape[0]}")
 - `t`: Linear time index (captures long-term trend)
 - `month_sin`, `month_cos`: Encode the annual cycle as coordinates on a circle
 
-> **Concept: Sine/Cosine Encoding**
->
-> Months aren't linear—December (12) is close to January (1), not far from it.
-> Encoding month as a number treats 12 and 1 as distant, which breaks cyclical
-> relationships.
->
-> Sine and cosine transform the cycle into circular coordinates. On a circle,
-> December and January are neighbors. The model sees smooth, continuous seasonal
-> patterns instead of artificial jumps.
->
-> **Why it matters:** Linear models can't learn "month 12 is near month 1" from
-> raw numbers. Sine/cosine encoding hands the model this relationship for free.
+!!! note "Concept: Sine/Cosine Encoding"
+
+    Months aren't linear—December (12) is close to January (1), not far from it.
+    Encoding month as a number treats 12 and 1 as distant, which breaks cyclical
+    relationships.
+
+    Sine and cosine transform the cycle into circular coordinates. On a circle,
+    December and January are neighbors. The model sees smooth, continuous seasonal
+    patterns instead of artificial jumps.
+
+    **Why it matters:** Linear models can't learn "month 12 is near month 1" from
+    raw numbers. Sine/cosine encoding hands the model this relationship for free.
 
 ---
 
@@ -129,18 +129,18 @@ for i, (train_idx, test_idx) in enumerate(ts_cv.split(X)):
     print(f"Fold {i+1}: Train on {len(train_idx)} samples, test on {len(test_idx)}")
 ```
 
-> **Concept: Why Not Random Splits?**
->
-> Random k-fold cross-validation shuffles data, then splits. For time series,
-> this means training on 2020 data and testing on 2018 data—using the future
-> to predict the past.
->
-> `TimeSeriesSplit` respects temporal order: always train on earlier data,
-> test on later data. Each fold expands the training set forward in time.
->
-> **Why it matters:** A model validated with random splits will look great but
-> fail in production. It's seen the future during training—something impossible
-> in real deployment.
+!!! note "Concept: Why Not Random Splits?"
+
+    Random k-fold cross-validation shuffles data, then splits. For time series,
+    this means training on 2020 data and testing on 2018 data—using the future
+    to predict the past.
+
+    `TimeSeriesSplit` respects temporal order: always train on earlier data,
+    test on later data. Each fold expands the training set forward in time.
+
+    **Why it matters:** A model validated with random splits will look great but
+    fail in production. It's seen the future during training—something impossible
+    in real deployment.
 
 ---
 

@@ -76,12 +76,12 @@ X = features.to_numpy()
 ts_cv = TimeSeriesSplit(n_splits=3)
 ```
 
-> **Concept: Why Synthetic Data?**
->
-> With real data, we don't know the true underlying patterns. Synthetic data
-> lets us embed known cycles and measure how well each encoding recovers them.
-> If an encoding works on synthetic data with the right structure, it will
-> generalize to real data with similar patterns.
+!!! note "Concept: Why Synthetic Data?"
+
+    With real data, we don't know the true underlying patterns. Synthetic data
+    lets us embed known cycles and measure how well each encoding recovers them.
+    If an encoding works on synthetic data with the right structure, it will
+    generalize to real data with similar patterns.
 
 ---
 
@@ -145,15 +145,15 @@ print("1. Gradient Boosting (raw ordinal):")
 show_metrics(result)
 ```
 
-> **Concept: How Trees Handle Cycles**
->
-> Decision trees split on threshold comparisons: "hour < 12?" They can learn
-> that hours 22, 23, 0, 1 share similar patterns by creating multiple splits.
-> But this requires the model to "discover" the cycle from data, rather than
-> encoding it directly.
->
-> **Why it matters:** Trees work decently on cyclical data but waste capacity
-> re-learning patterns that simple encoding could provide for free.
+!!! note "Concept: How Trees Handle Cycles"
+
+    Decision trees split on threshold comparisons: "hour < 12?" They can learn
+    that hours 22, 23, 0, 1 share similar patterns by creating multiple splits.
+    But this requires the model to "discover" the cycle from data, rather than
+    encoding it directly.
+
+    **Why it matters:** Trees work decently on cyclical data but waste capacity
+    re-learning patterns that simple encoding could provide for free.
 
 ---
 
@@ -214,14 +214,14 @@ print("\n3. Linear (one-hot time):")
 show_metrics(result)
 ```
 
-> **Concept: One-Hot Trade-offs**
->
-> One-hot encoding creates 24 features for hour, 7 for weekday, 12 for month.
-> Each time point gets its own coefficient—maximum flexibility.
->
-> **The catch:** The model doesn't know hour 23 and hour 0 are similar. It must
-> learn this from data, if it can at all. And with 43 time features, you need
-> enough data to estimate them all reliably.
+!!! note "Concept: One-Hot Trade-offs"
+
+    One-hot encoding creates 24 features for hour, 7 for weekday, 12 for month.
+    Each time point gets its own coefficient—maximum flexibility.
+
+    **The catch:** The model doesn't know hour 23 and hour 0 are similar. It must
+    learn this from data, if it can at all. And with 43 time features, you need
+    enough data to estimate them all reliably.
 
 ---
 
@@ -264,14 +264,14 @@ print("\n4. Linear (sine/cosine time):")
 show_metrics(result)
 ```
 
-> **Concept: The Circle Trick**
->
-> Sine and cosine map a cycle onto a unit circle. Hour 0 and hour 23 are now
-> geometrically close—they're neighbors on the circle. The Euclidean distance
-> between their (sin, cos) coordinates reflects their true temporal distance.
->
-> **Why it matters:** With just 2 features per cycle (sin + cos), you encode
-> the wraparound structure explicitly. The model doesn't need to discover it.
+!!! note "Concept: The Circle Trick"
+
+    Sine and cosine map a cycle onto a unit circle. Hour 0 and hour 23 are now
+    geometrically close—they're neighbors on the circle. The Euclidean distance
+    between their (sin, cos) coordinates reflects their true temporal distance.
+
+    **Why it matters:** With just 2 features per cycle (sin + cos), you encode
+    the wraparound structure explicitly. The model doesn't need to discover it.
 
 ---
 
@@ -316,17 +316,17 @@ print("\n5. Linear (periodic splines):")
 show_metrics(result)
 ```
 
-> **Concept: Splines vs. Sine/Cosine**
->
-> Sine/cosine can only model single-frequency patterns. Real hourly effects
-> might peak at 8 AM and 6 PM—a two-peak pattern that needs multiple harmonics.
->
-> Periodic splines create flexible basis functions that can capture arbitrary
-> shapes while still wrapping smoothly around the cycle boundary. They need
-> more features but can model complex patterns.
->
-> **When to use which:** Sine/cosine for simple, single-peak cycles. Splines
-> when you expect multi-modal or asymmetric patterns.
+!!! note "Concept: Splines vs. Sine/Cosine"
+
+    Sine/cosine can only model single-frequency patterns. Real hourly effects
+    might peak at 8 AM and 6 PM—a two-peak pattern that needs multiple harmonics.
+
+    Periodic splines create flexible basis functions that can capture arbitrary
+    shapes while still wrapping smoothly around the cycle boundary. They need
+    more features but can model complex patterns.
+
+    **When to use which:** Sine/cosine for simple, single-peak cycles. Splines
+    when you expect multi-modal or asymmetric patterns.
 
 ---
 

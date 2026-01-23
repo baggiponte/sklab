@@ -80,14 +80,14 @@ When introducing a concept, use a blockquote "Concept box" that explains
 the idea in 2-4 sentences:
 
 ```markdown
-> **Concept: Data Leakage**
->
-> Data leakage occurs when information from outside the training set
-> influences model training. A common example: fitting a StandardScaler
-> on all data before splitting. The scaler "sees" test set statistics,
-> giving artificially optimistic results.
->
-> sklab prevents this by requiring pipelines.
+!!! note "Concept: Data Leakage"
+
+    Data leakage occurs when information from outside the training set
+    influences model training. A common example: fitting a StandardScaler
+    on all data before splitting. The scaler "sees" test set statistics,
+    giving artificially optimistic results.
+
+    sklab prevents this by requiring pipelines.
 ```
 
 ### 4. Show "What Just Happened"
