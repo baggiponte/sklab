@@ -26,10 +26,10 @@ from sklab.search import (
 class TestFit:
     def test_returns_fitted_estimator(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline: Pipeline,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline)
         result = experiment.fit(X, y)
 
@@ -40,10 +40,10 @@ class TestFit:
 
     def test_clones_pipeline(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline: Pipeline,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline)
         result = experiment.fit(X, y)
 
@@ -53,10 +53,10 @@ class TestFit:
 
     def test_sets_fitted_estimator(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline: Pipeline,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline)
         result = experiment.fit(X, y)
 
@@ -64,10 +64,10 @@ class TestFit:
 
     def test_merges_params(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline: Pipeline,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline)
         result = experiment.fit(X, y, params={"model__C": 0.5})
 
@@ -76,11 +76,11 @@ class TestFit:
 
     def test_logs_run_with_config_and_model(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline: Pipeline,
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline,
             logger=logger,
@@ -104,10 +104,10 @@ class TestFit:
 class TestEvaluate:
     def test_requires_prior_fit(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
 
         with pytest.raises((NotFittedError, TypeError)):
@@ -115,10 +115,10 @@ class TestEvaluate:
 
     def test_requires_scoring(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory())
         experiment.fit(X, y)
 
@@ -127,10 +127,10 @@ class TestEvaluate:
 
     def test_uses_init_scoring(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         experiment.fit(X, y)
 
@@ -142,13 +142,13 @@ class TestEvaluate:
 
     def test_works_with_callable_scorer(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def dummy_scorer(estimator, X, y):
             return 0.42
 
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline_factory(),
             scoring=["accuracy", dummy_scorer],
@@ -162,11 +162,11 @@ class TestEvaluate:
 
     def test_logs_metrics_only(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline_factory(),
             logger=logger,
@@ -189,10 +189,10 @@ class TestEvaluate:
 class TestCrossValidate:
     def test_requires_scoring(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory())
 
         with pytest.raises(ValueError, match="scoring is required"):
@@ -200,10 +200,10 @@ class TestCrossValidate:
 
     def test_returns_fold_metrics(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
 
         result = experiment.cross_validate(X, y, cv=3, refit=False)
@@ -215,11 +215,11 @@ class TestCrossValidate:
 
     def test_refit_true_returns_estimator(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline_factory(),
             logger=logger,
@@ -235,11 +235,11 @@ class TestCrossValidate:
 
     def test_refit_false_no_estimator(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline_factory(),
             logger=logger,
@@ -256,11 +256,11 @@ class TestCrossValidate:
 
     def test_logs_metrics(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(
             pipeline=pipeline_factory(),
             logger=logger,
@@ -292,10 +292,10 @@ class TestSearch:
 
     def test_accepts_searcher_protocol(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
@@ -309,10 +309,10 @@ class TestSearch:
 
     def test_raw_falls_back_when_study_missing(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
@@ -323,7 +323,7 @@ class TestSearch:
 
     def test_raw_falls_back_when_study_none(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         @dataclass
@@ -340,7 +340,7 @@ class TestSearch:
                 self.best_estimator_ = clone(self.estimator).fit(X, y)
                 return self
 
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, StudyNoneSearcher(pipeline))
@@ -351,11 +351,11 @@ class TestSearch:
 
     def test_logs_params_metrics_model(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(
             pipeline=pipeline,
@@ -377,10 +377,10 @@ class TestSearch:
 
     def test_updates_fitted_estimator(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(pipeline=pipeline, scoring="accuracy")
         searcher = cast(SearcherProtocol, self.DummySearcher(pipeline))
@@ -391,7 +391,7 @@ class TestSearch:
 
     def test_no_score_skips_metrics_logging(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -407,7 +407,7 @@ class TestSearch:
                 self.best_estimator_ = clone(self.estimator).fit(X, y)
                 return self
 
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         experiment = Experiment(pipeline=pipeline, logger=logger)
         searcher = cast(SearcherProtocol, NoScoreSearcher(pipeline))
@@ -419,7 +419,7 @@ class TestSearch:
 
     def test_no_estimator_skips_model_logging(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -434,7 +434,7 @@ class TestSearch:
                 self.best_score_ = 0.5
                 return self
 
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), logger=logger)
         original_fitted = experiment._fitted_estimator
         searcher = cast(SearcherProtocol, NoEstimatorSearcher())
@@ -447,7 +447,7 @@ class TestSearch:
 
     def test_search_config_protocol(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         @dataclass
@@ -466,7 +466,7 @@ class TestSearch:
                 self.last_searcher = TestSearch.DummySearcher(pipeline)
                 return self.last_searcher
 
-        X, y = data
+        X, y = multiclass_data
         pipeline = pipeline_factory()
         config = DummyConfig()
         experiment = Experiment(
@@ -488,10 +488,10 @@ class TestSearch:
 
     def test_raw_grid_search_config(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         config = GridSearchConfig(param_grid={"model__C": [0.1, 1.0]})
 
@@ -501,10 +501,10 @@ class TestSearch:
 
     def test_raw_random_search_config(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         config = RandomSearchConfig(
             param_distributions={"model__C": [0.1, 1.0]},
@@ -518,10 +518,10 @@ class TestSearch:
 
     def test_raw_grid_searcher(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         searcher = GridSearchCV(
             pipeline_factory(),
@@ -536,10 +536,10 @@ class TestSearch:
 
     def test_raw_random_searcher(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         searcher = RandomizedSearchCV(
             pipeline_factory(),
@@ -556,13 +556,13 @@ class TestSearch:
 
     def test_raw_optuna_config_returns_study(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def search_space(trial: optuna.trial.Trial) -> dict[str, float]:
             return {"model__C": trial.suggest_float("C", 0.1, 1.0)}
 
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         config = OptunaConfig(search_space=search_space, n_trials=2)
 
@@ -572,13 +572,13 @@ class TestSearch:
 
     def test_raw_optuna_searcher_returns_study(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def search_space(trial: optuna.trial.Trial) -> dict[str, float]:
             return {"model__C": trial.suggest_float("C", 0.1, 1.0)}
 
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
         searcher = OptunaSearcher(
             pipeline=pipeline_factory(),
@@ -599,10 +599,10 @@ class TestSearch:
 
     def test_invalid_search_raises_type_error(
         self,
-        data: tuple[Any, Any],
+        multiclass_data: tuple[Any, Any],
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
-        X, y = data
+        X, y = multiclass_data
         experiment = Experiment(pipeline=pipeline_factory())
 
         with pytest.raises(TypeError, match="create_searcher.*fit"):

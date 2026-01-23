@@ -7,28 +7,32 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any
 
+import numpy as np
 import pytest
+from numpy.typing import NDArray
 from sklearn.datasets import load_breast_cancer, load_diabetes, load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+DatasetTuple = tuple[NDArray[np.floating], NDArray[np.integer]]
+
 
 @pytest.fixture
-def data() -> tuple[Any, Any]:
-    """Dataset fixture for experiments (iris - multiclass)."""
+def multiclass_data() -> DatasetTuple:
+    """Multiclass classification dataset (iris, 3 classes)."""
     dataset = load_iris()
     return dataset.data, dataset.target
 
 
 @pytest.fixture
-def binary_data() -> tuple[Any, Any]:
+def binary_data() -> DatasetTuple:
     """Binary classification dataset (breast cancer)."""
     return load_breast_cancer(return_X_y=True)
 
 
 @pytest.fixture
-def regression_data() -> tuple[Any, Any]:
+def regression_data() -> tuple[NDArray[np.floating], NDArray[np.floating]]:
     """Regression dataset (diabetes)."""
     return load_diabetes(return_X_y=True)
 

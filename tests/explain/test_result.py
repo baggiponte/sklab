@@ -39,9 +39,9 @@ class TestShapValues:
         assert result.values.shape[0] == 5
         assert result.values.shape[1] == X.shape[1]
 
-    def test_multiclass_values_shape(self, data):
+    def test_multiclass_values_shape(self, multiclass_data):
         """Multiclass: values should be (n_samples, n_features, n_classes)."""
-        X, y = data
+        X, y = multiclass_data
         exp = Experiment(pipeline=LogisticRegression(max_iter=1000))
         exp.fit(X, y)
         result = exp.explain(X[:5])
