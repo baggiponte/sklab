@@ -8,7 +8,7 @@ from typing import Any, cast
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-from sklab.type_aliases import ScorerName, Scoring
+from sklab.type_aliases import Scoring
 
 
 @dataclass(slots=True)
