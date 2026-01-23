@@ -11,10 +11,11 @@ from sklearn.metrics import get_scorer
 from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.utils.validation import check_is_fitted
 
+from sklab._search.optuna import OptunaConfig
 from sklab.adapters.logging import LoggerProtocol
 from sklab.logging import NoOpLogger
 from sklab.search import SearchConfigProtocol, SearcherProtocol
-from sklab.type_aliases import ScorerFunc, ScorerName, Scoring
+from sklab.type_aliases import ScorerFunc, Scoring
 
 
 @dataclass(slots=True)
@@ -24,6 +25,7 @@ class FitResult:
     estimator: Any
     metrics: Mapping[str, float]
     params: Mapping[str, Any]
+    raw: Any  # The fitted estimator (same as .estimator, for API consistency)
 
 
 @dataclass(slots=True)
@@ -31,6 +33,7 @@ class EvalResult:
     """Result of evaluating a fitted estimator on a dataset."""
 
     metrics: Mapping[str, float]
+    raw: Mapping[str, float]  # Same as metrics (for API consistency)
 
 
 @dataclass(slots=True)
@@ -40,6 +43,7 @@ class CVResult:
     metrics: Mapping[str, float]
     fold_metrics: Mapping[str, list[float]]
     estimator: Any | None
+    raw: Mapping[str, Any]  # Full sklearn cross_validate dict
 
 
 @dataclass(slots=True)
@@ -49,6 +53,7 @@ class SearchResult:
     best_params: Mapping[str, Any]
     best_score: float | None
     estimator: Any | None
+    raw: Any  # Optuna Study for OptunaConfig, or the searcher for sklearn configs
 
 
 @dataclass(slots=True)
@@ -83,7 +88,9 @@ class Experiment:
             estimator.fit(X, y)
             run.log_model(estimator, name="model")
         self._fitted_estimator = estimator
-        return FitResult(estimator=estimator, metrics={}, params=merged_params)
+        return FitResult(
+            estimator=estimator, metrics={}, params=merged_params, raw=estimator
+        )
 
     def evaluate(
         self,
@@ -102,7 +109,7 @@ class Experiment:
             tags=self.tags,
         ) as run:
             run.log_metrics(metrics)
-        return EvalResult(metrics=metrics)
+        return EvalResult(metrics=metrics, raw=metrics)
 
     def cross_validate(
         self,
@@ -144,6 +151,7 @@ class Experiment:
             metrics=metrics,
             fold_metrics=fold_metrics,
             estimator=final_estimator,
+            raw=scores,
         )
 
     def search(
@@ -182,10 +190,13 @@ class Experiment:
                 run.log_model(best_estimator, name="model")
         if best_estimator is not None:
             self._fitted_estimator = best_estimator
+        # Expose Study for Optuna searches, searcher for sklearn searches
+        raw = searcher.study if isinstance(search, OptunaConfig) else searcher
         return SearchResult(
             best_params=best_params,
             best_score=best_score,
             estimator=best_estimator,
+            raw=raw,
         )
 
 
