@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, cast
+from typing import TYPE_CHECKING, cast
 
 import optuna
 import pytest
@@ -22,11 +23,28 @@ from sklab.search import (
     SearcherProtocol,
 )
 
+if TYPE_CHECKING:
+    from typing import TypedDict
+
+    import numpy as np
+    from numpy.typing import NDArray
+
+    from tests.conftest import InMemoryLogger
+
+    DatasetTuple = tuple[NDArray[np.floating], NDArray[np.integer]]
+
+    class SearchConfigCreatedWith(TypedDict):
+        pipeline: Pipeline
+        scoring: str
+        cv: int
+        n_trials: int
+        timeout: float
+
 
 class TestFit:
     def test_returns_fitted_estimator(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline: Pipeline,
     ) -> None:
         X, y = multiclass_data
@@ -40,7 +58,7 @@ class TestFit:
 
     def test_clones_pipeline(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline: Pipeline,
     ) -> None:
         X, y = multiclass_data
@@ -53,7 +71,7 @@ class TestFit:
 
     def test_sets_fitted_estimator(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline: Pipeline,
     ) -> None:
         X, y = multiclass_data
@@ -64,7 +82,7 @@ class TestFit:
 
     def test_merges_params(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline: Pipeline,
     ) -> None:
         X, y = multiclass_data
@@ -76,7 +94,7 @@ class TestFit:
 
     def test_logs_run_with_config_and_model(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline: Pipeline,
         logger: InMemoryLogger,
     ) -> None:
@@ -104,7 +122,7 @@ class TestFit:
 class TestEvaluate:
     def test_requires_prior_fit(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -115,7 +133,7 @@ class TestEvaluate:
 
     def test_requires_scoring(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -127,7 +145,7 @@ class TestEvaluate:
 
     def test_uses_init_scoring(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -142,7 +160,7 @@ class TestEvaluate:
 
     def test_works_with_callable_scorer(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def dummy_scorer(estimator, X, y):
@@ -162,7 +180,7 @@ class TestEvaluate:
 
     def test_logs_metrics_only(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -189,7 +207,7 @@ class TestEvaluate:
 class TestCrossValidate:
     def test_requires_scoring(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -200,7 +218,7 @@ class TestCrossValidate:
 
     def test_returns_fold_metrics(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -215,7 +233,7 @@ class TestCrossValidate:
 
     def test_refit_true_returns_estimator(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -235,7 +253,7 @@ class TestCrossValidate:
 
     def test_refit_false_no_estimator(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -256,7 +274,7 @@ class TestCrossValidate:
 
     def test_logs_metrics(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -292,7 +310,7 @@ class TestSearch:
 
     def test_accepts_searcher_protocol(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -309,7 +327,7 @@ class TestSearch:
 
     def test_raw_falls_back_when_study_missing(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -323,7 +341,7 @@ class TestSearch:
 
     def test_raw_falls_back_when_study_none(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         @dataclass
@@ -351,7 +369,7 @@ class TestSearch:
 
     def test_logs_params_metrics_model(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -377,7 +395,7 @@ class TestSearch:
 
     def test_updates_fitted_estimator(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -391,7 +409,7 @@ class TestSearch:
 
     def test_no_score_skips_metrics_logging(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -419,7 +437,7 @@ class TestSearch:
 
     def test_no_estimator_skips_model_logging(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
         logger: InMemoryLogger,
     ) -> None:
@@ -447,12 +465,12 @@ class TestSearch:
 
     def test_search_config_protocol(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         @dataclass
         class DummyConfig:
-            created_with: dict[str, Any] | None = None
+            created_with: SearchConfigCreatedWith | None = None
             last_searcher: TestSearch.DummySearcher | None = None
 
             def create_searcher(self, pipeline, scoring, cv, n_trials, timeout):
@@ -488,7 +506,7 @@ class TestSearch:
 
     def test_raw_grid_search_config(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -501,7 +519,7 @@ class TestSearch:
 
     def test_raw_random_search_config(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -518,7 +536,7 @@ class TestSearch:
 
     def test_raw_grid_searcher(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -536,7 +554,7 @@ class TestSearch:
 
     def test_raw_random_searcher(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
@@ -556,7 +574,7 @@ class TestSearch:
 
     def test_raw_optuna_config_returns_study(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def search_space(trial: optuna.trial.Trial) -> dict[str, float]:
@@ -572,7 +590,7 @@ class TestSearch:
 
     def test_raw_optuna_searcher_returns_study(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         def search_space(trial: optuna.trial.Trial) -> dict[str, float]:
@@ -599,7 +617,7 @@ class TestSearch:
 
     def test_invalid_search_raises_type_error(
         self,
-        multiclass_data: tuple[Any, Any],
+        multiclass_data: DatasetTuple,
         pipeline_factory: Callable[[], Pipeline],
     ) -> None:
         X, y = multiclass_data
