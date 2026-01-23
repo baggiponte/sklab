@@ -2,15 +2,41 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any
 
+import pytest
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+
+
+@pytest.fixture
+def data() -> tuple[Any, Any]:
+    """Dataset fixture for experiments."""
+    dataset = load_iris()
+    return dataset.data, dataset.target
+
+
+@pytest.fixture
+def pipeline() -> Pipeline:
+    """Pipeline fixture for experiments."""
+    return _pipeline()
+
+
+@pytest.fixture
+def pipeline_factory() -> Callable[[], Pipeline]:
+    """Factory fixture for creating new pipelines on demand."""
+    return _pipeline
+
+
+@pytest.fixture
+def logger() -> InMemoryLogger:
+    """Logger fixture for experiments."""
+    return InMemoryLogger()
 
 
 @dataclass
@@ -67,8 +93,8 @@ class InMemoryLogger:
         self._current_run.model_calls.append(model)
 
 
-def make_pipeline() -> Pipeline:
-    """Create a simple sklearn pipeline for testing."""
+def _pipeline() -> Pipeline:
+    """Pipeline fixture for experiments."""
     return Pipeline(
         [
             ("scale", StandardScaler()),
@@ -77,7 +103,3 @@ def make_pipeline() -> Pipeline:
     )
 
 
-def make_data() -> tuple[Any, Any]:
-    """Load iris dataset for testing."""
-    data = load_iris()
-    return data.data, data.target

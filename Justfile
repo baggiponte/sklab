@@ -2,10 +2,10 @@ set quiet := true
 
 format:
     uvx ruff format -- src
-    uvx ruff check --fix --select=I,UP -- src
+    uvx ruff check --fix --select=I,UP,F401 -- src
 
 lint: format
-    uvx ruff check -- src
+    uvx ruff check --fix -- src
     uvx ty check
 
 test:

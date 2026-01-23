@@ -10,7 +10,7 @@ from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
 
 from sklab._lazy import LazyModule
-from sklab.type_aliases import Direction, ScorerName, Scoring
+from sklab.type_aliases import Direction, Scoring
 
 if TYPE_CHECKING:
     from optuna.study import Study
@@ -143,6 +143,7 @@ class OptunaSearcher:
     best_params_: Mapping[str, Any] | None = None
     best_score_: float | None = None
     best_estimator_: Any | None = None
+    study: Study | None = None  # Internal; exposed via SearchResult.raw
 
     def fit(self, X: Any, y: Any | None = None) -> OptunaSearcher:  # noqa: N803
         scorer = _resolve_scoring(self.config_scoring, self.experiment_scoring)
@@ -171,6 +172,7 @@ class OptunaSearcher:
             callbacks=list(self.callbacks or ()),
         )
 
+        self.study = study
         self.best_score_ = float(study.best_value)
         self.best_params_ = dict(study.best_trial.user_attrs["params"])
         self.best_estimator_ = (

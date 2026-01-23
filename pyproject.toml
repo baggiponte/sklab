@@ -44,6 +44,9 @@ default-groups = ["dev", "docs", "test"]
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib", "--markdown-docs"]
 testpaths = ["tests", "docs"]
+filterwarnings = [
+    "ignore:The `Scope.user` setter is deprecated:DeprecationWarning:wandb\\..*",
+]
 
 [tool.ruff]
 line-length = 88

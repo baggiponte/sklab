@@ -341,6 +341,86 @@ With enough trials, both methods find good solutions. The difference shows in
 
 ---
 
+## Accessing the Optuna study
+
+The `SearchResult` returned by `experiment.search()` exposes the underlying
+Optuna `Study` via the `.raw` attribute. This gives you full access to trial
+history, parameter importance, and Optuna's visualization tools.
+
+```python
+import optuna
+
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from sklab.experiment import Experiment
+from sklab.search import OptunaConfig
+
+optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+X, y = load_iris(return_X_y=True)
+
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200)),
+])
+
+def search_space(trial):
+    return {
+        "model__C": trial.suggest_float("model__C", 1e-3, 1e2, log=True),
+    }
+
+experiment = Experiment(
+    pipeline=pipeline,
+    scoring="accuracy",
+    name="iris-study-access",
+)
+
+result = experiment.search(
+    OptunaConfig(search_space=search_space, n_trials=20, direction="maximize"),
+    X, y,
+    cv=5,
+)
+
+# Access the Optuna Study via .raw
+study = result.raw
+print(f"Total trials: {len(study.trials)}")
+print(f"Best trial: #{study.best_trial.number}")
+print(f"Best value: {study.best_value:.4f}")
+```
+
+### What you can do with the study
+
+The `Study` object provides rich functionality for post-search analysis:
+
+```python
+# Inspect individual trials
+for trial in study.trials[:3]:
+    print(f"Trial {trial.number}: {trial.value:.4f} with {trial.params}")
+```
+
+```{.python continuation}
+# Get parameter importance (requires enough trials)
+try:
+    importance = optuna.importance.get_param_importances(study)
+    print(f"Parameter importance: {importance}")
+except RuntimeError:
+    print("Need more trials for importance analysis")
+```
+
+You can also use Optuna's built-in visualization functions:
+
+```python
+# These require optuna[visualization] and plotly
+# optuna.visualization.plot_optimization_history(study)
+# optuna.visualization.plot_param_importances(study)
+# optuna.visualization.plot_slice(study)
+```
+
+---
+
 ## Best practices
 
 1. **Set `log=True` for scale parameters.** Learning rates, regularization
