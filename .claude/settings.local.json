@@ -4,6 +4,8 @@
       "Bash(gh pr checks:*)",
       "Bash(gh pr create:*)",
       "Bash(gh pr list:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr view:*)",
       "Bash(gh run view:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
