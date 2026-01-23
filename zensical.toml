@@ -3,25 +3,35 @@ site_name = "sklab"
 nav = [
   {"Home" = "index.md"},
   {"Tutorials" = [
-    "tutorials/experiment.md",
-    "tutorials/why-pipelines.md",
-    "tutorials/basics-classification-iris.md",
-    "tutorials/basics-regression-census.md",
+    {"Basics" = [
+      "tutorials/experiment.md",
+      "tutorials/why-pipelines.md",
+      "tutorials/basics-classification-iris.md",
+      "tutorials/basics-regression-census.md",
+    ]},
+    {"Search" = [
+      "tutorials/sklearn-search.md",
+      "tutorials/optuna-search.md",
+      "tutorials/optuna-advanced.md",
+    ]},
+    {"SHAP" = [
+      "tutorials/explain-shap.md",
+      "tutorials/explain-shap-advanced.md",
+    ]},
+  ]},
+  {"Examples" = [
     "tutorials/titanic-classification.md",
     "tutorials/time-series-forecasting.md",
-    "tutorials/sklearn-search.md",
-    "tutorials/optuna-search.md",
-    "tutorials/optuna-advanced.md",
-    "tutorials/logger-adapters.md",
     "tutorials/cyclical-feature-engineering.md",
+    "tutorials/logger-adapters.md",
   ]},
-  {"Glossary" = "glossary.md"},
   {"Developer" = [
     "developer/logging-plugins.md",
     "developer/search-plugins.md",
   ]},
   {"API Reference" = [
     "api/sklab/experiment.md",
+    "api/sklab/explain.md",
     "api/sklab/search.md",
     "api/sklab/logging/interfaces.md",
     "api/sklab/logging/adapters.md",
