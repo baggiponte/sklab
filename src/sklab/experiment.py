@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Any, cast, overload
 
 from sklearn.base import clone
 from sklearn.metrics import get_scorer
@@ -12,6 +12,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.utils.validation import check_is_fitted
 
+from sklab._results import CVResult, EvalResult, FitResult, SearchResult
 from sklab._search.optuna import OptunaConfig, OptunaSearcher
 from sklab._search.sklearn import GridSearchConfig, RandomSearchConfig
 from sklab.adapters.logging import LoggerProtocol
@@ -22,45 +23,8 @@ from sklab.type_aliases import ScorerFunc, Scoring
 if TYPE_CHECKING:
     from optuna.study import Study
 
-RawT = TypeVar("RawT")
-
-
-@dataclass(slots=True)
-class FitResult:
-    """Result of a single fit run."""
-
-    estimator: Any
-    metrics: Mapping[str, float]
-    params: Mapping[str, Any]
-    raw: Any  # The fitted estimator (same as .estimator, for API consistency)
-
-
-@dataclass(slots=True)
-class EvalResult:
-    """Result of evaluating a fitted estimator on a dataset."""
-
-    metrics: Mapping[str, float]
-    raw: Mapping[str, float]  # Same as metrics (for API consistency)
-
-
-@dataclass(slots=True)
-class CVResult:
-    """Result of a cross-validation run."""
-
-    metrics: Mapping[str, float]
-    fold_metrics: Mapping[str, list[float]]
-    estimator: Any | None
-    raw: Mapping[str, Any]  # Full sklearn cross_validate dict
-
-
-@dataclass(slots=True)
-class SearchResult(Generic[RawT]):
-    """Result of a hyperparameter search run."""
-
-    best_params: Mapping[str, Any]
-    best_score: float | None
-    estimator: Any | None
-    raw: RawT  # Optuna Study for OptunaConfig, or the searcher for sklearn configs
+# Re-export result classes for public API
+__all__ = ["Experiment", "FitResult", "EvalResult", "CVResult", "SearchResult"]
 
 
 @dataclass(slots=True)
