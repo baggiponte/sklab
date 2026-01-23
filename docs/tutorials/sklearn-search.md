@@ -450,6 +450,80 @@ print(f"Best score: {result.best_score:.4f}")
 
 ---
 
+## Accessing the underlying searcher
+
+The `SearchResult` returned by `experiment.search()` exposes the underlying
+sklearn searcher via the `.raw` attribute. This gives you access to detailed
+cross-validation results, timing information, and other sklearn-specific data.
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from sklab.experiment import Experiment
+from sklab.search import GridSearchConfig
+
+X, y = load_iris(return_X_y=True)
+
+pipeline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200)),
+])
+
+experiment = Experiment(
+    pipeline=pipeline,
+    scoring="accuracy",
+    name="iris-raw-access",
+)
+
+result = experiment.search(
+    GridSearchConfig(
+        param_grid={"model__C": [0.01, 0.1, 1.0, 10.0]},
+        refit=True,
+    ),
+    X, y,
+    cv=5,
+)
+
+# Access the underlying GridSearchCV via .raw
+searcher = result.raw
+print(f"Number of candidates: {len(searcher.cv_results_['params'])}")
+print(f"Best index: {searcher.best_index_}")
+```
+
+### Inspecting CV results
+
+The `cv_results_` attribute contains detailed information about every
+parameter combination tested:
+
+```{.python continuation}
+# View results for each candidate
+for i, params in enumerate(searcher.cv_results_["params"]):
+    mean_score = searcher.cv_results_["mean_test_score"][i]
+    std_score = searcher.cv_results_["std_test_score"][i]
+    print(f"{params}: {mean_score:.4f} (+/- {std_score:.4f})")
+```
+
+For more convenient analysis, convert to a DataFrame:
+
+```{.python continuation}
+import polars as pl
+
+cv_df = pl.DataFrame({
+    "C": [p["model__C"] for p in searcher.cv_results_["params"]],
+    "mean_score": searcher.cv_results_["mean_test_score"],
+    "std_score": searcher.cv_results_["std_test_score"],
+    "mean_fit_time": searcher.cv_results_["mean_fit_time"],
+})
+print(cv_df)
+```
+
+This works the same way for `RandomizedSearchCV` and `HalvingRandomSearchCV`.
+
+---
+
 ## Decision guide: which strategy to use
 
 | Situation | Recommended Strategy |
