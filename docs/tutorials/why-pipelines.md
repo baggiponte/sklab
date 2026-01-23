@@ -152,7 +152,7 @@ from sklab.experiment import Experiment
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="leakage-demo",
 )
 

@@ -103,10 +103,10 @@ pipeline = Pipeline([
     ("model", LogisticRegression(max_iter=200)),
 ])
 
-# Create experiment with pipeline and scorers
+# Create experiment with pipeline and scoring
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-classification",
 )
 ```
@@ -194,7 +194,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-classification",
 )
 

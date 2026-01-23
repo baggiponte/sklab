@@ -152,7 +152,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1": "f1"},
+    scoring=["accuracy", "f1"],
     name="titanic",
 )
 ```
@@ -253,7 +253,7 @@ pipeline = Pipeline([
 # 4. Create experiment and cross-validate
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1": "f1"},
+    scoring=["accuracy", "f1"],
     name="titanic",
 )
 

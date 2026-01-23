@@ -90,7 +90,7 @@ mlflow_logger = NoOpLogger()
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1_macro": "f1_macro"},
+    scoring=["accuracy", "f1_macro"],
     logger=mlflow_logger,  # or wandb, or none
     name="my-experiment",
 )
@@ -104,7 +104,7 @@ search_result = experiment.search(config, X, y, cv=5, run_name="search")
 
 Every method:
 
-- Uses the same scorers you defined once
+- Uses the same scoring you defined once
 - Logs automatically to whatever backend you configured
 - Returns structured results you can inspect programmatically
 - Works with any sklearn-compatible pipeline
@@ -113,7 +113,7 @@ Every method:
 
 **1. Standardized workflow**
 
-One API for fit, evaluate, cross-validate, and search. Define your scorers once;
+One API for fit, evaluate, cross-validate, and search. Define your scoring once;
 they're used consistently everywhere.
 
 **2. Backend-agnostic logging**
@@ -158,7 +158,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-quickstart",
 )
 

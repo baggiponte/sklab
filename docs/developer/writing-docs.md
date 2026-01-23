@@ -267,9 +267,9 @@ from sklab.experiment import Experiment
 X = np.zeros((10, 2))
 y = np.zeros(10)
 pipeline = Pipeline([("model", DummyClassifier(strategy="most_frequent"))])
-scorers = {"accuracy": "accuracy"}
+scoring = "accuracy"
 
-experiment = Experiment(pipeline=pipeline, scorers=scorers)
+experiment = Experiment(pipeline=pipeline, scoring=scoring)
 ```
 
 ```{.python continuation}

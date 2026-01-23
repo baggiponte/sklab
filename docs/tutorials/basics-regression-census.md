@@ -96,10 +96,7 @@ from sklab.experiment import Experiment
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={
-        "mae": "neg_mean_absolute_error",
-        "rmse": "neg_root_mean_squared_error",
-    },
+    scoring=["neg_mean_absolute_error", "neg_root_mean_squared_error"],
     name="diabetes-progression",
 )
 ```
@@ -133,8 +130,8 @@ cv = KFold(n_splits=5, shuffle=True, random_state=42)
 result = experiment.cross_validate(X, y, cv=cv, run_name="diabetes-cv")
 
 # Flip signs for readability (sklearn uses negative scores)
-mae = -result.metrics["cv/mae_mean"]
-rmse = -result.metrics["cv/rmse_mean"]
+mae = -result.metrics["cv/neg_mean_absolute_error_mean"]
+rmse = -result.metrics["cv/neg_root_mean_squared_error_mean"]
 
 print(f"MAE:  {mae:.1f} (average error)")
 print(f"RMSE: {rmse:.1f} (penalizes large errors)")
@@ -210,10 +207,7 @@ pipeline = Pipeline([
 # 3. Create experiment
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={
-        "mae": "neg_mean_absolute_error",
-        "rmse": "neg_root_mean_squared_error",
-    },
+    scoring=["neg_mean_absolute_error", "neg_root_mean_squared_error"],
     name="diabetes-progression",
 )
 
@@ -221,7 +215,7 @@ experiment = Experiment(
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 result = experiment.cross_validate(X, y, cv=cv, run_name="cv")
 
-mae = -result.metrics["cv/mae_mean"]
+mae = -result.metrics["cv/neg_mean_absolute_error_mean"]
 print(f"Cross-validated MAE: {mae:.1f}")
 ```
 

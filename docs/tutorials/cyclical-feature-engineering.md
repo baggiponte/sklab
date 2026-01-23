@@ -87,17 +87,17 @@ ts_cv = TimeSeriesSplit(n_splits=3)
 
 ## Experiment setup
 
-We'll compare all five approaches using the same scorer and CV strategy.
+We'll compare all five approaches using the same scoring and CV strategy.
 
 ```{.python continuation}
-scorers = {
-    "mae": "neg_mean_absolute_error",
-    "rmse": "neg_root_mean_squared_error",
-}
+scoring = [
+    "neg_mean_absolute_error",
+    "neg_root_mean_squared_error",
+]
 
 experiment = Experiment(
     pipeline=None,  # set per model
-    scorers=scorers,
+    scoring=scoring,
     name="cyclical-features",
 )
 
@@ -109,8 +109,8 @@ month_column = [2]
 
 
 def show_metrics(result):
-    mae = -result.metrics["cv/mae_mean"]
-    rmse = -result.metrics["cv/rmse_mean"]
+    mae = -result.metrics["cv/neg_mean_absolute_error_mean"]
+    rmse = -result.metrics["cv/neg_root_mean_squared_error_mean"]
     print(f"MAE: {mae:.3f}, RMSE: {rmse:.3f}")
 ```
 

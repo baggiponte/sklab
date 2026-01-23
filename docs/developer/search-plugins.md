@@ -47,13 +47,13 @@ from dataclasses import dataclass
 
 @dataclass
 class MySearchConfig:
-    def create_searcher(self, *, pipeline, scorers, cv, n_trials, timeout):
+    def create_searcher(self, *, pipeline, scoring, cv, n_trials, timeout):
         return MySearcher(estimator=pipeline, cv=cv or 3)
 ```
 
 ## Best practices
 
-- Use `cv` and `scorers` from Experiment when possible.
+- Use `cv` and `scoring` from Experiment when possible.
 - Keep searcher state on the instance (`best_*` attributes).
 - Favor reproducibility (set seeds, track versions).
 

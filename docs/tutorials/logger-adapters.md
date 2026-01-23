@@ -71,7 +71,7 @@ experiment = Experiment(
         ("scale", StandardScaler()),
         ("model", LogisticRegression(max_iter=200)),
     ]),
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="no-logging",
 )
 
@@ -103,7 +103,7 @@ experiment = Experiment(
         ("scale", StandardScaler()),
         ("model", LogisticRegression(max_iter=200)),
     ]),
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     logger=WandbLogger(project="sklab-demo"),
     name="wandb-demo",
 )
@@ -146,7 +146,7 @@ experiment = Experiment(
         ("scale", StandardScaler()),
         ("model", LogisticRegression(max_iter=200)),
     ]),
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     logger=MLflowLogger(experiment_name="sklab-demo"),
     name="mlflow-demo",
 )
@@ -258,7 +258,7 @@ experiment = Experiment(
         ("scale", StandardScaler()),
         ("model", LogisticRegression(max_iter=200)),
     ]),
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     logger=PrintLogger(),  # Uses our custom logger
     name="custom-logger",
 )

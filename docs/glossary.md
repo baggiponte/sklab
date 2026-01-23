@@ -9,11 +9,11 @@ definition and, where relevant, why it matters for experiment design.
 
 A lightweight wrapper around a sklearn pipeline that provides a consistent API
 for `fit`, `evaluate`, `cross_validate`, and `search`. The Experiment object
-holds your pipeline, scorers, and logger configuration, ensuring that every
+holds your pipeline, scoring, and logger configuration, ensuring that every
 operation uses the same settings.
 
 **Why it matters:** Without a central experiment object, it's easy to use
-different scorers for training vs. evaluation, forget to log certain runs, or
+different scoring for training vs. evaluation, forget to log certain runs, or
 accidentally change preprocessing between experiments. The Experiment class
 prevents these inconsistencies.
 
@@ -33,7 +33,7 @@ mlflow_logger = NoOpLogger()
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1": "f1"},
+    scoring=["accuracy", "f1"],
     logger=mlflow_logger,
     name="my-experiment",
 )
@@ -89,19 +89,15 @@ sklab enforces this by requiring a Pipeline object.
 
 A metric definition passed to sklearn. Can be a string (e.g., `"accuracy"`) or
 a callable that takes `(y_true, y_pred)` and returns a float. sklab
-accepts a mapping of names to scorers, and uses them consistently across all
-operations.
+accepts a scorer string, a callable, or a list of scorers, and uses them
+consistently across all operations.
 
 **Why it matters:** Using different metrics for training, cross-validation,
-and final evaluation leads to misleading comparisons. By defining scorers once
+and final evaluation leads to misleading comparisons. By defining scoring once
 on the Experiment, you ensure consistent evaluation everywhere.
 
 ```text
-scorers = {
-    "accuracy": "accuracy",
-    "f1": "f1_macro",
-    "custom": make_scorer(my_metric_fn),
-}
+scoring = ["accuracy", "f1_macro", make_scorer(my_metric_fn)]
 ```
 
 **Note:** sklearn's regression metrics like MAE and RMSE are negated by
@@ -187,7 +183,7 @@ param_grid = {"model__C": [0.1, 1.0, 10.0]}
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="search-demo",
 )
 
@@ -237,11 +233,11 @@ from sklab.experiment import Experiment
 from sklab.logging import MLflowLogger, WandbLogger
 
 pipeline = Pipeline([("model", DummyClassifier(strategy="most_frequent"))])
-scorers = {"accuracy": "accuracy"}
+scoring = "accuracy"
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers=scorers,
+    scoring=scoring,
     logger=MLflowLogger(experiment_name="my-project"),
 )
 ```

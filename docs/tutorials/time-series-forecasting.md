@@ -160,7 +160,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"mae": "neg_mean_absolute_error"},
+    scoring="neg_mean_absolute_error",
     name="mauna-loa-co2",
 )
 ```
@@ -172,7 +172,7 @@ experiment = Experiment(
 ```{.python continuation}
 result = experiment.cross_validate(X, y, cv=ts_cv, run_name="co2-cv")
 
-mae = -result.metrics["cv/mae_mean"]
+mae = -result.metrics["cv/neg_mean_absolute_error_mean"]
 print(f"Cross-validated MAE: {mae:.2f} ppm")
 ```
 
@@ -201,7 +201,7 @@ from sklearn.model_selection import KFold
 wrong_cv = KFold(n_splits=3, shuffle=True, random_state=42)
 wrong_result = experiment.cross_validate(X, y, cv=wrong_cv, run_name="wrong-cv")
 
-wrong_mae = -wrong_result.metrics["cv/mae_mean"]
+wrong_mae = -wrong_result.metrics["cv/neg_mean_absolute_error_mean"]
 print(f"Random CV MAE: {wrong_mae:.2f} ppm (misleadingly good!)")
 ```
 
@@ -266,14 +266,14 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"mae": "neg_mean_absolute_error"},
+    scoring="neg_mean_absolute_error",
     name="mauna-loa-co2",
 )
 
 ts_cv = TimeSeriesSplit(n_splits=3)
 result = experiment.cross_validate(X, y, cv=ts_cv, run_name="final")
 
-print(f"MAE: {-result.metrics['cv/mae_mean']:.2f} ppm")
+print(f"MAE: {-result.metrics['cv/neg_mean_absolute_error_mean']:.2f} ppm")
 ```
 
 ---

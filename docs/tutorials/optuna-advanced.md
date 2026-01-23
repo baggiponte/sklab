@@ -158,7 +158,7 @@ def study_factory(*, direction):
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="optuna-pruning",
 )
 
@@ -272,7 +272,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="pruning-custom",
 )
 
@@ -359,7 +359,7 @@ def study_factory(*, direction):
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="cmaes-demo",
 )
 
@@ -426,7 +426,7 @@ def study_factory(*, direction):
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="persistent-study",
 )
 

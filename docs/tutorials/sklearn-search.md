@@ -68,7 +68,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-grid",
 )
 
@@ -183,7 +183,7 @@ searcher = RandomizedSearchCV(
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-random",
 )
 
@@ -256,7 +256,7 @@ searcher = HalvingRandomSearchCV(
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="iris-halving",
 )
 
@@ -299,7 +299,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="search-comparison",
 )
 
@@ -439,7 +439,7 @@ searcher = SimpleRandomSearch(
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="custom-searcher",
 )
 
@@ -556,7 +556,7 @@ This works the same way for `RandomizedSearchCV` and `HalvingRandomSearchCV`.
 
 ## Notes
 
-- Config classes default to the experiment scorers when `scoring` is not set.
+- Config classes default to the experiment scoring when `scoring` is not set.
 - Config classes use `cv` from `Experiment.search()` unless you set `cv` on the config.
 - When you pass a searcher instance directly, `Experiment.search()` will call its
   `fit()` method and log `best_params_`, `best_score_`, and `best_estimator_` if

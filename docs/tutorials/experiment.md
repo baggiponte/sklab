@@ -46,7 +46,7 @@ pipeline = Pipeline([
 # Create the experiment
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="quickstart",
 )
 ```
@@ -54,7 +54,7 @@ experiment = Experiment(
 **What this does:**
 
 - `pipeline`: The sklearn pipeline to train and evaluate
-- `scorers`: A dict of metric names to sklearn scorer strings or callables
+- `scoring`: A scorer string, callable, or list of scorers
 - `name`: A human-readable name for logging and identification
 
 ---
@@ -117,7 +117,7 @@ print(f"CV std: {cv_result.metrics['cv/accuracy_std']:.4f}")
 ```
 
 **Returns:** `CVResult` with:
-- `metrics`: Mean and std for each scorer (prefixed with `cv/`)
+- `metrics`: Mean and std for each metric (prefixed with `cv/`)
 - `fold_metrics`: Per-fold scores
 
 **Use when:** Estimating model performance, comparing model variants, model
@@ -149,7 +149,7 @@ ts_experiment = Experiment(
         ("scale", StandardScaler()),
         ("model", LogisticRegression(max_iter=200)),
     ]),
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="ts-demo",
 )
 
@@ -230,7 +230,7 @@ strategies.
 
 ---
 
-## Multiple scorers
+## Multiple metrics
 
 Track multiple metrics simultaneously:
 
@@ -249,15 +249,11 @@ pipeline = Pipeline([
     ("model", LogisticRegression(max_iter=200)),
 ])
 
-# Define multiple scorers
+# Define multiple metrics
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={
-        "accuracy": "accuracy",
-        "f1_macro": "f1_macro",
-        "precision": "precision_macro",
-    },
-    name="multi-scorer",
+    scoring=["accuracy", "f1_macro", "precision_macro"],
+    name="multi-metric",
 )
 
 cv_result = experiment.cross_validate(X, y, cv=5, run_name="multi-cv")
@@ -296,7 +292,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy"},
+    scoring="accuracy",
     name="full-workflow",
 )
 
