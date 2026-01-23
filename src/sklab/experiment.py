@@ -12,7 +12,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.utils.validation import check_is_fitted
 
-from sklab._search.optuna import OptunaConfig
+from sklab._search.optuna import OptunaConfig, OptunaSearcher
 from sklab._search.sklearn import GridSearchConfig, RandomSearchConfig
 from sklab.adapters.logging import LoggerProtocol
 from sklab.logging import NoOpLogger
@@ -164,7 +164,7 @@ class Experiment:
     @overload
     def search(
         self,
-        search: OptunaConfig,
+        search: OptunaConfig | OptunaSearcher,
         X: Any,
         y: Any | None = None,
         *,
@@ -174,10 +174,12 @@ class Experiment:
         run_name: str | None = None,
     ) -> SearchResult[Study]: ...
 
+
+
     @overload
     def search(
         self,
-        search: GridSearchConfig,
+        search: GridSearchConfig | GridSearchCV,
         X: Any,
         y: Any | None = None,
         *,
@@ -190,7 +192,7 @@ class Experiment:
     @overload
     def search(
         self,
-        search: RandomSearchConfig,
+        search: RandomSearchConfig | RandomizedSearchCV,
         X: Any,
         y: Any | None = None,
         *,
