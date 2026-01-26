@@ -259,48 +259,36 @@ class Experiment:
     ) -> ExplainResult:
         """Compute SHAP values for the fitted estimator.
 
-        Parameters
-        ----------
-        X : array-like
-            Samples to explain.
-        method : ExplainerModel or str, default="auto"
-            Explainer type. "auto" selects based on estimator structure:
-            - Tree models (RandomForest, XGBoost, etc.) -> TreeExplainer
-            - Linear models (LogisticRegression, Ridge) -> LinearExplainer
-            - Neural networks (Keras, PyTorch) -> DeepExplainer
-            - Everything else -> KernelExplainer (slower)
-        model_output : ExplainerOutput or str, default="auto"
-            What model output to explain. "auto" uses probability for classifiers
-            with predict_proba, raw output otherwise. Use "log_odds" when comparing
-            SHAP values to logistic regression coefficients.
-        background : array-like or int, optional
-            Background data for KernelExplainer/etc. If int, samples that many
-            rows from X. If None, uses X as background.
-        feature_names : sequence of str, optional
-            Feature names to use. If None, attempts to infer from pipeline
-            transformers (best-effort; may fall back to generic names like x0, x1).
-        run_name : str, optional
-            Name for the logged run.
+        Args:
+            X: Samples to explain.
+            method: Explainer type. "auto" selects based on estimator structure:
+                - Tree models (RandomForest, XGBoost, etc.) -> TreeExplainer
+                - Linear models (LogisticRegression, Ridge) -> LinearExplainer
+                - Neural networks (Keras, PyTorch) -> DeepExplainer
+                - Everything else -> KernelExplainer (slower)
+            model_output: What model output to explain. "auto" uses probability for
+                classifiers with predict_proba, raw output otherwise. Use "log_odds"
+                when comparing SHAP values to logistic regression coefficients.
+            background: Background data for KernelExplainer/etc. If int, samples that
+                many rows from X. If None, uses X as background.
+            feature_names: Feature names to use. If None, attempts to infer from
+                pipeline transformers (best-effort; may fall back to generic names
+                like x0, x1).
+            run_name: Name for the logged run.
 
-        Returns
-        -------
-        ExplainResult
-            SHAP explanation with values, base values, and feature names.
-            Access the raw shap.Explanation via result.raw for advanced use.
+        Returns:
+            SHAP explanation with values, base values, and feature names. Access the
+            raw shap.Explanation via result.raw for advanced use.
 
-        Raises
-        ------
-        ValueError
-            If the estimator has not been fitted yet.
-        ValueError
-            If model_output is incompatible with the estimator type.
+        Raises:
+            ValueError: If the estimator has not been fitted yet.
+            ValueError: If model_output is incompatible with the estimator type.
 
-        Examples
-        --------
-        >>> exp = Experiment(pipeline=LogisticRegression())
-        >>> exp.fit(X_train, y_train)
-        >>> result = exp.explain(X_test[:10])
-        >>> result.plot("beeswarm")  # Visualize
+        Examples:
+            >>> exp = Experiment(pipeline=LogisticRegression())
+            >>> exp.fit(X_train, y_train)
+            >>> result = exp.explain(X_test[:10])
+            >>> result.plot("beeswarm")  # Visualize
         """
         if self._fitted_estimator is None:
             raise ValueError(

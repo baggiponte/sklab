@@ -87,7 +87,7 @@ class OptunaConfig:
         from the Experiment's scoring. Can be a string (e.g., ``"accuracy"``),
         a ScorerName enum, or a callable.
 
-    References
+    References:
     ----------
     .. _Trial: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html
     .. _Study: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html
