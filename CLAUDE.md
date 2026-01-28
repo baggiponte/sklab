@@ -99,12 +99,131 @@ The PR will auto-merge when CI passes. Do not commit, push, or open PRs unless t
 - Integration tests, not mocks
 - **Docs are code** — all code fences run via `pytest-markdown-docs`. Broken examples fail the build.
 
+## Type Patterns
+
+### StrEnum with auto()
+
+Use `StrEnum` with `auto()` for string-based enums. This gives type safety with string compatibility:
+
+```python
+from enum import StrEnum, auto
+
+class ExplainerModel(StrEnum):
+    AUTO = auto()      # value: "auto"
+    TREE = auto()      # value: "tree"
+    LINEAR = auto()    # value: "linear"
+```
+
+Users can pass either the enum or a string: `method=ExplainerModel.TREE` or `method="tree"`.
+
+### NDArray annotations
+
+Use `numpy.typing.NDArray` for array types, not `Any`:
+
+```python
+from numpy.typing import NDArray
+import numpy as np
+
+DatasetTuple = tuple[NDArray[np.floating], NDArray[np.integer]]
+
+def load_data() -> DatasetTuple: ...
+```
+
+### Optional dependencies
+
+Use the `LazyModule` pattern from `sklab._lazy` for optional dependencies:
+
+```python
+from sklab._lazy import LazyModule
+
+shap = LazyModule("shap", install_hint="Install with: pip install sklab[shap]")
+```
+
+This defers the import until first use and provides a helpful error message.
+
+## Module Organization
+
+### Keep related types together
+
+Types that work together should live in the same module. Don't split them across files just for "organization":
+
+```
+# Good: ExplainResult lives with other explain types
+src/sklab/_explain.py
+├── ExplainerModel
+├── ExplainerOutput
+├── ExplainerPlotKind
+├── ExplainResult
+└── compute_shap_explanation()
+
+# Bad: Splitting ExplainResult into _results.py
+```
+
+### Naming conventions
+
+Use consistent prefixes/suffixes for related types:
+
+| Pattern | Examples |
+|---------|----------|
+| `*Result` | `FitResult`, `CVResult`, `ExplainResult` |
+| `*Config` | `GridSearchConfig`, `OptunaConfig` |
+| `Explainer*` | `ExplainerModel`, `ExplainerOutput` |
+
+## Test Organization
+
+### Use conftest.py fixtures
+
+Never duplicate fixtures across test files. Add shared fixtures to `tests/conftest.py`:
+
+```python
+# tests/conftest.py
+@pytest.fixture
+def binary_data() -> DatasetTuple:
+    """Binary classification dataset (breast cancer)."""
+    return load_breast_cancer(return_X_y=True)
+```
+
+### Descriptive fixture names
+
+Name fixtures by what they represent, not just "data":
+
+| Bad | Good |
+|-----|------|
+| `data` | `multiclass_data` |
+| `clf_data` | `binary_data` |
+| `reg_data` | `regression_data` |
+
+### Organize tests with classes and directories
+
+For feature modules, use a directory with multiple test files:
+
+```
+tests/explain/
+├── __init__.py
+├── test_selection.py     # TestExplainerSelection, TestOutputSelection
+├── test_result.py        # TestShapValues, TestFeatureNames, TestPlot
+└── test_integration.py   # TestExplainIntegration, TestExplainErrors
+```
+
+Use classes to group related tests:
+
+```python
+class TestExplainErrors:
+    """Tests for error handling."""
+
+    def test_unfitted_raises(self, binary_data): ...
+    def test_invalid_method_raises(self, binary_data): ...
+```
+
 ## Key Files
 
 - `src/sklab/experiment.py` — Core Experiment class
+- `src/sklab/_explain.py` — SHAP explanation support
+- `src/sklab/_results.py` — Result dataclasses (FitResult, CVResult, etc.)
 - `src/sklab/search.py` — Search configs (Grid, Random)
-- `src/sklab/optuna.py` — Optional Optuna integration
-- `plans/feature-vision.md` — Product vision and feature scope
+- `src/sklab/_search/optuna.py` — Optional Optuna integration
+- `tests/conftest.py` — Shared test fixtures
+- `plans/` — Feature specs and design docs
 
 ---
 

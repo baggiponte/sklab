@@ -19,6 +19,9 @@ wandb = [
 mlflow = [
     "mlflow>=3.8.1",
 ]
+shap = [
+    "shap>=0.42",
+]
 
 [dependency-groups]
 dev = [
@@ -27,7 +30,7 @@ dev = [
     "ruff>=0.14.11",
 ]
 test = [
-    "sklab[optuna,wandb,mlflow]",
+    "sklab[optuna,wandb,mlflow,shap]",
     "pandas>=2.3.3",
     "polars>=1.37.0",
     "pytest-markdown-docs>=0.9.0",
@@ -46,14 +49,18 @@ addopts = ["--import-mode=importlib", "--markdown-docs"]
 testpaths = ["tests", "docs"]
 filterwarnings = [
     "ignore:The `Scope.user` setter is deprecated:DeprecationWarning:wandb\\..*",
+    "ignore:.*:sklearn.exceptions.ConvergenceWarning",
 ]
 
 [tool.ruff]
 line-length = 88
 
 [tool.ruff.lint]
-extend-select = ["I", "UP", "TID"]
+extend-select = ["I", "UP", "TID", "D"]
 fixable = ["I", "UP", "TID", "F401"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"

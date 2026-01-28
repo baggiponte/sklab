@@ -17,4 +17,5 @@ test-docs:
 test-all: test test-docs
 
 docs:
-    uv run zensical serve
+    uv run zensical build --clean
+    uv run zensical serve --open

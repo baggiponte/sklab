@@ -11,6 +11,7 @@ class SearcherProtocol(Protocol):
     """Minimal interface required by Experiment.search."""
 
     def fit(self, X: Any, y: Any | None = None) -> Any:  # noqa: N803
+        """Fit the underlying searcher and return the fitted object."""
         ...
 
     best_params_: Mapping[str, Any] | None
@@ -30,4 +31,6 @@ class SearchConfigProtocol(Protocol):
         cv: Any | None,
         n_trials: int | None,
         timeout: float | None,
-    ) -> SearcherProtocol: ...
+    ) -> SearcherProtocol:
+        """Build a searcher configured for Experiment.search."""
+        ...

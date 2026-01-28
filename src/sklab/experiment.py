@@ -6,12 +6,20 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, cast, overload
 
+import numpy as np
 from sklearn.base import clone
 from sklearn.metrics import get_scorer
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.model_selection import cross_validate as sklearn_cross_validate
 from sklearn.utils.validation import check_is_fitted
 
+from sklab._explain import (
+    ExplainerModel,
+    ExplainerOutput,
+    ExplainerPlotKind,
+    ExplainResult,
+    compute_shap_explanation,
+)
 from sklab._results import CVResult, EvalResult, FitResult, SearchResult
 from sklab._search.optuna import OptunaConfig, OptunaSearcher
 from sklab._search.sklearn import GridSearchConfig, RandomSearchConfig
@@ -21,10 +29,23 @@ from sklab.search import SearchConfigProtocol, SearcherProtocol
 from sklab.type_aliases import ScorerFunc, Scoring
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence as SequenceType
+
+    from numpy.typing import ArrayLike
     from optuna.study import Study
 
 # Re-export result classes for public API
-__all__ = ["Experiment", "FitResult", "EvalResult", "CVResult", "SearchResult"]
+__all__ = [
+    "Experiment",
+    "FitResult",
+    "EvalResult",
+    "CVResult",
+    "SearchResult",
+    "ExplainResult",
+    "ExplainerModel",
+    "ExplainerOutput",
+    "ExplainerPlotKind",
+]
 
 
 @dataclass(slots=True)
@@ -214,13 +235,100 @@ class Experiment:
         if best_estimator is not None:
             self._fitted_estimator = best_estimator
         # Expose Study for Optuna searches, searcher for sklearn searches
-        raw = searcher.study if isinstance(search, (OptunaConfig, OptunaSearcher)) else searcher
+        raw = (
+            searcher.study
+            if isinstance(search, (OptunaConfig, OptunaSearcher))
+            else searcher
+        )
         return SearchResult(
             best_params=best_params,
             best_score=best_score,
             estimator=best_estimator,
             raw=raw,
         )
+
+    def explain(
+        self,
+        X: ArrayLike,
+        *,
+        method: ExplainerModel | str = ExplainerModel.AUTO,
+        model_output: ExplainerOutput | str = ExplainerOutput.AUTO,
+        background: ArrayLike | int | None = None,
+        feature_names: SequenceType[str] | None = None,
+        run_name: str | None = None,
+    ) -> ExplainResult:
+        """Compute SHAP values for the fitted estimator.
+
+        Args:
+            X: Samples to explain.
+            method: Explainer type. "auto" selects based on estimator structure:
+                - Tree models (RandomForest, XGBoost, etc.) -> TreeExplainer
+                - Linear models (LogisticRegression, Ridge) -> LinearExplainer
+                - Neural networks (Keras, PyTorch) -> DeepExplainer
+                - Everything else -> KernelExplainer (slower)
+            model_output: What model output to explain. "auto" uses probability for
+                classifiers with predict_proba, raw output otherwise. Use "log_odds"
+                when comparing SHAP values to logistic regression coefficients.
+            background: Background data for KernelExplainer/etc. If int, samples that
+                many rows from X. If None, uses X as background.
+            feature_names: Feature names to use. If None, attempts to infer from
+                pipeline transformers (best-effort; may fall back to generic names
+                like x0, x1).
+            run_name: Name for the logged run.
+
+        Returns:
+            SHAP explanation with values, base values, and feature names. Access the
+            raw shap.Explanation via result.raw for advanced use.
+
+        Raises:
+            ValueError: If the estimator has not been fitted yet.
+            ValueError: If model_output is incompatible with the estimator type.
+
+        Examples:
+            >>> exp = Experiment(pipeline=LogisticRegression())
+            >>> exp.fit(X_train, y_train)
+            >>> result = exp.explain(X_test[:10])
+            >>> result.plot("beeswarm")  # Visualize
+        """
+        if self._fitted_estimator is None:
+            raise ValueError(
+                "No fitted estimator. Call fit() or cross_validate(refit=True) "
+                "before explain()."
+            )
+
+        # Compute SHAP explanation
+        result = compute_shap_explanation(
+            self._fitted_estimator,
+            X,
+            method=method,
+            model_output=model_output,
+            background=background,
+            feature_names=feature_names,
+        )
+
+        # Log metrics
+        with self.logger.start_run(
+            name=run_name or self.name,
+            config=None,
+            tags=self.tags,
+        ) as run:
+            # Log mean |SHAP| per feature as importance metrics
+            # Use the normalized 3D values and average over samples and outputs
+            values_3d = result.values  # (n_samples, n_features, n_outputs)
+            mean_abs_shap = np.abs(values_3d).mean(axis=(0, 2))  # (n_features,)
+            if result.feature_names:
+                metrics = {
+                    f"shap_importance/{name}": float(val)
+                    for name, val in zip(result.feature_names, mean_abs_shap)
+                }
+            else:
+                metrics = {
+                    f"shap_importance/x{i}": float(val)
+                    for i, val in enumerate(mean_abs_shap)
+                }
+            run.log_metrics(metrics)
+
+        return result
 
 
 def _merge_params(estimator: Any, params: Mapping[str, Any] | None) -> dict[str, Any]:

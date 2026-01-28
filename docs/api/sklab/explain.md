@@ -1,42 +1,28 @@
-# sklab.experiment
+# sklab.experiment (explain)
 
-::: sklab.experiment.Experiment
+::: sklab.experiment.ExplainResult
     options:
       show_root_heading: true
       show_object_full_path: false
       show_source: true
       show_docstring_description: true
       show_docstring_parameters: true
-      members:
-        - fit
-        - evaluate
-        - cross_validate
-        - search
-        - explain
-        - __init__
 
-::: sklab.experiment.FitResult
+::: sklab.experiment.ExplainerModel
     options:
       show_root_heading: true
       show_object_full_path: false
       show_source: true
       show_docstring_description: true
 
-::: sklab.experiment.EvalResult
+::: sklab.experiment.ExplainerOutput
     options:
       show_root_heading: true
       show_object_full_path: false
       show_source: true
       show_docstring_description: true
 
-::: sklab.experiment.CVResult
-    options:
-      show_root_heading: true
-      show_object_full_path: false
-      show_source: true
-      show_docstring_description: true
-
-::: sklab.experiment.SearchResult
+::: sklab.experiment.ExplainerPlotKind
     options:
       show_root_heading: true
       show_object_full_path: false
