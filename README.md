@@ -11,12 +11,17 @@ A zero-boilerplate experiment runner for sklearn pipelines. One thing, done well
 ## What It Does
 
 ```python
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 
-from sklab import Experiment
+from sklab.experiment import Experiment
 from sklab.search import GridSearchConfig
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
 pipeline = Pipeline([
     ("scale", StandardScaler()),
@@ -25,7 +30,7 @@ pipeline = Pipeline([
 
 experiment = Experiment(
     pipeline=pipeline,
-    scorers={"accuracy": "accuracy", "f1": "f1_macro"},
+    scoring=["accuracy", "f1_macro"],
 )
 
 experiment.fit(X_train, y_train)
@@ -34,7 +39,15 @@ result = experiment.evaluate(X_test, y_test)
 
 result = experiment.cross_validate(X, y, cv=5)
 
-result = experiment.search(GridSearchConfig(param_grid={...}), X, y, cv=5)
+result = experiment.search(
+    GridSearchConfig(
+        param_grid={"model__C": [0.1, 1.0, 10.0]},
+        refit="accuracy",
+    ),
+    X,
+    y,
+    cv=5,
+)
 ```
 
 ## 🪄 Why
