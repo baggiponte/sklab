@@ -168,7 +168,7 @@ If you use sklab in your research, please cite this repository:
 ```bibtex
 @software{sklab,
   title = {sklab: A lightweight experiment runner for sklearn pipelines},
-  url = {https://github.com/your-username/sklab},
+  url = {https://github.com/your-username/scikit-lab},
   year = {2024}
 }
 ```
