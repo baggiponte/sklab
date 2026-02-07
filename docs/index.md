@@ -182,23 +182,23 @@ print(f"CV accuracy: {cv_result.metrics['cv/accuracy_mean']:.3f}")
 === "uv (recommended)"
 
     ```bash
-    uv add sklab
+    uv add scikit-lab
     ```
 
     For Optuna support:
 
     ```bash
-    uv add "sklab[optuna]"
+    uv add "scikit-lab[optuna]"
     ```
 
 === "pip"
 
     ```bash
-    pip install sklab
+    pip install scikit-lab
     ```
 
     For Optuna support:
 
     ```bash
-    pip install sklab[optuna]
+    pip install scikit-lab[optuna]
     ```

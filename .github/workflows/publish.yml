@@ -46,7 +46,7 @@ jobs:
       id-token: write
     environment:
       name: pypi
-      url: https://pypi.org/project/sklab/
+      url: https://pypi.org/project/scikit-lab/
     steps:
       - name: Download distributions
         uses: actions/download-artifact@v5 # zizmor: ignore[unpinned-uses]

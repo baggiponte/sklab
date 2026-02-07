@@ -8,7 +8,9 @@ from typing import Any
 
 from sklab._lazy import LazyModule
 
-wandb = LazyModule("wandb", install_hint="Install sklab with the 'wandb' extra.")
+wandb = LazyModule(
+    "wandb", install_hint="Install scikit-lab with the 'wandb' extra."
+)
 
 
 @dataclass

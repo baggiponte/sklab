@@ -50,12 +50,12 @@ Sklab removes this friction. Results include predictions, probabilities, and dia
 ## Install
 
 ```bash
-uv add sklab
+uv add scikit-lab
 
 # With optional integrations
-uv add "sklab[optuna]"   # Optuna search
-uv add "sklab[mlflow]"   # MLflow logging
-uv add "sklab[wandb]"    # W&B logging
+uv add "scikit-lab[optuna]"   # Optuna search
+uv add "scikit-lab[mlflow]"   # MLflow logging
+uv add "scikit-lab[wandb]"    # W&B logging
 ```
 
 ## 🤗 Contributing
