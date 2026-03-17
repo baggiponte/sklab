@@ -1912,11 +1912,11 @@ wheels = [
 
 [[package]]
 name = "pyasn1"
-version = "0.6.2"
+version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fe/b6/6e630dff89739fcd427e3f72b3d905ce0acb85a45d4ec3e2678718a3487f/pyasn1-0.6.2.tar.gz", hash = "sha256:9b59a2b25ba7e4f8197db7686c09fb33e658b98339fadb826e9512629017833b", size = 146586, upload-time = "2026-01-16T18:04:18.534Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/5f/6583902b6f79b399c9c40674ac384fd9cd77805f9e6205075f828ef11fb2/pyasn1-0.6.3.tar.gz", hash = "sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf", size = 148685, upload-time = "2026-03-17T01:06:53.382Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/b5/a96872e5184f354da9c84ae119971a0a4c221fe9b27a4d94bd43f2596727/pyasn1-0.6.2-py3-none-any.whl", hash = "sha256:1eb26d860996a18e9b6ed05e7aae0e9fc21619fcee6af91cca9bad4fbea224bf", size = 83371, upload-time = "2026-01-16T18:04:17.174Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/a0/7d793dce3fa811fe047d6ae2431c672364b462850c6235ae306c0efd025f/pyasn1-0.6.3-py3-none-any.whl", hash = "sha256:a80184d120f0864a52a073acc6fc642847d0be408e7c7252f31390c0f4eadcde", size = 83997, upload-time = "2026-03-17T01:06:52.036Z" },
 ]
 
 [[package]]
@@ -2294,6 +2294,72 @@ wheels = [
 ]
 
 [[package]]
+name = "scikit-lab"
+version = "0.0.1"
+source = { editable = "." }
+dependencies = [
+    { name = "scikit-learn" },
+]
+
+[package.optional-dependencies]
+mlflow = [
+    { name = "mlflow" },
+]
+optuna = [
+    { name = "cmaes" },
+    { name = "optuna" },
+]
+wandb = [
+    { name = "wandb" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "just" },
+    { name = "prek" },
+    { name = "ruff" },
+]
+docs = [
+    { name = "mkdocstrings-python" },
+    { name = "zensical" },
+]
+test = [
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "pytest" },
+    { name = "pytest-markdown-docs" },
+    { name = "scikit-lab", extra = ["mlflow", "optuna", "wandb"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cmaes", marker = "extra == 'optuna'", specifier = ">=0.11.1" },
+    { name = "mlflow", marker = "extra == 'mlflow'", specifier = ">=3.8.1" },
+    { name = "optuna", marker = "extra == 'optuna'", specifier = ">=4.6.0" },
+    { name = "scikit-learn", specifier = ">=1.7.2" },
+    { name = "wandb", marker = "extra == 'wandb'", specifier = ">=0.23.1" },
+]
+provides-extras = ["optuna", "wandb", "mlflow"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "just", specifier = ">=0.8.165" },
+    { name = "prek", specifier = ">=0.2.27" },
+    { name = "ruff", specifier = ">=0.14.11" },
+]
+docs = [
+    { name = "mkdocstrings-python" },
+    { name = "zensical" },
+]
+test = [
+    { name = "pandas", specifier = ">=2.3.3" },
+    { name = "polars", specifier = ">=1.37.0" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "pytest-markdown-docs", specifier = ">=0.9.0" },
+    { name = "scikit-lab", extras = ["optuna", "wandb", "mlflow"] },
+]
+
+[[package]]
 name = "scikit-learn"
 version = "1.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2434,72 +2500,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
-]
-
-[[package]]
-name = "scikit-lab"
-version = "0.0.1"
-source = { editable = "." }
-dependencies = [
-    { name = "scikit-learn" },
-]
-
-[package.optional-dependencies]
-mlflow = [
-    { name = "mlflow" },
-]
-optuna = [
-    { name = "cmaes" },
-    { name = "optuna" },
-]
-wandb = [
-    { name = "wandb" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "just" },
-    { name = "prek" },
-    { name = "ruff" },
-]
-docs = [
-    { name = "mkdocstrings-python" },
-    { name = "zensical" },
-]
-test = [
-    { name = "pandas" },
-    { name = "polars" },
-    { name = "pytest" },
-    { name = "pytest-markdown-docs" },
-    { name = "scikit-lab", extra = ["mlflow", "optuna", "wandb"] },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "cmaes", marker = "extra == 'optuna'", specifier = ">=0.11.1" },
-    { name = "mlflow", marker = "extra == 'mlflow'", specifier = ">=3.8.1" },
-    { name = "optuna", marker = "extra == 'optuna'", specifier = ">=4.6.0" },
-    { name = "scikit-learn", specifier = ">=1.7.2" },
-    { name = "wandb", marker = "extra == 'wandb'", specifier = ">=0.23.1" },
-]
-provides-extras = ["optuna", "wandb", "mlflow"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "just", specifier = ">=0.8.165" },
-    { name = "prek", specifier = ">=0.2.27" },
-    { name = "ruff", specifier = ">=0.14.11" },
-]
-docs = [
-    { name = "mkdocstrings-python" },
-    { name = "zensical" },
-]
-test = [
-    { name = "pandas", specifier = ">=2.3.3" },
-    { name = "polars", specifier = ">=1.37.0" },
-    { name = "pytest", specifier = ">=9.0.2" },
-    { name = "pytest-markdown-docs", specifier = ">=0.9.0" },
-    { name = "scikit-lab", extras = ["optuna", "wandb", "mlflow"] },
 ]
 
 [[package]]
