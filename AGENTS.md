@@ -62,8 +62,8 @@ No flags to enable. No forgetting. It just happens.
 
 ## How to Collaborate
 
-1. **Spec first.** Draft a plan in `plans/` before coding. Keep it small, concrete, goal-driven.
-2. **Plans must include:** Frontmatter header (`title`, `description`, `date`), then Goal, References, Design, How to test. Add "Future considerations" for scoped-out items. Note: Only plans have frontmatter; docs do not.
+1. **ADR first.** Check [docs/contributing/adr/index.md](docs/contributing/adr/index.md) before coding so existing decisions stay visible.
+2. **Document architecture in ADRs.** If a change introduces or reverses an architecturally significant decision, add or update an ADR instead of creating a planning file.
 3. **Sketch before coding.** Interfaces, usage snippets, tradeoffs first. Code only after the API is clear.
 4. **Small steps.** Prefer small, reviewable PRs over big jumps.
 5. **Ask if blocked.** One brief clarifying question, not a brainstorm session.
@@ -204,4 +204,4 @@ See [docs/developer/writing-docs.md](docs/developer/writing-docs.md) for the ful
 - Backend-agnostic core; adapters in optional modules
 - Doc examples are runnable tests
 - Explicit branching beats scattered conditionals
-- Document tradeoffs directly in plans
+- Document tradeoffs directly in ADRs and docs
