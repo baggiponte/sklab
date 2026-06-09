@@ -53,6 +53,7 @@ result = experiment.search(
 ## 🪄 Why
 
 sklab wants to help data scientist avoid:
+
 - Writing the same logging code for every experiment
 - Forgetting to save predictions, then needing them later
 - Copy-pasting matplotlib code for confusion matrices and ROC curves
@@ -89,7 +90,7 @@ Documentation, code and abstraction strive to adhere to the following principles
 
 1. Disclose usage of AI Agents. You are free to use them to contribute. We strive to keep this codebase as agent-friendly as possible. However, you **must** own every line of code the agent writes. This means, as a starter, that you must be able to explain and justify the choice. No slop.
 2. Start your feature request in the [discussions](https://github.com/baggiponte/scikit-lab/discussions) tab. Once the core details are ironed out, we'll move it to the issue tracker.
-3. Agents are encouraged to explore the [plans/](plans/) folder to get a sense of the big picture of the ongoing/relevant developments and to create a new plan if needed.
+3. Agents are encouraged to read the [ADR index](docs/contributing/adr/index.md) and the linked records to understand the project's current architectural decisions before proposing changes.
 4. Code is now free to write. The value we bring is in the ideas, taste and judgment to assert the adherence to the principles above. Let's discuss thoroughly those ideas - including the final API - and code will follow naturally. In other words, treat code as an implementation detail, not as the end goal - this is, and always has been, the ideas we bring.
 5. Keep changes small and reviewable
 

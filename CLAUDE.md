@@ -30,6 +30,7 @@ Documentation, code and abstraction strive to adhere to the following principles
 ## Results Are Not Dumb Containers
 
 Results must:
+
 - Always include predictions, probabilities (clf), targets
 - Print as formatted metric tables
 - Offer `.plot()` for task-appropriate diagnostics
@@ -57,19 +58,9 @@ No `mlflow.log_param()` scattered through code. Ever.
 
 ## Before Writing Code
 
-1. Check `plans/` for existing specs
-2. If new feature, write a plan first with frontmatter + sections:
-   ```
-   ---
-   title: Feature Name
-   description: One-line summary
-   date: YYYY-MM-DD
-   ---
-   # Feature Name
-   ## Goal / ## References / ## Design / ## How to Test / ## Future Considerations
-   ```
-   Note: Only `plans/` files have frontmatter. Docs do not.
-3. Sketch the API before implementing
+1. Check [docs/contributing/adr/index.md](docs/contributing/adr/index.md) for existing decisions.
+2. If your change introduces or reverses an architecturally significant decision, add or update an ADR rather than creating a planning file.
+3. Sketch the API before implementing.
 
 ## Commands
 
@@ -104,7 +95,7 @@ The PR will auto-merge when CI passes. Do not commit, push, or open PRs unless t
 - `src/sklab/experiment.py` — Core Experiment class
 - `src/sklab/search.py` — Search configs (Grid, Random)
 - `src/sklab/optuna.py` — Optional Optuna integration
-- `plans/feature-vision.md` — Product vision and feature scope
+- `docs/contributing/adr/index.md` — Architecture decisions and their current status
 
 ---
 
@@ -145,27 +136,34 @@ For theory, use blockquotes:
 # Title
 
 **What you'll learn:**
+
 - Point 1
 - Point 2
 
 **Prerequisites:** [Links]
 
 ## The Problem
+
 [1-2 paragraphs on why this matters]
 
 ## Concept: X (if needed)
+
 [Explanation + "Why it matters"]
 
 ## Implementation
+
 [Code blocks]
 
 ### What Just Happened
+
 [Explain the code]
 
 ## Best Practices
+
 [Numbered list]
 
 ## Further Reading
+
 [Links to papers, docs]
 ```
 

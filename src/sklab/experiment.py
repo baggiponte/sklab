@@ -214,7 +214,11 @@ class Experiment:
         if best_estimator is not None:
             self._fitted_estimator = best_estimator
         # Expose Study for Optuna searches, searcher for sklearn searches
-        raw = searcher.study if isinstance(search, (OptunaConfig, OptunaSearcher)) else searcher
+        raw = (
+            searcher.study
+            if isinstance(search, (OptunaConfig, OptunaSearcher))
+            else searcher
+        )
         return SearchResult(
             best_params=best_params,
             best_score=best_score,
