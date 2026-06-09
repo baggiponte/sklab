@@ -38,6 +38,7 @@ Study what works across the ML ecosystem—sklearn, HuggingFace, PyTorch—and a
 ## What We Always Capture
 
 Every result includes:
+
 - `y_pred` — Predictions (always)
 - `y_proba` — Probabilities (classification)
 - `y_true` — Ground truth
@@ -130,6 +131,7 @@ Documentation is a product. We ship it like one.
 **Start with the problem.** Before explaining what something does, explain what problem it solves.
 
 **Use concept boxes for theory:**
+
 ```markdown
 > **Concept: Data Leakage**
 >
@@ -140,6 +142,7 @@ Documentation is a product. We ship it like one.
 **Show "what just happened."** After code blocks, explain what the code did.
 
 **Provide decision guides.** When multiple approaches exist, give a decision table:
+
 ```markdown
 | Situation | Recommendation |
 |-----------|----------------|
@@ -173,24 +176,30 @@ Documentation is a product. We ship it like one.
 # Title
 
 **What you'll learn:**
+
 - Bullet 1
 - Bullet 2
 
 **Prerequisites:** [Links]
 
 ## The Problem
+
 [Why this matters]
 
 ## Concept: X (if needed)
+
 [2-4 paragraphs with "Why it matters"]
 
 ## Implementation
+
 [Code + "What just happened"]
 
 ## Best Practices
+
 [Numbered list]
 
 ## Further Reading
+
 [Links to papers, sklearn docs]
 ```
 

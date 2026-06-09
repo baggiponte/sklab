@@ -53,6 +53,7 @@ result = experiment.search(
 ## 🪄 Why
 
 sklab wants to help data scientist avoid:
+
 - Writing the same logging code for every experiment
 - Forgetting to save predictions, then needing them later
 - Copy-pasting matplotlib code for confusion matrices and ROC curves

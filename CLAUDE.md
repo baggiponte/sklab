@@ -30,6 +30,7 @@ Documentation, code and abstraction strive to adhere to the following principles
 ## Results Are Not Dumb Containers
 
 Results must:
+
 - Always include predictions, probabilities (clf), targets
 - Print as formatted metric tables
 - Offer `.plot()` for task-appropriate diagnostics
@@ -135,27 +136,34 @@ For theory, use blockquotes:
 # Title
 
 **What you'll learn:**
+
 - Point 1
 - Point 2
 
 **Prerequisites:** [Links]
 
 ## The Problem
+
 [1-2 paragraphs on why this matters]
 
 ## Concept: X (if needed)
+
 [Explanation + "Why it matters"]
 
 ## Implementation
+
 [Code blocks]
 
 ### What Just Happened
+
 [Explain the code]
 
 ## Best Practices
+
 [Numbered list]
 
 ## Further Reading
+
 [Links to papers, docs]
 ```
 
