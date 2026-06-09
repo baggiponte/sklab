@@ -22,3 +22,4 @@ Status values follow that article's terminology:
 | [ADR-007](adr-007-type-safe-scorer-enum.md) | Provide a type-safe scorer enum without removing raw scorer flexibility | Accepted |
 | [ADR-008](adr-008-small-result-objects-with-raw-escape-hatch.md) | Return small method-specific result objects with a raw escape hatch | Accepted |
 | [ADR-009](adr-009-documentation-philosophy-as-project-decision.md) | Treat documentation philosophy as a project decision | Accepted |
+| [ADR-010](adr-010-native-tracker-integrations.md) | Accept native tracker objects through integration adapters | Proposed |
