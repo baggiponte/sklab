@@ -21,6 +21,7 @@ from sklab.search import (
     RandomSearchConfig,
     SearcherProtocol,
 )
+from .conftest import InMemoryLogger
 
 
 class TestFit:
@@ -138,6 +139,7 @@ class TestEvaluate:
 
         assert "accuracy" in result.metrics
         assert 0.0 <= result.metrics["accuracy"] <= 1.0
+        assert result.estimator is experiment._fitted_estimator
         assert result.raw is result.metrics
 
     def test_works_with_callable_scorer(
@@ -607,3 +609,49 @@ class TestSearch:
 
         with pytest.raises(TypeError, match="create_searcher.*fit"):
             experiment.search("not a searcher", X, y)  # type: ignore[arg-type]
+
+
+class TestPromote:
+    def test_promote_after_fit_supports_inference(
+        self,
+        data: tuple[Any, Any],
+        pipeline_factory: Callable[[], Pipeline],
+    ) -> None:
+        X, y = data
+        experiment = Experiment(pipeline=pipeline_factory(), name="iris-fit")
+        experiment.fit(X, y)
+
+        model = experiment.promote()
+
+        assert model.name == "iris-fit"
+        assert model.source == "Experiment"
+        assert "model__C" in model.params
+        preds = model.predict(X[:3])
+        proba = model.predict_proba(X[:3])
+        assert len(preds) == 3
+        assert len(proba) == 3
+
+    def test_promote_after_search_uses_latest_fitted_estimator(
+        self,
+        data: tuple[Any, Any],
+        pipeline_factory: Callable[[], Pipeline],
+    ) -> None:
+        X, y = data
+        experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
+        search = GridSearchConfig(param_grid={"model__C": [0.1, 1.0]})
+        experiment.search(search, X, y, cv=2)
+
+        model = experiment.promote(name="best-grid")
+
+        assert model.name == "best-grid"
+        assert model.source == "Experiment"
+        assert model.estimator is experiment._fitted_estimator
+
+    def test_promote_raises_before_fit(
+        self,
+        pipeline_factory: Callable[[], Pipeline],
+    ) -> None:
+        experiment = Experiment(pipeline=pipeline_factory(), scoring="accuracy")
+
+        with pytest.raises(ValueError, match="Cannot promote an unfitted experiment"):
+            experiment.promote()

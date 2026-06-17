@@ -48,6 +48,9 @@ result = experiment.search(
     y,
     cv=5,
 )
+
+model = experiment.promote(name="iris-best")
+y_pred = model.predict(X_test)
 ```
 
 ## 🪄 Why

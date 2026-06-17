@@ -17,6 +17,7 @@ from sklab._search.optuna import OptunaConfig, OptunaSearcher
 from sklab._search.sklearn import GridSearchConfig, RandomSearchConfig
 from sklab.adapters.logging import LoggerProtocol
 from sklab.logging import NoOpLogger
+from sklab.model import PromotedModel
 from sklab.search import SearchConfigProtocol, SearcherProtocol
 from sklab.type_aliases import ScorerFunc, Scoring
 
@@ -24,7 +25,14 @@ if TYPE_CHECKING:
     from optuna.study import Study
 
 # Re-export result classes for public API
-__all__ = ["Experiment", "FitResult", "EvalResult", "CVResult", "SearchResult"]
+__all__ = [
+    "Experiment",
+    "PromotedModel",
+    "FitResult",
+    "EvalResult",
+    "CVResult",
+    "SearchResult",
+]
 
 
 @dataclass(slots=True)
@@ -80,7 +88,9 @@ class Experiment:
             tags=self.tags,
         ) as run:
             run.log_metrics(metrics)
-        return EvalResult(metrics=metrics, raw=metrics)
+        return EvalResult(
+            metrics=metrics, estimator=self._fitted_estimator, raw=metrics
+        )
 
     def cross_validate(
         self,
@@ -224,6 +234,26 @@ class Experiment:
             best_score=best_score,
             estimator=best_estimator,
             raw=raw,
+        )
+
+    def promote(self, *, name: str | None = None) -> PromotedModel:
+        """Promote this experiment as an inference-ready model."""
+        estimator = self._fitted_estimator
+        if estimator is None:
+            raise ValueError(
+                "Cannot promote an unfitted experiment. "
+                "Call fit(), search(), or cross_validate(..., refit=True) first."
+            )
+        check_is_fitted(estimator)
+        params = (
+            dict(estimator.get_params()) if hasattr(estimator, "get_params") else {}
+        )
+        return PromotedModel(
+            estimator=estimator,
+            name=name or self.name,
+            source="Experiment",
+            metrics={},
+            params=params,
         )
 
 

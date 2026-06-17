@@ -32,10 +32,12 @@ class EvalResult:
 
     Attributes:
         metrics: Computed metric scores.
+        estimator: The fitted estimator used for evaluation.
         raw: The metrics dict (same as metrics, for API consistency).
     """
 
     metrics: Mapping[str, float]
+    estimator: Any
     raw: Mapping[str, float]
 
 
